@@ -52,7 +52,9 @@ var Bomber = (function (_super) {
             _this.move(event, 6);
         });
         window.addEventListener("keyup", function (event) {
-            return _this.move(event, 0);
+            _this.move(event, 0);
+            _this.animationCount = 0;
+            _this.setWalkingBackground(true);
         });
         return _this;
     }
@@ -86,7 +88,7 @@ var Bomber = (function (_super) {
         }
     };
     Bomber.prototype.setWalkingBackground = function (startPostion) {
-        var baseUrl = '../docs/img/characters/bomber/spr_player_';
+        var baseUrl = "../docs/img/characters/bomber/spr_player_";
         if (startPostion) {
             this.animationCount = 0;
         }

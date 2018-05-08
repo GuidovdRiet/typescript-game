@@ -19,9 +19,11 @@ class Bomber extends GameObject {
       this.move(event, 6);
     });
 
-    window.addEventListener("keyup", (event: KeyboardEvent) =>
+    window.addEventListener("keyup", (event: KeyboardEvent) => {
       this.move(event, 0)
-    );
+      this.animationCount = 0;
+      this.setWalkingBackground(true);
+    });
   }
 
   private start() {
@@ -57,8 +59,8 @@ class Bomber extends GameObject {
   }
 
   private setWalkingBackground(startPostion: boolean) {
-    const baseUrl = '../docs/img/characters/bomber/spr_player_';
-    if(startPostion) {
+    const baseUrl = "../docs/img/characters/bomber/spr_player_";
+    if (startPostion) {
       this.animationCount = 0;
     } else {
       this.animationCount <= 2
