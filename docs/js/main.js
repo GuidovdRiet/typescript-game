@@ -10,13 +10,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var Game = (function () {
     function Game() {
-        this.bomber = new Bomber();
-        this.gameLoop();
+        this._bomber = new Bomber();
+        this._gameLoop();
     }
-    Game.prototype.gameLoop = function () {
+    Game.prototype._gameLoop = function () {
         var _this = this;
-        this.bomber.update();
-        requestAnimationFrame(function () { return _this.gameLoop(); });
+        this._bomber.update();
+        requestAnimationFrame(function () { return _this._gameLoop(); });
     };
     return Game;
 }());
@@ -40,27 +40,27 @@ var Bomber = (function (_super) {
     __extends(Bomber, _super);
     function Bomber() {
         var _this = _super.call(this) || this;
-        _this.leftSpeed = 0;
-        _this.upSpeed = 0;
-        _this.downSpeed = 0;
-        _this.rightSpeed = 0;
-        _this.animationCount = 0;
+        _this._leftSpeed = 0;
+        _this._upSpeed = 0;
+        _this._downSpeed = 0;
+        _this._rightSpeed = 0;
+        _this._animationCount = 0;
         _this.div = document.createElement("bomber");
         document.body.appendChild(_this.div);
-        _this.start();
+        _this._start();
         window.addEventListener("keydown", function (event) {
-            _this.move(event, 6);
+            return _this.move(event, 6);
         });
         window.addEventListener("keyup", function (event) {
             _this.move(event, 0);
-            _this.setWalkingBackground(true);
+            _this._setWalkingBackground(true);
         });
         return _this;
     }
-    Bomber.prototype.start = function () {
+    Bomber.prototype._start = function () {
         this.x = 50;
         this.y = 100;
-        this.setWalkingBackground(true);
+        this._setWalkingBackground(true);
     };
     Bomber.prototype.move = function (event, speed) {
         var leftKey = 37;
@@ -69,38 +69,38 @@ var Bomber = (function (_super) {
         var downKey = 40;
         switch (event.keyCode) {
             case leftKey:
-                this.leftSpeed = speed;
-                this.setWalkingBackground(false);
+                this._leftSpeed = speed;
+                this._setWalkingBackground(false);
                 break;
             case rightKey:
-                this.rightSpeed = speed;
-                this.setWalkingBackground(false);
+                this._rightSpeed = speed;
+                this._setWalkingBackground(false);
                 break;
             case upKey:
-                this.upSpeed = speed;
-                this.setWalkingBackground(false);
+                this._upSpeed = speed;
+                this._setWalkingBackground(false);
                 break;
             case downKey:
-                this.downSpeed = speed;
-                this.setWalkingBackground(false);
+                this._downSpeed = speed;
+                this._setWalkingBackground(false);
                 break;
         }
     };
-    Bomber.prototype.setWalkingBackground = function (startPostion) {
+    Bomber.prototype._setWalkingBackground = function (startPostion) {
         var baseUrl = "../docs/img/characters/bomber/spr_player_";
         if (startPostion) {
-            this.animationCount = 0;
+            this._animationCount = 0;
         }
         else {
-            this.animationCount <= 2
-                ? this.animationCount++
-                : (this.animationCount = 0);
+            this._animationCount <= 2
+                ? this._animationCount++
+                : (this._animationCount = 0);
         }
-        this.div.style.backgroundImage = "url(" + baseUrl + this.animationCount + ".png)";
+        this.div.style.backgroundImage = "url(" + baseUrl + this._animationCount + ".png)";
     };
     Bomber.prototype.update = function () {
-        var targetX = this.x - this.leftSpeed + this.rightSpeed;
-        var targetY = this.y - this.upSpeed + this.downSpeed;
+        var targetX = this.x - this._leftSpeed + this._rightSpeed;
+        var targetY = this.y - this._upSpeed + this._downSpeed;
         this.x = targetX;
         this.y = targetY;
         this.draw();
