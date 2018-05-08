@@ -48,7 +48,7 @@ var Bomber = (function (_super) {
         document.body.appendChild(_this.div);
         _this.startPosition();
         window.addEventListener('keydown', function (event) {
-            return _this.move(event, 10);
+            return _this.move(event, 6);
         });
         window.addEventListener('keyup', function (event) {
             return _this.move(event, 0);
@@ -71,11 +71,19 @@ var Bomber = (function (_super) {
             case rightKey:
                 this.rightSpeed = speed;
                 break;
+            case upKey:
+                this.upSpeed = speed;
+                break;
+            case downKey:
+                this.downSpeed = speed;
+                break;
         }
     };
     Bomber.prototype.update = function () {
         var targetX = this.x - this.leftSpeed + this.rightSpeed;
+        var targetY = this.y - this.upSpeed + this.downSpeed;
         this.x = targetX;
+        this.y = targetY;
         this.draw();
     };
     Bomber.prototype.draw = function () {

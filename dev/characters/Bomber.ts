@@ -16,7 +16,7 @@ class Bomber extends GameObject {
     this.startPosition();
 
     window.addEventListener('keydown', (event: KeyboardEvent) =>
-      this.move(event, 10)
+      this.move(event, 6)
     );
 
     window.addEventListener('keyup', (event: KeyboardEvent) => 
@@ -43,13 +43,21 @@ class Bomber extends GameObject {
       case rightKey:
         this.rightSpeed = speed;
         break;
+      case upKey:
+        this.upSpeed = speed;
+        break;
+      case downKey:
+        this.downSpeed = speed;
+        break;
     }
   }
 
   public update() {
     let targetX = this.x - this.leftSpeed + this.rightSpeed;
+    let targetY = this.y - this.upSpeed + this.downSpeed;
     this.x = targetX;
-    
+    this.y = targetY;
+
     this.draw();
   }
 
