@@ -1,8 +1,13 @@
 class Game {
+  private bomber: Bomber;
 
-    private bomber: Bomber;
+  constructor() {
+    this.bomber = new Bomber();
+    this.gameLoop();
+  }
 
-    constructor() {
-        this.bomber = new Bomber();
-    }
+  private gameLoop() {
+    this.bomber.update();
+    requestAnimationFrame(() => this.gameLoop());
+  }
 }

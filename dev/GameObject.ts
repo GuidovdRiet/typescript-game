@@ -17,9 +17,4 @@ class GameObject {
       );
     }
   }
-
-  protected draw(x:number, y:number): void {
-    this.div.style.transform = `translate3d(${x}px, ${y}px, 0px)`;
-  }
-
 }
