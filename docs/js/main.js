@@ -53,7 +53,6 @@ var Bomber = (function (_super) {
         });
         window.addEventListener("keyup", function (event) {
             _this.move(event, 0);
-            _this.animationCount = 0;
             _this.setWalkingBackground(true);
         });
         return _this;

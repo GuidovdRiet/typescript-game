@@ -21,7 +21,6 @@ class Bomber extends GameObject {
 
     window.addEventListener("keyup", (event: KeyboardEvent) => {
       this.move(event, 0)
-      this.animationCount = 0;
       this.setWalkingBackground(true);
     });
   }
