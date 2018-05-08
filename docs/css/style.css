@@ -1,0 +1,21 @@
+html {
+    box-sizing: border-box;
+    font-size: 10px;
+}
+
+body {
+    background: url('../img/background/bg_metal.png');
+    width: calc(100% - 1px);
+    height: calc(100% - 1px);
+}
+
+body * {
+    position: absolute;
+    display: inline-block;
+}
+
+bomber {
+    width: 60px;
+    height: 80px;
+    background: url('../img/characters/spr_player_0.png');
+}
