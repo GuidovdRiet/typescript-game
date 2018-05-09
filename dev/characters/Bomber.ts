@@ -1,4 +1,4 @@
-/// <reference path="../GameObject.ts"/>
+/// <reference path="../game/GameObject.ts"/>
 
 class Bomber extends GameObject {
   private _leftSpeed: number = 0;
@@ -6,12 +6,17 @@ class Bomber extends GameObject {
   private _downSpeed: number = 0;
   private _rightSpeed: number = 0;
   private _animationCount: number = 0;
+  private _width: number;
+  private _height: number;
 
   constructor() {
     super();
 
     this.div = document.createElement("bomber");
     document.body.appendChild(this.div);
+
+    this._width = this.div.clientWidth;
+    this._height = this.div.clientHeight;
 
     this._start();
 
@@ -74,8 +79,19 @@ class Bomber extends GameObject {
   public update() {
     const targetX = this.x - this._leftSpeed + this._rightSpeed;
     const targetY = this.y - this._upSpeed + this._downSpeed;
-    this.x = targetX;
-    this.y = targetY;
+    // console.log(this._width);
+    // console.log(targetX) ;
+    const screenCorrection = 15;
+    if (
+      targetX < window.innerWidth - screenCorrection - this._width &&
+      targetX > 0
+    )
+      this.x = targetX;
+    if (
+      targetY < window.innerHeight - screenCorrection - this._height &&
+      targetY > 0
+    )
+      this.y = targetY;
 
     this.draw();
   }

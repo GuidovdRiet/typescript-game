@@ -8,18 +8,9 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var Game = (function () {
-    function Game() {
-        this._bomber = new Bomber();
-        this._gameLoop();
-    }
-    Game.prototype._gameLoop = function () {
-        var _this = this;
-        this._bomber.update();
-        requestAnimationFrame(function () { return _this._gameLoop(); });
-    };
-    return Game;
-}());
+window.addEventListener('load', function () {
+    new Game();
+});
 var GameObject = (function () {
     function GameObject() {
     }
@@ -33,9 +24,6 @@ var GameObject = (function () {
     };
     return GameObject;
 }());
-window.addEventListener('load', function () {
-    new Game();
-});
 var Bomber = (function (_super) {
     __extends(Bomber, _super);
     function Bomber() {
@@ -47,6 +35,8 @@ var Bomber = (function (_super) {
         _this._animationCount = 0;
         _this.div = document.createElement("bomber");
         document.body.appendChild(_this.div);
+        _this._width = _this.div.clientWidth;
+        _this._height = _this.div.clientHeight;
         _this._start();
         window.addEventListener("keydown", function (event) {
             return _this.move(event, 6);
@@ -101,8 +91,13 @@ var Bomber = (function (_super) {
     Bomber.prototype.update = function () {
         var targetX = this.x - this._leftSpeed + this._rightSpeed;
         var targetY = this.y - this._upSpeed + this._downSpeed;
-        this.x = targetX;
-        this.y = targetY;
+        var screenCorrection = 15;
+        if (targetX < window.innerWidth - screenCorrection - this._width &&
+            targetX > 0)
+            this.x = targetX;
+        if (targetY < window.innerHeight - screenCorrection - this._height &&
+            targetY > 0)
+            this.y = targetY;
         this.draw();
     };
     Bomber.prototype.draw = function () {
@@ -110,4 +105,16 @@ var Bomber = (function (_super) {
     };
     return Bomber;
 }(GameObject));
+var Game = (function () {
+    function Game() {
+        this._bomber = new Bomber();
+        this._gameLoop();
+    }
+    Game.prototype._gameLoop = function () {
+        var _this = this;
+        this._bomber.update();
+        requestAnimationFrame(function () { return _this._gameLoop(); });
+    };
+    return Game;
+}());
 //# sourceMappingURL=main.js.map
