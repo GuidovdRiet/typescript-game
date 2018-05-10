@@ -1,5 +1,5 @@
 class GameObject {
-  protected div: HTMLElement;
+  protected element: HTMLElement;
 
   protected x: number;
   protected y: number;

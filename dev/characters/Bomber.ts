@@ -5,18 +5,19 @@ class Bomber extends GameObject {
   private _upSpeed: number = 0;
   private _downSpeed: number = 0;
   private _rightSpeed: number = 0;
+
   private _animationCount: number = 0;
-  private _width: number;
-  private _height: number;
+
+  private _weapon: MachineGun;
 
   constructor() {
     super();
 
-    this.div = document.createElement("bomber");
-    document.body.appendChild(this.div);
+    this.element = document.createElement("bomber");
+    document.body.appendChild(this.element);
 
-    this._width = this.div.clientWidth;
-    this._height = this.div.clientHeight;
+    this.width = this.element.clientWidth;
+    this.height = this.element.clientHeight;
 
     this._start();
 
@@ -34,6 +35,7 @@ class Bomber extends GameObject {
     this.x = 50;
     this.y = 100;
     this._setWalkingBackground(true);
+    this._weapon = new MachineGun(this);
   }
 
   public move(event: KeyboardEvent, speed: number): void {
@@ -71,7 +73,7 @@ class Bomber extends GameObject {
         ? this._animationCount++
         : (this._animationCount = 0);
     }
-    this.div.style.backgroundImage = `url(${baseUrl}${
+    this.element.style.backgroundImage = `url(${baseUrl}${
       this._animationCount
     }.png)`;
   }
@@ -79,24 +81,36 @@ class Bomber extends GameObject {
   public update() {
     const targetX = this.x - this._leftSpeed + this._rightSpeed;
     const targetY = this.y - this._upSpeed + this._downSpeed;
-    // console.log(this._width);
-    // console.log(targetX) ;
+
     const screenCorrection = 15;
     if (
-      targetX < window.innerWidth - screenCorrection - this._width &&
+      targetX < window.innerWidth - screenCorrection - this.width &&
       targetX > 0
     )
       this.x = targetX;
     if (
-      targetY < window.innerHeight - screenCorrection - this._height &&
+      targetY < window.innerHeight - screenCorrection - this.height &&
       targetY > 0
     )
       this.y = targetY;
 
-    this.draw();
+    this._weapon.draw();
+    this._draw();
   }
 
-  private draw(): void {
-    this.div.style.transform = `translate3d(${this.x}px, ${this.y}px, 0px)`;
+  public getPosition() {
+    const position = {
+      x: this.x,
+      y: this.y
+    };
+    return position;
+  }
+
+  public getHeight() {
+    return this.height;
+  }
+
+  private _draw(): void {
+    this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0px)`;
   }
 }

@@ -33,10 +33,10 @@ var Bomber = (function (_super) {
         _this._downSpeed = 0;
         _this._rightSpeed = 0;
         _this._animationCount = 0;
-        _this.div = document.createElement("bomber");
-        document.body.appendChild(_this.div);
-        _this._width = _this.div.clientWidth;
-        _this._height = _this.div.clientHeight;
+        _this.element = document.createElement("bomber");
+        document.body.appendChild(_this.element);
+        _this.width = _this.element.clientWidth;
+        _this.height = _this.element.clientHeight;
         _this._start();
         window.addEventListener("keydown", function (event) {
             return _this.move(event, 6);
@@ -51,6 +51,7 @@ var Bomber = (function (_super) {
         this.x = 50;
         this.y = 100;
         this._setWalkingBackground(true);
+        this._weapon = new MachineGun(this);
     };
     Bomber.prototype.move = function (event, speed) {
         var leftKey = 37;
@@ -86,22 +87,33 @@ var Bomber = (function (_super) {
                 ? this._animationCount++
                 : (this._animationCount = 0);
         }
-        this.div.style.backgroundImage = "url(" + baseUrl + this._animationCount + ".png)";
+        this.element.style.backgroundImage = "url(" + baseUrl + this._animationCount + ".png)";
     };
     Bomber.prototype.update = function () {
         var targetX = this.x - this._leftSpeed + this._rightSpeed;
         var targetY = this.y - this._upSpeed + this._downSpeed;
         var screenCorrection = 15;
-        if (targetX < window.innerWidth - screenCorrection - this._width &&
+        if (targetX < window.innerWidth - screenCorrection - this.width &&
             targetX > 0)
             this.x = targetX;
-        if (targetY < window.innerHeight - screenCorrection - this._height &&
+        if (targetY < window.innerHeight - screenCorrection - this.height &&
             targetY > 0)
             this.y = targetY;
-        this.draw();
+        this._weapon.draw();
+        this._draw();
     };
-    Bomber.prototype.draw = function () {
-        this.div.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
+    Bomber.prototype.getPosition = function () {
+        var position = {
+            x: this.x,
+            y: this.y
+        };
+        return position;
+    };
+    Bomber.prototype.getHeight = function () {
+        return this.height;
+    };
+    Bomber.prototype._draw = function () {
+        this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
     };
     return Bomber;
 }(GameObject));
@@ -117,4 +129,36 @@ var Game = (function () {
     };
     return Game;
 }());
+var Weapon = (function (_super) {
+    __extends(Weapon, _super);
+    function Weapon() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Weapon.prototype.shoot = function () {
+    };
+    return Weapon;
+}(GameObject));
+var MachineGun = (function (_super) {
+    __extends(MachineGun, _super);
+    function MachineGun(bomber) {
+        var _this = _super.call(this) || this;
+        _this._bomber = bomber;
+        _this.element = document.createElement("machinegun");
+        document.body.appendChild(_this.element);
+        _this.height = _this.element.offsetHeight;
+        _this._bomberHeight = bomber.getHeight();
+        _this._start();
+        return _this;
+    }
+    MachineGun.prototype._start = function () {
+        this.draw();
+    };
+    MachineGun.prototype.draw = function () {
+        var bomberPosition = this._bomber.getPosition();
+        this.x = bomberPosition.x;
+        this.y = bomberPosition.y + this.height / 2 + this._bomberHeight / 2;
+        this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
+    };
+    return MachineGun;
+}(Weapon));
 //# sourceMappingURL=main.js.map

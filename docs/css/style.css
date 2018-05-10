@@ -1,20 +1,28 @@
 html {
-    box-sizing: border-box;
-    font-size: 10px;
+  box-sizing: border-box;
+  font-size: 10px;
 }
 
 body {
-    background: url('../img/background/bg_warehouse.png');
-    width: calc(100% - 1px);
-    height: calc(100% - 1px);
+  background: url('../img/background/bg_warehouse.png');
+  width: calc(100% - 1px);
+  height: calc(100% - 1px);
 }
 
 body * {
-    position: absolute;
-    display: inline-block;
+  position: absolute;
+  display: inline-block;
 }
 
+/* characters */
 bomber {
-    width: 60px;
-    height: 80px;
+  width: 60px;
+  height: 80px;
+}
+
+/* weapons */
+machinegun {
+  width: 66px;
+  height: 18px;
+  background: url('../img/weapons/spr_machinegun_0.png')
 }
