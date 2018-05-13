@@ -24,6 +24,23 @@ var GameObject = (function () {
     };
     return GameObject;
 }());
+var Character = (function (_super) {
+    __extends(Character, _super);
+    function Character() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Character.prototype.getPosition = function () {
+        var position = {
+            x: this.x,
+            y: this.y
+        };
+        return position;
+    };
+    Character.prototype.getHeight = function () {
+        return this.height;
+    };
+    return Character;
+}(GameObject));
 var Bomber = (function (_super) {
     __extends(Bomber, _super);
     function Bomber() {
@@ -48,8 +65,8 @@ var Bomber = (function (_super) {
         return _this;
     }
     Bomber.prototype._start = function () {
-        this.x = 50;
-        this.y = 100;
+        this.x = (window.innerWidth / 2) - this.width;
+        this.y = (window.innerHeight / 2) - this.height;
         this._setWalkingBackground(true);
         this._weapon = new MachineGun(this);
     };
@@ -102,21 +119,11 @@ var Bomber = (function (_super) {
         this._weapon.draw();
         this._draw();
     };
-    Bomber.prototype.getPosition = function () {
-        var position = {
-            x: this.x,
-            y: this.y
-        };
-        return position;
-    };
-    Bomber.prototype.getHeight = function () {
-        return this.height;
-    };
     Bomber.prototype._draw = function () {
         this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
     };
     return Bomber;
-}(GameObject));
+}(Character));
 var Game = (function () {
     function Game() {
         this._bomber = new Bomber();
@@ -129,14 +136,12 @@ var Game = (function () {
     };
     return Game;
 }());
-var Weapon = (function (_super) {
-    __extends(Weapon, _super);
-    function Weapon() {
+var Gun = (function (_super) {
+    __extends(Gun, _super);
+    function Gun() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Weapon.prototype.shoot = function () {
-    };
-    return Weapon;
+    return Gun;
 }(GameObject));
 var MachineGun = (function (_super) {
     __extends(MachineGun, _super);
@@ -146,10 +151,34 @@ var MachineGun = (function (_super) {
         _this.element = document.createElement("machinegun");
         document.body.appendChild(_this.element);
         _this.height = _this.element.offsetHeight;
+        _this.width = _this.element.offsetWidth;
         _this._bomberHeight = bomber.getHeight();
+        _this._setShootEventHandler();
         _this._start();
         return _this;
     }
+    MachineGun.prototype.getPostion = function () {
+        var position = {
+            x: this.x,
+            y: this.y
+        };
+        return position;
+    };
+    MachineGun.prototype.getWidth = function () {
+        return this.width;
+    };
+    MachineGun.prototype._setShootEventHandler = function () {
+        var _this = this;
+        document.addEventListener("click", function () {
+            _this._shoot();
+        });
+    };
+    MachineGun.prototype._shoot = function () {
+        var _this = this;
+        requestAnimationFrame(function () {
+            _this._machineGunBullet = new MachineGunBullet(_this);
+        });
+    };
     MachineGun.prototype._start = function () {
         this.draw();
     };
@@ -160,5 +189,35 @@ var MachineGun = (function (_super) {
         this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
     };
     return MachineGun;
-}(Weapon));
+}(Gun));
+var Bullet = (function (_super) {
+    __extends(Bullet, _super);
+    function Bullet() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Bullet;
+}(GameObject));
+var MachineGunBullet = (function (_super) {
+    __extends(MachineGunBullet, _super);
+    function MachineGunBullet(machineGun) {
+        var _this = _super.call(this) || this;
+        _this.element = document.createElement("MachineGunBullet");
+        document.body.appendChild(_this.element);
+        _this._machineGun = machineGun;
+        _this._start();
+        return _this;
+    }
+    MachineGunBullet.prototype._start = function () {
+        this.draw();
+    };
+    MachineGunBullet.prototype.draw = function () {
+        var weaponPosition = this._machineGun.getPostion();
+        var weaponWidth = this._machineGun.getWidth();
+        var bulletHeight = this.element.offsetHeight;
+        this.x = weaponPosition.x + weaponWidth;
+        this.y = weaponPosition.y + bulletHeight - 1;
+        this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
+    };
+    return MachineGunBullet;
+}(Bullet));
 //# sourceMappingURL=main.js.map

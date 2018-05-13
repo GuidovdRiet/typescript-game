@@ -1,6 +1,7 @@
-/// <reference path="../game/GameObject.ts"/>
+/// <reference path="./Character.ts"/>
 
-class Bomber extends GameObject {
+class Bomber extends Character {
+
   private _leftSpeed: number = 0;
   private _upSpeed: number = 0;
   private _downSpeed: number = 0;
@@ -32,8 +33,8 @@ class Bomber extends GameObject {
   }
 
   private _start() {
-    this.x = 50;
-    this.y = 100;
+    this.x = (window.innerWidth / 2) - this.width;
+    this.y = (window.innerHeight / 2) - this.height;
     this._setWalkingBackground(true);
     this._weapon = new MachineGun(this);
   }
@@ -96,18 +97,6 @@ class Bomber extends GameObject {
 
     this._weapon.draw();
     this._draw();
-  }
-
-  public getPosition() {
-    const position = {
-      x: this.x,
-      y: this.y
-    };
-    return position;
-  }
-
-  public getHeight() {
-    return this.height;
   }
 
   private _draw(): void {

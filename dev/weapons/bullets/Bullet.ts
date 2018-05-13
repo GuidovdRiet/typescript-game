@@ -1,0 +1,3 @@
+class Bullet extends GameObject {
+  
+}

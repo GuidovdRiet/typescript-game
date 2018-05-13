@@ -1,12 +1,17 @@
 html {
   box-sizing: border-box;
-  font-size: 10px;
+  width: 100%;
+  height: 100vh;
+}
+
+html * {
+  margin: 0;
 }
 
 body {
   background: url('../img/background/bg_warehouse.png');
-  width: calc(100% - 1px);
-  height: calc(100% - 1px);
+  width: 100%;
+  height: 100vh;
 }
 
 body * {
@@ -25,4 +30,10 @@ machinegun {
   width: 66px;
   height: 18px;
   background: url('../img/weapons/spr_machinegun_0.png')
+}
+
+machinegunbullet {
+  width: 9px;
+  height: 5px;
+  background: url('../img/weapons/bullets/spr_machinegunBullet_0.png')
 }
