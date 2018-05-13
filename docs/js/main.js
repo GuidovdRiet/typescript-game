@@ -189,14 +189,22 @@ var Bullet = (function (_super) {
     function Bullet() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    Bullet.prototype.removeIfLeavesScreen = function () {
+        if (this.x > window.innerWidth) {
+            this.element.remove();
+        }
+    };
     return Bullet;
 }(GameObject));
 var MachineGunBullet = (function (_super) {
     __extends(MachineGunBullet, _super);
     function MachineGunBullet(machineGun) {
         var _this = _super.call(this) || this;
+        _this._bulletSpeed = 10;
         _this.element = document.createElement("MachineGunBullet");
         document.body.appendChild(_this.element);
+        _this.width = _this.element.offsetWidth;
+        _this.height = _this.element.offsetHeight;
         _this._machineGun = machineGun;
         _this._start();
         return _this;
@@ -213,7 +221,8 @@ var MachineGunBullet = (function (_super) {
     MachineGunBullet.prototype._update = function () {
         var _this = this;
         requestAnimationFrame(function () { return _this._update(); });
-        this.x = this.x + 10;
+        this.x = this.x + this._bulletSpeed;
+        this.removeIfLeavesScreen();
         this.draw();
     };
     MachineGunBullet.prototype.draw = function () {

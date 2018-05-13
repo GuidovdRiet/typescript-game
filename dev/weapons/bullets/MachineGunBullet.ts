@@ -1,13 +1,18 @@
 /// <reference path="./Bullet.ts"/>
 
 class MachineGunBullet extends Bullet {
+
   private _machineGun: MachineGun;
+  private _bulletSpeed: number = 10;
 
   constructor(machineGun: MachineGun) {
     super();
 
     this.element = document.createElement("MachineGunBullet");
     document.body.appendChild(this.element);
+
+    this.width = this.element.offsetWidth;
+    this.height = this.element.offsetHeight;
 
     this._machineGun = machineGun;
 
@@ -28,7 +33,9 @@ class MachineGunBullet extends Bullet {
   private _update() {
     requestAnimationFrame(() => this._update());
 
-    this.x = this.x + 10;
+    this.x = this.x + this._bulletSpeed;
+    
+    this.removeIfLeavesScreen();
     this.draw();
   }
 
