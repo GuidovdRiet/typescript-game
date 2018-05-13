@@ -153,7 +153,7 @@ var MachineGun = (function (_super) {
         _this.height = _this.element.offsetHeight;
         _this.width = _this.element.offsetWidth;
         _this._bomberHeight = bomber.getHeight();
-        _this._setShootEventHandler();
+        _this._shoot();
         _this._start();
         return _this;
     }
@@ -167,15 +167,9 @@ var MachineGun = (function (_super) {
     MachineGun.prototype.getWidth = function () {
         return this.width;
     };
-    MachineGun.prototype._setShootEventHandler = function () {
-        var _this = this;
-        document.addEventListener("click", function () {
-            _this._shoot();
-        });
-    };
     MachineGun.prototype._shoot = function () {
         var _this = this;
-        requestAnimationFrame(function () {
+        document.addEventListener("click", function () {
             _this._machineGunBullet = new MachineGunBullet(_this);
         });
     };
@@ -208,14 +202,21 @@ var MachineGunBullet = (function (_super) {
         return _this;
     }
     MachineGunBullet.prototype._start = function () {
-        this.draw();
-    };
-    MachineGunBullet.prototype.draw = function () {
         var weaponPosition = this._machineGun.getPostion();
         var weaponWidth = this._machineGun.getWidth();
         var bulletHeight = this.element.offsetHeight;
         this.x = weaponPosition.x + weaponWidth;
         this.y = weaponPosition.y + bulletHeight - 1;
+        this.draw();
+        this._update();
+    };
+    MachineGunBullet.prototype._update = function () {
+        var _this = this;
+        requestAnimationFrame(function () { return _this._update(); });
+        this.x = this.x + 10;
+        this.draw();
+    };
+    MachineGunBullet.prototype.draw = function () {
         this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
     };
     return MachineGunBullet;

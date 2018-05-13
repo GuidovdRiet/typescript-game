@@ -82,8 +82,9 @@ class Bomber extends Character {
   public update() {
     const targetX = this.x - this._leftSpeed + this._rightSpeed;
     const targetY = this.y - this._upSpeed + this._downSpeed;
-
+    
     const screenCorrection = 15;
+
     if (
       targetX < window.innerWidth - screenCorrection - this.width &&
       targetX > 0

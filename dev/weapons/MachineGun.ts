@@ -20,7 +20,7 @@ class MachineGun extends Gun {
 
     this._bomberHeight = bomber.getHeight();
 
-    this._setShootEventHandler();
+    this._shoot();
     this._start();
   }
 
@@ -36,14 +36,8 @@ class MachineGun extends Gun {
     return this.width;
   }
 
-  private _setShootEventHandler() {
-    document.addEventListener("click", () => {
-      this._shoot();
-    });
-  }
-
   private _shoot() {
-    requestAnimationFrame(() => {
+    document.addEventListener("click", () => {
       this._machineGunBullet = new MachineGunBullet(this);
     });
   }
