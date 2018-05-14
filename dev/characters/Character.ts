@@ -1,6 +1,7 @@
 /// <reference path="../game/GameObject.ts"/>
 
 class Character extends GameObject {
+  
   constructor(name: string) {
     super();
 

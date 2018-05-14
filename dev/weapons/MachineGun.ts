@@ -32,11 +32,11 @@ class MachineGun extends Gun {
     return position;
   }
 
-  public getWidth() {
+  public getWidth(): number {
     return this.width;
   }
 
-  private shoot() {
+  private shoot(): void {
     document.addEventListener("click", () => {
       this.machineGunBullet = new MachineGunBullet(this);
     });

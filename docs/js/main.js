@@ -128,17 +128,27 @@ var Bomber = (function (_super) {
     };
     return Bomber;
 }(Character));
-var Zombie = (function (_super) {
-    __extends(Zombie, _super);
-    function Zombie() {
-        return _super.call(this, "zombie") || this;
+var Walker = (function (_super) {
+    __extends(Walker, _super);
+    function Walker() {
+        var _this = _super.call(this, "walker") || this;
+        _this.start();
+        return _this;
     }
-    return Zombie;
+    Walker.prototype.start = function () {
+        this.x = window.innerWidth - this.width;
+        this.y = (window.innerHeight / 100) * (Math.random() * 100);
+        this.draw();
+    };
+    Walker.prototype.draw = function () {
+        this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
+    };
+    return Walker;
 }(Character));
 var Game = (function () {
     function Game() {
         this.bomber = new Bomber();
-        this.zombie = new Zombie();
+        this.walker = new Walker();
         this.gameLoop();
     }
     Game.getInstance = function () {

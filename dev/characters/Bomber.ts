@@ -1,7 +1,6 @@
 /// <reference path="./Character.ts"/>
 
 class Bomber extends Character {
-
   private leftSpeed: number = 0;
   private upSpeed: number = 0;
   private downSpeed: number = 0;
@@ -26,7 +25,7 @@ class Bomber extends Character {
     });
   }
 
-  private start() {
+  private start(): void {
     this.x = window.innerWidth / 2 - this.width;
     this.y = window.innerHeight / 2 - this.height;
     this.setWalkingBackground(true);
@@ -59,7 +58,7 @@ class Bomber extends Character {
     }
   }
 
-  private setWalkingBackground(startPostion: boolean) {
+  private setWalkingBackground(startPostion: boolean): void {
     const baseUrl = "../docs/img/characters/bomber/spr_player_";
     if (startPostion) {
       this.animationCount = 0;
@@ -73,7 +72,7 @@ class Bomber extends Character {
     }.png)`;
   }
 
-  public update() {
+  public update(): void {
     const targetX = this.x - this.leftSpeed + this.rightSpeed;
     const targetY = this.y - this.upSpeed + this.downSpeed;
 

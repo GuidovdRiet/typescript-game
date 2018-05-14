@@ -25,6 +25,13 @@ bomber {
   height: 80px;
 }
 
+walker {
+  width: 60px;
+  height: 80px;
+  background: url('../img/characters/zombies/walker/spr_zombie1_attack_0.png');
+  transform: scaleX(-1);
+}
+
 /* weapons */
 machinegun {
   width: 66px;
