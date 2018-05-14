@@ -9,8 +9,8 @@ class Character extends GameObject {
 
     this.width = this.element.clientWidth;
     this.height = this.element.clientHeight;
-    
   }
+  
   public getPosition() {
     const position = {
       x: this.x,

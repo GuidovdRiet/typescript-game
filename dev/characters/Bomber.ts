@@ -1,22 +1,20 @@
 /// <reference path="./Character.ts"/>
 
 class Bomber extends Character {
-  private _leftSpeed: number = 0;
-  private _upSpeed: number = 0;
-  private _downSpeed: number = 0;
-  private _rightSpeed: number = 0;
 
-  private _animationCount: number = 0;
+  private leftSpeed: number = 0;
+  private upSpeed: number = 0;
+  private downSpeed: number = 0;
+  private rightSpeed: number = 0;
 
-  private _weapon: MachineGun;
+  private animationCount: number = 0;
+
+  private weapon: MachineGun;
 
   constructor() {
     super("bomber");
 
-    this.element = document.createElement("bomber");
-    document.body.appendChild(this.element);
-
-    this._start();
+    this.start();
 
     window.addEventListener("keydown", (event: KeyboardEvent) =>
       this.move(event, 4)
@@ -24,15 +22,15 @@ class Bomber extends Character {
 
     window.addEventListener("keyup", (event: KeyboardEvent) => {
       this.move(event, 0);
-      this._setWalkingBackground(true);
+      this.setWalkingBackground(true);
     });
   }
 
-  private _start() {
+  private start() {
     this.x = window.innerWidth / 2 - this.width;
     this.y = window.innerHeight / 2 - this.height;
-    this._setWalkingBackground(true);
-    this._weapon = new MachineGun(this);
+    this.setWalkingBackground(true);
+    this.weapon = new MachineGun(this);
   }
 
   public move(event: KeyboardEvent, speed: number): void {
@@ -43,41 +41,41 @@ class Bomber extends Character {
 
     switch (event.keyCode) {
       case leftKey:
-        this._leftSpeed = speed;
-        this._setWalkingBackground(false);
+        this.leftSpeed = speed;
+        this.setWalkingBackground(false);
         break;
       case rightKey:
-        this._rightSpeed = speed;
-        this._setWalkingBackground(false);
+        this.rightSpeed = speed;
+        this.setWalkingBackground(false);
         break;
       case upKey:
-        this._upSpeed = speed;
-        this._setWalkingBackground(false);
+        this.upSpeed = speed;
+        this.setWalkingBackground(false);
         break;
       case downKey:
-        this._downSpeed = speed;
-        this._setWalkingBackground(false);
+        this.downSpeed = speed;
+        this.setWalkingBackground(false);
         break;
     }
   }
 
-  private _setWalkingBackground(startPostion: boolean) {
+  private setWalkingBackground(startPostion: boolean) {
     const baseUrl = "../docs/img/characters/bomber/spr_player_";
     if (startPostion) {
-      this._animationCount = 0;
+      this.animationCount = 0;
     } else {
-      this._animationCount <= 2
-        ? this._animationCount++
-        : (this._animationCount = 0);
+      this.animationCount <= 2
+        ? this.animationCount++
+        : (this.animationCount = 0);
     }
     this.element.style.backgroundImage = `url(${baseUrl}${
-      this._animationCount
+      this.animationCount
     }.png)`;
   }
 
   public update() {
-    const targetX = this.x - this._leftSpeed + this._rightSpeed;
-    const targetY = this.y - this._upSpeed + this._downSpeed;
+    const targetX = this.x - this.leftSpeed + this.rightSpeed;
+    const targetY = this.y - this.upSpeed + this.downSpeed;
 
     const screenCorrection = 15;
 
@@ -92,11 +90,11 @@ class Bomber extends Character {
     )
       this.y = targetY;
 
-    this._weapon.draw();
-    this._draw();
+    this.weapon.draw();
+    this.draw();
   }
 
-  private _draw(): void {
+  private draw(): void {
     this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0px)`;
   }
 }

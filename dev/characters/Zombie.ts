@@ -2,4 +2,7 @@
 
 class Zombie extends Character {
   
+  constructor() {
+    super("zombie")
+  }
 }

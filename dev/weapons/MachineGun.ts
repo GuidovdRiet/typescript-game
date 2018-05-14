@@ -1,16 +1,16 @@
 /// <reference path="./Gun.ts" />
 
 class MachineGun extends Gun {
-  private _bomber: Bomber;
-  private _bomberWidth: number;
-  private _bomberHeight: number;
+  private bomber: Bomber;
+  private bomberWidth: number;
+  private bomberHeight: number;
 
-  private _machineGunBullet: MachineGunBullet;
+  private machineGunBullet: MachineGunBullet;
 
   constructor(bomber: Bomber) {
     super();
 
-    this._bomber = bomber;
+    this.bomber = bomber;
 
     this.element = document.createElement("machinegun");
     document.body.appendChild(this.element);
@@ -18,10 +18,10 @@ class MachineGun extends Gun {
     this.height = this.element.offsetHeight;
     this.width = this.element.offsetWidth;
 
-    this._bomberHeight = bomber.getHeight();
+    this.bomberHeight = bomber.getHeight();
 
-    this._shoot();
-    this._start();
+    this.shoot();
+    this.start();
   }
 
   public getPostion() {
@@ -36,20 +36,20 @@ class MachineGun extends Gun {
     return this.width;
   }
 
-  private _shoot() {
+  private shoot() {
     document.addEventListener("click", () => {
-      this._machineGunBullet = new MachineGunBullet(this);
+      this.machineGunBullet = new MachineGunBullet(this);
     });
   }
 
-  private _start(): void {
+  private start(): void {
     this.draw();
   }
 
   public draw(): void {
-    const bomberPosition = this._bomber.getPosition();
+    const bomberPosition = this.bomber.getPosition();
     this.x = bomberPosition.x;
-    this.y = bomberPosition.y + this.height / 2 + this._bomberHeight / 2;
+    this.y = bomberPosition.y + this.height / 2 + this.bomberHeight / 2;
     this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0px)`;
   }
 }

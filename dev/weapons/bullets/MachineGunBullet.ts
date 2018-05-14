@@ -2,8 +2,8 @@
 
 class MachineGunBullet extends Bullet {
 
-  private _machineGun: MachineGun;
-  private _bulletSpeed: number = 10;
+  private machineGun: MachineGun;
+  private bulletSpeed: number = 10;
 
   constructor(machineGun: MachineGun) {
     super();
@@ -14,26 +14,26 @@ class MachineGunBullet extends Bullet {
     this.width = this.element.offsetWidth;
     this.height = this.element.offsetHeight;
 
-    this._machineGun = machineGun;
+    this.machineGun = machineGun;
 
-    this._start();
+    this.start();
   }
 
-  private _start() {
-    const weaponPosition = this._machineGun.getPostion();
-    const weaponWidth = this._machineGun.getWidth();
+  private start() {
+    const weaponPosition = this.machineGun.getPostion();
+    const weaponWidth = this.machineGun.getWidth();
     const bulletHeight = this.element.offsetHeight;
 
     this.x = weaponPosition.x + weaponWidth;
     this.y = weaponPosition.y + bulletHeight - 1;
     this.draw();
-    this._update();
+    this.update();
   }
 
-  private _update() {
-    requestAnimationFrame(() => this._update());
+  private update() {
+    requestAnimationFrame(() => this.update());
 
-    this.x = this.x + this._bulletSpeed;
+    this.x = this.x + this.bulletSpeed;
     
     this.removeIfLeavesScreen();
     this.draw();

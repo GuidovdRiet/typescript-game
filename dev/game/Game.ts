@@ -1,11 +1,12 @@
 class Game {
   
-  private _bomber: Bomber;
+  private bomber: Bomber;
   private static instance: Game;
 
   constructor() {
-    this._bomber = new Bomber();
-    this._gameLoop();
+    this.bomber = new Bomber();
+    this.zombie = new Zombie();
+    this.gameLoop();
   }
 
   public static getInstance() {
@@ -15,8 +16,8 @@ class Game {
     return Game.instance;
   }
 
-  private _gameLoop() {
-    this._bomber.update();
-    requestAnimationFrame(() => this._gameLoop());
+  private gameLoop() {
+    this.bomber.update();
+    requestAnimationFrame(() => this.gameLoop());
   }
 }
