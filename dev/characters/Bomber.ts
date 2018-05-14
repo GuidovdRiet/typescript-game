@@ -1,7 +1,6 @@
 /// <reference path="./Character.ts"/>
 
 class Bomber extends Character {
-
   private _leftSpeed: number = 0;
   private _upSpeed: number = 0;
   private _downSpeed: number = 0;
@@ -12,13 +11,10 @@ class Bomber extends Character {
   private _weapon: MachineGun;
 
   constructor() {
-    super();
+    super("bomber");
 
     this.element = document.createElement("bomber");
     document.body.appendChild(this.element);
-
-    this.width = this.element.clientWidth;
-    this.height = this.element.clientHeight;
 
     this._start();
 
@@ -33,14 +29,13 @@ class Bomber extends Character {
   }
 
   private _start() {
-    this.x = (window.innerWidth / 2) - this.width;
-    this.y = (window.innerHeight / 2) - this.height;
+    this.x = window.innerWidth / 2 - this.width;
+    this.y = window.innerHeight / 2 - this.height;
     this._setWalkingBackground(true);
     this._weapon = new MachineGun(this);
   }
 
   public move(event: KeyboardEvent, speed: number): void {
-
     const leftKey: number = 65;
     const upKey: number = 87;
     const rightKey: number = 68;
@@ -83,7 +78,7 @@ class Bomber extends Character {
   public update() {
     const targetX = this.x - this._leftSpeed + this._rightSpeed;
     const targetY = this.y - this._upSpeed + this._downSpeed;
-    
+
     const screenCorrection = 15;
 
     if (

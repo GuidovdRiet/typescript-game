@@ -26,8 +26,13 @@ var GameObject = (function () {
 }());
 var Character = (function (_super) {
     __extends(Character, _super);
-    function Character() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function Character(name) {
+        var _this = _super.call(this) || this;
+        _this.element = document.createElement(name);
+        document.body.appendChild(_this.element);
+        _this.width = _this.element.clientWidth;
+        _this.height = _this.element.clientHeight;
+        return _this;
     }
     Character.prototype.getPosition = function () {
         var position = {
@@ -39,12 +44,15 @@ var Character = (function (_super) {
     Character.prototype.getHeight = function () {
         return this.height;
     };
+    Character.prototype.getWidth = function () {
+        return this.height;
+    };
     return Character;
 }(GameObject));
 var Bomber = (function (_super) {
     __extends(Bomber, _super);
     function Bomber() {
-        var _this = _super.call(this) || this;
+        var _this = _super.call(this, "bomber") || this;
         _this._leftSpeed = 0;
         _this._upSpeed = 0;
         _this._downSpeed = 0;
@@ -52,8 +60,6 @@ var Bomber = (function (_super) {
         _this._animationCount = 0;
         _this.element = document.createElement("bomber");
         document.body.appendChild(_this.element);
-        _this.width = _this.element.clientWidth;
-        _this.height = _this.element.clientHeight;
         _this._start();
         window.addEventListener("keydown", function (event) {
             return _this.move(event, 4);
@@ -65,8 +71,8 @@ var Bomber = (function (_super) {
         return _this;
     }
     Bomber.prototype._start = function () {
-        this.x = (window.innerWidth / 2) - this.width;
-        this.y = (window.innerHeight / 2) - this.height;
+        this.x = window.innerWidth / 2 - this.width;
+        this.y = window.innerHeight / 2 - this.height;
         this._setWalkingBackground(true);
         this._weapon = new MachineGun(this);
     };
@@ -123,6 +129,13 @@ var Bomber = (function (_super) {
         this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
     };
     return Bomber;
+}(Character));
+var Zombie = (function (_super) {
+    __extends(Zombie, _super);
+    function Zombie() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Zombie;
 }(Character));
 var Game = (function () {
     function Game() {
