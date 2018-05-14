@@ -9,7 +9,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 window.addEventListener('load', function () {
-    new Game();
+    Game.getInstance();
 });
 var GameObject = (function () {
     function GameObject() {
@@ -56,7 +56,7 @@ var Bomber = (function (_super) {
         _this.height = _this.element.clientHeight;
         _this._start();
         window.addEventListener("keydown", function (event) {
-            return _this.move(event, 6);
+            return _this.move(event, 4);
         });
         window.addEventListener("keyup", function (event) {
             _this.move(event, 0);
@@ -71,10 +71,10 @@ var Bomber = (function (_super) {
         this._weapon = new MachineGun(this);
     };
     Bomber.prototype.move = function (event, speed) {
-        var leftKey = 37;
-        var upKey = 38;
-        var rightKey = 39;
-        var downKey = 40;
+        var leftKey = 65;
+        var upKey = 87;
+        var rightKey = 68;
+        var downKey = 83;
         switch (event.keyCode) {
             case leftKey:
                 this._leftSpeed = speed;
@@ -129,6 +129,12 @@ var Game = (function () {
         this._bomber = new Bomber();
         this._gameLoop();
     }
+    Game.getInstance = function () {
+        if (!Game.instance) {
+            Game.instance = new Game();
+        }
+        return Game.instance;
+    };
     Game.prototype._gameLoop = function () {
         var _this = this;
         this._bomber.update();

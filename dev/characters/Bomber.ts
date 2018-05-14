@@ -23,7 +23,7 @@ class Bomber extends Character {
     this._start();
 
     window.addEventListener("keydown", (event: KeyboardEvent) =>
-      this.move(event, 6)
+      this.move(event, 4)
     );
 
     window.addEventListener("keyup", (event: KeyboardEvent) => {
@@ -40,10 +40,11 @@ class Bomber extends Character {
   }
 
   public move(event: KeyboardEvent, speed: number): void {
-    const leftKey: number = 37;
-    const upKey: number = 38;
-    const rightKey: number = 39;
-    const downKey: number = 40;
+
+    const leftKey: number = 65;
+    const upKey: number = 87;
+    const rightKey: number = 68;
+    const downKey: number = 83;
 
     switch (event.keyCode) {
       case leftKey:
