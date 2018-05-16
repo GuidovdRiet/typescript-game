@@ -20,6 +20,7 @@ class Game {
 
   private gameLoop(): void {
     this.bomber.update();
+    this.walker.update();
     requestAnimationFrame(() => this.gameLoop());
   }
 }

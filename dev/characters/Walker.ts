@@ -9,6 +9,12 @@ class Walker extends Character {
   private start() {
     this.x = window.innerWidth - this.width;
     this.y = (window.innerHeight / 100) *(Math.random() * 100);
+    this.update();
+  }
+
+  public update() {
+    this.x = this.x - 10;
+    this.removeIfLeavesScreen();
     this.draw();
   }
 

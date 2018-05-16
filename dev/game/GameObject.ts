@@ -1,5 +1,4 @@
 class GameObject {
-  
   protected element: HTMLElement;
   protected domName: string;
 
@@ -17,6 +16,12 @@ class GameObject {
         c2.y > c1.y + c1.height ||
         c2.y + c2.height < c1.y
       );
+    }
+  }
+
+  protected removeIfLeavesScreen(): void {
+    if (this.x > window.innerWidth || this.x < 0) {
+      this.element.remove();
     }
   }
 }

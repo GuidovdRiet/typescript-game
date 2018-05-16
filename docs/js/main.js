@@ -22,6 +22,11 @@ var GameObject = (function () {
                 c2.y + c2.height < c1.y);
         }
     };
+    GameObject.prototype.removeIfLeavesScreen = function () {
+        if (this.x > window.innerWidth || this.x < 0) {
+            this.element.remove();
+        }
+    };
     return GameObject;
 }());
 var Character = (function (_super) {
@@ -138,6 +143,11 @@ var Walker = (function (_super) {
     Walker.prototype.start = function () {
         this.x = window.innerWidth - this.width;
         this.y = (window.innerHeight / 100) * (Math.random() * 100);
+        this.update();
+    };
+    Walker.prototype.update = function () {
+        this.x = this.x - 10;
+        this.removeIfLeavesScreen();
         this.draw();
     };
     Walker.prototype.draw = function () {
@@ -160,6 +170,7 @@ var Game = (function () {
     Game.prototype.gameLoop = function () {
         var _this = this;
         this.bomber.update();
+        this.walker.update();
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     return Game;
@@ -217,11 +228,6 @@ var Bullet = (function (_super) {
     function Bullet() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Bullet.prototype.removeIfLeavesScreen = function () {
-        if (this.x > window.innerWidth) {
-            this.element.remove();
-        }
-    };
     return Bullet;
 }(GameObject));
 var MachineGunBullet = (function (_super) {
