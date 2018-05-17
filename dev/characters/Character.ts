@@ -2,10 +2,10 @@
 
 class Character extends GameObject {
   
-  private animationCount: number = 0;
+  protected animationCount: number = 0;
+  protected attackPower: number;
+  protected health = 100;
 
-  private health = 100;
-  
   constructor(name: string) {
     super();
 
@@ -16,7 +16,11 @@ class Character extends GameObject {
     this.height = this.element.clientHeight;
   }
 
-  protected setWalkingBackground(startPostion: boolean, backgrounds: number, baseUrl: string): void {
+  protected setWalkingBackground(
+    startPostion: boolean,
+    backgrounds: number,
+    baseUrl: string
+  ): void {
     if (startPostion) {
       this.animationCount = 0;
     } else {
@@ -29,15 +33,22 @@ class Character extends GameObject {
     }.png)`;
   }
 
-  public getHealth() {
+  public setAttackPower(maxDamage: number): void {
+    this.attackPower = Math.floor(Math.random() * 10 / maxDamage);
+  }
+
+  public getAttackPower(): number {
+    return this.attackPower;
+  }
+
+  public getHealth(): number {
     return this.health;
   }
 
-  public damage(damage: number) {
+  public damage(damage: number): void {
     this.health = this.health - damage;
-    return this.health;
   }
-  
+
   public getPosition() {
     const position = {
       x: this.x,
@@ -46,11 +57,11 @@ class Character extends GameObject {
     return position;
   }
 
-  public getHeight() {
+  public getHeight(): number {
     return this.height;
   }
 
-  public getWidth() {
+  protected getWidth(): number {
     return this.height;
   }
 }

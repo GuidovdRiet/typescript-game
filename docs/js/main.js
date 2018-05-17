@@ -52,12 +52,17 @@ var Character = (function (_super) {
         }
         this.element.style.backgroundImage = "url(" + baseUrl + this.animationCount + ".png)";
     };
+    Character.prototype.setAttackPower = function (maxDamage) {
+        this.attackPower = Math.floor(Math.random() * 10 / maxDamage);
+    };
+    Character.prototype.getAttackPower = function () {
+        return this.attackPower;
+    };
     Character.prototype.getHealth = function () {
         return this.health;
     };
     Character.prototype.damage = function (damage) {
         this.health = this.health - damage;
-        return this.health;
     };
     Character.prototype.getPosition = function () {
         var position = {
@@ -152,6 +157,7 @@ var Walker = (function (_super) {
     Walker.prototype.start = function () {
         this.x = window.innerWidth - this.width;
         this.y = window.innerHeight / 100 * (Math.random() * 100);
+        this.setAttackPower(3);
         this.update();
     };
     Walker.prototype.update = function () {
@@ -180,8 +186,8 @@ var Game = (function (_super) {
         return Game.instance;
     };
     Game.prototype.decreseHealth = function () {
-        this.bomber.damage(1);
-        console.log(this.bomber.getHealth());
+        this.bomber.damage(this.walker.getAttackPower());
+        console.log('current health = ', this.bomber.getHealth());
     };
     Game.prototype.gameLoop = function () {
         var _this = this;

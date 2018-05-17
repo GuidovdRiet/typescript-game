@@ -12,6 +12,9 @@ class Walker extends Character {
   private start() {
     this.x = window.innerWidth - this.width;
     this.y = window.innerHeight / 100 * (Math.random() * 100);
+    
+    this.setAttackPower(3);
+
     this.update();
     // this.animate();
   }

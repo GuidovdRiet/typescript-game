@@ -1,6 +1,7 @@
 /// <reference path="../characters/Walker.ts"/>
 
 class Game extends GameObject {
+  
   private bomber: Bomber;
   private walker: Walker;
   private static instance: Game;
@@ -20,8 +21,8 @@ class Game extends GameObject {
   }
 
   private decreseHealth() {
-    this.bomber.damage(1);
-    console.log(this.bomber.getHealth());
+    this.bomber.damage(this.walker.getAttackPower());
+    console.log('current health = ', this.bomber.getHealth());
   }
 
   private gameLoop(): void {
