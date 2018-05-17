@@ -5,8 +5,7 @@ class Bomber extends Character {
   private upSpeed: number = 0;
   private downSpeed: number = 0;
   private rightSpeed: number = 0;
-
-  private animationCount: number = 0;
+  private baseUrlBackgroundAnimation: string = "../docs/img/characters/bomber/spr_player_";
 
   private weapon: MachineGun;
 
@@ -21,14 +20,14 @@ class Bomber extends Character {
 
     window.addEventListener("keyup", (event: KeyboardEvent) => {
       this.move(event, 0);
-      this.setWalkingBackground(true);
+      this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
     });
   }
 
   private start(): void {
     this.x = window.innerWidth / 2 - this.width;
     this.y = window.innerHeight / 2 - this.height;
-    this.setWalkingBackground(true);
+    this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
     this.weapon = new MachineGun(this);
   }
 
@@ -41,35 +40,21 @@ class Bomber extends Character {
     switch (event.keyCode) {
       case leftKey:
         this.leftSpeed = speed;
-        this.setWalkingBackground(false);
+        this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
         break;
       case rightKey:
         this.rightSpeed = speed;
-        this.setWalkingBackground(false);
+        this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
         break;
       case upKey:
         this.upSpeed = speed;
-        this.setWalkingBackground(false);
+        this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
         break;
       case downKey:
         this.downSpeed = speed;
-        this.setWalkingBackground(false);
+        this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
         break;
     }
-  }
-
-  private setWalkingBackground(startPostion: boolean): void {
-    const baseUrl = "../docs/img/characters/bomber/spr_player_";
-    if (startPostion) {
-      this.animationCount = 0;
-    } else {
-      this.animationCount <= 2
-        ? this.animationCount++
-        : (this.animationCount = 0);
-    }
-    this.element.style.backgroundImage = `url(${baseUrl}${
-      this.animationCount
-    }.png)`;
   }
 
   public update(): void {

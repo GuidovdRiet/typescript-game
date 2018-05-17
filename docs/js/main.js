@@ -33,12 +33,32 @@ var Character = (function (_super) {
     __extends(Character, _super);
     function Character(name) {
         var _this = _super.call(this) || this;
+        _this.animationCount = 0;
+        _this.health = 100;
         _this.element = document.createElement(name);
         document.body.appendChild(_this.element);
         _this.width = _this.element.clientWidth;
         _this.height = _this.element.clientHeight;
         return _this;
     }
+    Character.prototype.setWalkingBackground = function (startPostion, backgrounds, baseUrl) {
+        if (startPostion) {
+            this.animationCount = 0;
+        }
+        else {
+            this.animationCount <= backgrounds
+                ? this.animationCount++
+                : (this.animationCount = 0);
+        }
+        this.element.style.backgroundImage = "url(" + baseUrl + this.animationCount + ".png)";
+    };
+    Character.prototype.getHealth = function () {
+        return this.health;
+    };
+    Character.prototype.damage = function (damage) {
+        this.health = this.health - damage;
+        return this.health;
+    };
     Character.prototype.getPosition = function () {
         var position = {
             x: this.x,
@@ -62,21 +82,21 @@ var Bomber = (function (_super) {
         _this.upSpeed = 0;
         _this.downSpeed = 0;
         _this.rightSpeed = 0;
-        _this.animationCount = 0;
+        _this.baseUrlBackgroundAnimation = "../docs/img/characters/bomber/spr_player_";
         _this.start();
         window.addEventListener("keydown", function (event) {
             return _this.move(event, 4);
         });
         window.addEventListener("keyup", function (event) {
             _this.move(event, 0);
-            _this.setWalkingBackground(true);
+            _this.setWalkingBackground(true, 2, _this.baseUrlBackgroundAnimation);
         });
         return _this;
     }
     Bomber.prototype.start = function () {
         this.x = window.innerWidth / 2 - this.width;
         this.y = window.innerHeight / 2 - this.height;
-        this.setWalkingBackground(true);
+        this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
         this.weapon = new MachineGun(this);
     };
     Bomber.prototype.move = function (event, speed) {
@@ -87,33 +107,21 @@ var Bomber = (function (_super) {
         switch (event.keyCode) {
             case leftKey:
                 this.leftSpeed = speed;
-                this.setWalkingBackground(false);
+                this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
                 break;
             case rightKey:
                 this.rightSpeed = speed;
-                this.setWalkingBackground(false);
+                this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
                 break;
             case upKey:
                 this.upSpeed = speed;
-                this.setWalkingBackground(false);
+                this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
                 break;
             case downKey:
                 this.downSpeed = speed;
-                this.setWalkingBackground(false);
+                this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
                 break;
         }
-    };
-    Bomber.prototype.setWalkingBackground = function (startPostion) {
-        var baseUrl = "../docs/img/characters/bomber/spr_player_";
-        if (startPostion) {
-            this.animationCount = 0;
-        }
-        else {
-            this.animationCount <= 2
-                ? this.animationCount++
-                : (this.animationCount = 0);
-        }
-        this.element.style.backgroundImage = "url(" + baseUrl + this.animationCount + ".png)";
     };
     Bomber.prototype.update = function () {
         var targetX = this.x - this.leftSpeed + this.rightSpeed;
@@ -137,16 +145,17 @@ var Walker = (function (_super) {
     __extends(Walker, _super);
     function Walker() {
         var _this = _super.call(this, "walker") || this;
+        _this.baseUrlBackgroundAnimation = "../docs/img/characters/zombies/walker/spr_zombie1_attack_";
         _this.start();
         return _this;
     }
     Walker.prototype.start = function () {
         this.x = window.innerWidth - this.width;
-        this.y = (window.innerHeight / 100) * (Math.random() * 100);
+        this.y = window.innerHeight / 100 * (Math.random() * 100);
         this.update();
     };
     Walker.prototype.update = function () {
-        this.x = this.x - 10;
+        this.x = this.x - 2;
         this.removeIfLeavesScreen();
         this.draw();
     };
@@ -155,11 +164,14 @@ var Walker = (function (_super) {
     };
     return Walker;
 }(Character));
-var Game = (function () {
+var Game = (function (_super) {
+    __extends(Game, _super);
     function Game() {
-        this.bomber = new Bomber();
-        this.walker = new Walker();
-        this.gameLoop();
+        var _this = _super.call(this) || this;
+        _this.bomber = new Bomber();
+        _this.walker = new Walker();
+        _this.gameLoop();
+        return _this;
     }
     Game.getInstance = function () {
         if (!Game.instance) {
@@ -167,14 +179,20 @@ var Game = (function () {
         }
         return Game.instance;
     };
+    Game.prototype.decreseHealth = function () {
+        this.bomber.damage(1);
+        console.log(this.bomber.getHealth());
+    };
     Game.prototype.gameLoop = function () {
         var _this = this;
         this.bomber.update();
         this.walker.update();
+        if (this.collision(this.bomber, this.walker))
+            this.decreseHealth();
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     return Game;
-}());
+}(GameObject));
 var Gun = (function (_super) {
     __extends(Gun, _super);
     function Gun() {
