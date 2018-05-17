@@ -44,3 +44,9 @@ machinegunbullet {
   height: 5px;
   background: url('../img/weapons/bullets/spr_machinegunBullet_0.png')
 }
+
+healthbar {
+  width: 100px;
+  height: 10px;
+  background: green;
+}

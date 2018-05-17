@@ -105,6 +105,7 @@ var Bomber = (function (_super) {
     Bomber.prototype.start = function () {
         this.x = window.innerWidth / 2 - this.width;
         this.y = window.innerHeight / 2 - this.height;
+        this.healthBar = new HealthBar(this);
         this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
         this.weapon = new MachineGun(this);
     };
@@ -158,14 +159,22 @@ var Walker = (function (_super) {
     Walker.prototype.start = function () {
         this.x = window.innerWidth - this.width;
         this.y = window.innerHeight / 100 * (Math.random() * 100);
+        this.healthBar = new HealthBar(this);
         this.moveSpeed = 2;
         this.setAttackPower(3);
         this.update();
+        this.animate();
     };
     Walker.prototype.update = function () {
         this.x = this.x - this.moveSpeed;
         this.removeIfLeavesScreen();
         this.draw();
+    };
+    Walker.prototype.animate = function () {
+        var _this = this;
+        setInterval(function () {
+            _this.setWalkingBackground(false, 3, _this.baseUrlBackgroundAnimation);
+        }, 500);
     };
     return Walker;
 }(Character));
@@ -178,7 +187,7 @@ var Game = (function (_super) {
         _this.walkers.push(new Walker());
         setInterval(function () {
             _this.walkers.push(new Walker());
-        }, 3000);
+        }, 7000);
         _this.gameLoop();
         return _this;
     }
@@ -209,15 +218,17 @@ var Game = (function (_super) {
 }(GameObject));
 var HealthBar = (function (_super) {
     __extends(HealthBar, _super);
-    function HealthBar() {
+    function HealthBar(character) {
         var _this = _super.call(this) || this;
         _this.element = document.createElement("healthbar");
-        document.appendChild(_this.element);
+        document.body.appendChild(_this.element);
+        _this.start(character);
         return _this;
     }
-    HealthBar.prototype.start = function () {
-        this.x = 10;
-        this.y = 10;
+    HealthBar.prototype.start = function (character) {
+        console.log(character.getPosition());
+        this.x = character.getPosition().x;
+        this.y = character.getPosition().y;
         this.draw();
     };
     return HealthBar;

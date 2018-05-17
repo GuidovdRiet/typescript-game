@@ -8,7 +8,6 @@ class Bomber extends Character {
   private rightSpeed: number = 0;
   
   private baseUrlBackgroundAnimation: string = "../docs/img/characters/bomber/spr_player_";
-
   private weapon: MachineGun;
 
   constructor() {
@@ -30,6 +29,7 @@ class Bomber extends Character {
   private start(): void {
     this.x = window.innerWidth / 2 - this.width;
     this.y = window.innerHeight / 2 - this.height;
+    this.healthBar = new HealthBar(this);
     this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
     this.weapon = new MachineGun(this);
   }

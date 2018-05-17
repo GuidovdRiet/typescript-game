@@ -13,7 +13,7 @@ class Game extends GameObject {
 
     setInterval(() => {
       this.walkers.push(new Walker());
-    }, 3000);
+    }, 7000);
     
     this.gameLoop();
   }

@@ -12,12 +12,13 @@ class Walker extends Character {
   private start() {
     this.x = window.innerWidth - this.width;
     this.y = window.innerHeight / 100 * (Math.random() * 100);
+    this.healthBar = new HealthBar(this);
     this.moveSpeed = 2;
 
     this.setAttackPower(3);
 
     this.update();
-    // this.animate();
+    this.animate();
   }
 
   public update() {
@@ -26,9 +27,9 @@ class Walker extends Character {
     this.draw();
   }
 
-  // private animate() {
-  //   setInterval(() => {
-  //     this.setWalkingBackground(false, 6, this.baseUrlBackgroundAnimation);
-  //   }, 500)
-  // }
+  private animate() {
+    setInterval(() => {
+      this.setWalkingBackground(false, 3, this.baseUrlBackgroundAnimation);
+    }, 500)
+  }
 }
