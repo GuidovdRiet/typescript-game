@@ -14,6 +14,12 @@ window.addEventListener('load', function () {
 var GameObject = (function () {
     function GameObject() {
     }
+    GameObject.prototype.setAttackPower = function (maxDamage) {
+        this.attackPower = Math.floor(Math.random() * 10 / maxDamage);
+    };
+    GameObject.prototype.getAttackPower = function () {
+        return this.attackPower;
+    };
     GameObject.prototype.collision = function (c1, c2) {
         if (c1 || c2) {
             return !(c2.x > c1.x + c1.width ||
@@ -26,6 +32,9 @@ var GameObject = (function () {
         if (this.x > window.innerWidth || this.x < 0) {
             this.element.remove();
         }
+    };
+    GameObject.prototype.draw = function () {
+        this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
     };
     return GameObject;
 }());
@@ -51,12 +60,6 @@ var Character = (function (_super) {
                 : (this.animationCount = 0);
         }
         this.element.style.backgroundImage = "url(" + baseUrl + this.animationCount + ".png)";
-    };
-    Character.prototype.setAttackPower = function (maxDamage) {
-        this.attackPower = Math.floor(Math.random() * 10 / maxDamage);
-    };
-    Character.prototype.getAttackPower = function () {
-        return this.attackPower;
     };
     Character.prototype.getHealth = function () {
         return this.health;
@@ -89,8 +92,9 @@ var Bomber = (function (_super) {
         _this.rightSpeed = 0;
         _this.baseUrlBackgroundAnimation = "../docs/img/characters/bomber/spr_player_";
         _this.start();
+        _this.moveSpeed = 4;
         window.addEventListener("keydown", function (event) {
-            return _this.move(event, 4);
+            return _this.move(event, _this.moveSpeed);
         });
         window.addEventListener("keyup", function (event) {
             _this.move(event, 0);
@@ -138,11 +142,8 @@ var Bomber = (function (_super) {
         if (targetY < window.innerHeight - screenCorrection - this.height &&
             targetY > 0)
             this.y = targetY;
-        this.weapon.draw();
+        this.weapon.start();
         this.draw();
-    };
-    Bomber.prototype.draw = function () {
-        this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
     };
     return Bomber;
 }(Character));
@@ -157,16 +158,14 @@ var Walker = (function (_super) {
     Walker.prototype.start = function () {
         this.x = window.innerWidth - this.width;
         this.y = window.innerHeight / 100 * (Math.random() * 100);
+        this.moveSpeed = 2;
         this.setAttackPower(3);
         this.update();
     };
     Walker.prototype.update = function () {
-        this.x = this.x - 2;
+        this.x = this.x - this.moveSpeed;
         this.removeIfLeavesScreen();
         this.draw();
-    };
-    Walker.prototype.draw = function () {
-        this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
     };
     return Walker;
 }(Character));
@@ -174,8 +173,12 @@ var Game = (function (_super) {
     __extends(Game, _super);
     function Game() {
         var _this = _super.call(this) || this;
+        _this.walkers = new Array();
         _this.bomber = new Bomber();
-        _this.walker = new Walker();
+        _this.walkers.push(new Walker());
+        setInterval(function () {
+            _this.walkers.push(new Walker());
+        }, 3000);
         _this.gameLoop();
         return _this;
     }
@@ -185,19 +188,39 @@ var Game = (function (_super) {
         }
         return Game.instance;
     };
-    Game.prototype.decreseHealth = function () {
-        this.bomber.damage(this.walker.getAttackPower());
-        console.log('current health = ', this.bomber.getHealth());
+    Game.prototype.damageHandler = function () {
+        var _this = this;
+        this.walkers.forEach(function (walker) {
+            if (_this.collision(_this.bomber, walker)) {
+                _this.bomber.damage(walker.getAttackPower());
+            }
+        });
     };
     Game.prototype.gameLoop = function () {
         var _this = this;
         this.bomber.update();
-        this.walker.update();
-        if (this.collision(this.bomber, this.walker))
-            this.decreseHealth();
+        this.walkers.forEach(function (walker) {
+            walker.update();
+        });
+        this.damageHandler();
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     return Game;
+}(GameObject));
+var HealthBar = (function (_super) {
+    __extends(HealthBar, _super);
+    function HealthBar() {
+        var _this = _super.call(this) || this;
+        _this.element = document.createElement("healthbar");
+        document.appendChild(_this.element);
+        return _this;
+    }
+    HealthBar.prototype.start = function () {
+        this.x = 10;
+        this.y = 10;
+        this.draw();
+    };
+    return HealthBar;
 }(GameObject));
 var Gun = (function (_super) {
     __extends(Gun, _super);
@@ -237,13 +260,10 @@ var MachineGun = (function (_super) {
         });
     };
     MachineGun.prototype.start = function () {
-        this.draw();
-    };
-    MachineGun.prototype.draw = function () {
         var bomberPosition = this.bomber.getPosition();
         this.x = bomberPosition.x;
         this.y = bomberPosition.y + this.height / 2 + this.bomberHeight / 2;
-        this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
+        this.draw();
     };
     return MachineGun;
 }(Gun));
@@ -282,9 +302,6 @@ var MachineGunBullet = (function (_super) {
         this.x = this.x + this.bulletSpeed;
         this.removeIfLeavesScreen();
         this.draw();
-    };
-    MachineGunBullet.prototype.draw = function () {
-        this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
     };
     return MachineGunBullet;
 }(Bullet));

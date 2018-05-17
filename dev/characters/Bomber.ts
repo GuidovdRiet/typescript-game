@@ -1,10 +1,12 @@
 /// <reference path="./Character.ts"/>
 
 class Bomber extends Character {
+
   private leftSpeed: number = 0;
   private upSpeed: number = 0;
   private downSpeed: number = 0;
   private rightSpeed: number = 0;
+  
   private baseUrlBackgroundAnimation: string = "../docs/img/characters/bomber/spr_player_";
 
   private weapon: MachineGun;
@@ -13,9 +15,10 @@ class Bomber extends Character {
     super("bomber");
 
     this.start();
+    this.moveSpeed = 4;
 
     window.addEventListener("keydown", (event: KeyboardEvent) =>
-      this.move(event, 4)
+      this.move(event, this.moveSpeed)
     );
 
     window.addEventListener("keyup", (event: KeyboardEvent) => {
@@ -74,11 +77,7 @@ class Bomber extends Character {
     )
       this.y = targetY;
 
-    this.weapon.draw();
+    this.weapon.start();
     this.draw();
-  }
-
-  private draw(): void {
-    this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0px)`;
   }
 }

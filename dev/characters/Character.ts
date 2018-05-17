@@ -1,9 +1,10 @@
 /// <reference path="../game/GameObject.ts"/>
 
 class Character extends GameObject {
-  
+
   protected animationCount: number = 0;
-  protected attackPower: number;
+  protected moveSpeed: number;
+  protected healthBar: HTMLElement;
   protected health = 100;
 
   constructor(name: string) {
@@ -31,14 +32,6 @@ class Character extends GameObject {
     this.element.style.backgroundImage = `url(${baseUrl}${
       this.animationCount
     }.png)`;
-  }
-
-  public setAttackPower(maxDamage: number): void {
-    this.attackPower = Math.floor(Math.random() * 10 / maxDamage);
-  }
-
-  public getAttackPower(): number {
-    return this.attackPower;
   }
 
   public getHealth(): number {

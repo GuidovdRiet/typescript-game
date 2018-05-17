@@ -37,8 +37,4 @@ class MachineGunBullet extends Bullet {
     this.removeIfLeavesScreen();
     this.draw();
   }
-
-  public draw(): void {
-    this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0px)`;
-  }
 }

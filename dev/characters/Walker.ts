@@ -12,7 +12,8 @@ class Walker extends Character {
   private start() {
     this.x = window.innerWidth - this.width;
     this.y = window.innerHeight / 100 * (Math.random() * 100);
-    
+    this.moveSpeed = 2;
+
     this.setAttackPower(3);
 
     this.update();
@@ -20,7 +21,7 @@ class Walker extends Character {
   }
 
   public update() {
-    this.x = this.x - 2;
+    this.x = this.x - this.moveSpeed;
     this.removeIfLeavesScreen();
     this.draw();
   }
@@ -30,8 +31,4 @@ class Walker extends Character {
   //     this.setWalkingBackground(false, 6, this.baseUrlBackgroundAnimation);
   //   }, 500)
   // }
-
-  private draw(): void {
-    this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0px)`;
-  }
 }

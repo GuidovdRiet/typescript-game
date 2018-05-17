@@ -1,15 +1,20 @@
 /// <reference path="../characters/Walker.ts"/>
 
 class Game extends GameObject {
-  
+
   private bomber: Bomber;
-  private walker: Walker;
+  private walkers: Array<Walker> = new Array<Walker>();
   private static instance: Game;
 
   constructor() {
     super();
     this.bomber = new Bomber();
-    this.walker = new Walker();
+    this.walkers.push(new Walker());
+
+    setInterval(() => {
+      this.walkers.push(new Walker());
+    }, 3000);
+    
     this.gameLoop();
   }
 
@@ -20,15 +25,23 @@ class Game extends GameObject {
     return Game.instance;
   }
 
-  private decreseHealth() {
-    this.bomber.damage(this.walker.getAttackPower());
-    console.log('current health = ', this.bomber.getHealth());
+  private damageHandler() {
+    // decrease bomber health on collision walker
+    this.walkers.forEach((walker) => {
+      if (this.collision(this.bomber, walker)) {
+        this.bomber.damage(walker.getAttackPower());
+      }
+    })
   }
 
   private gameLoop(): void {
+
     this.bomber.update();
-    this.walker.update();
-    if (this.collision(this.bomber, this.walker)) this.decreseHealth();
+    this.walkers.forEach((walker) => {
+      walker.update();
+    })
+    this.damageHandler();
+
     requestAnimationFrame(() => this.gameLoop());
   }
 }

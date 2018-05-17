@@ -42,14 +42,10 @@ class MachineGun extends Gun {
     });
   }
 
-  private start(): void {
-    this.draw();
-  }
-
-  public draw(): void {
+  public start(): void {
     const bomberPosition = this.bomber.getPosition();
     this.x = bomberPosition.x;
     this.y = bomberPosition.y + this.height / 2 + this.bomberHeight / 2;
-    this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0px)`;
+    this.draw();
   }
 }
