@@ -1,7 +1,6 @@
 /// <reference path="./Character.ts"/>
 
 class Walker extends Character {
-
   private baseUrlBackgroundAnimation: string = "../docs/img/characters/zombies/walker/spr_zombie1_attack_";
 
   constructor() {
@@ -23,6 +22,7 @@ class Walker extends Character {
 
   public update() {
     this.x = this.x - this.moveSpeed;
+    this.healthBar.update(this);
     this.removeIfLeavesScreen();
     this.draw();
   }
@@ -30,6 +30,6 @@ class Walker extends Character {
   private animate() {
     setInterval(() => {
       this.setWalkingBackground(false, 3, this.baseUrlBackgroundAnimation);
-    }, 500)
+    }, 500);
   }
 }

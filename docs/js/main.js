@@ -105,7 +105,6 @@ var Bomber = (function (_super) {
     Bomber.prototype.start = function () {
         this.x = window.innerWidth / 2 - this.width;
         this.y = window.innerHeight / 2 - this.height;
-        this.healthBar = new HealthBar(this);
         this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
         this.weapon = new MachineGun(this);
     };
@@ -167,6 +166,7 @@ var Walker = (function (_super) {
     };
     Walker.prototype.update = function () {
         this.x = this.x - this.moveSpeed;
+        this.healthBar.update(this);
         this.removeIfLeavesScreen();
         this.draw();
     };
@@ -183,6 +183,7 @@ var Game = (function (_super) {
     function Game() {
         var _this = _super.call(this) || this;
         _this.walkers = new Array();
+        _this.MachineGunBullets = new Array();
         _this.bomber = new Bomber();
         _this.walkers.push(new Walker());
         setInterval(function () {
@@ -197,7 +198,7 @@ var Game = (function (_super) {
         }
         return Game.instance;
     };
-    Game.prototype.damageHandler = function () {
+    Game.prototype.damageHandlerBomber = function () {
         var _this = this;
         this.walkers.forEach(function (walker) {
             if (_this.collision(_this.bomber, walker)) {
@@ -205,13 +206,15 @@ var Game = (function (_super) {
             }
         });
     };
+    Game.prototype.damageHandlerWalker = function () {
+    };
     Game.prototype.gameLoop = function () {
         var _this = this;
         this.bomber.update();
         this.walkers.forEach(function (walker) {
             walker.update();
         });
-        this.damageHandler();
+        this.damageHandlerBomber();
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     return Game;
@@ -222,11 +225,10 @@ var HealthBar = (function (_super) {
         var _this = _super.call(this) || this;
         _this.element = document.createElement("healthbar");
         document.body.appendChild(_this.element);
-        _this.start(character);
+        _this.update(character);
         return _this;
     }
-    HealthBar.prototype.start = function (character) {
-        console.log(character.getPosition());
+    HealthBar.prototype.update = function (character) {
         this.x = character.getPosition().x;
         this.y = character.getPosition().y;
         this.draw();

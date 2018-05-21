@@ -4,10 +4,12 @@ class Game extends GameObject {
 
   private bomber: Bomber;
   private walkers: Array<Walker> = new Array<Walker>();
+  private MachineGunBullets: Array<MachineGunBullet> = new Array<MachineGunBullet>();
   private static instance: Game;
 
   constructor() {
     super();
+    
     this.bomber = new Bomber();
     this.walkers.push(new Walker());
 
@@ -25,7 +27,7 @@ class Game extends GameObject {
     return Game.instance;
   }
 
-  private damageHandler() {
+  private damageHandlerBomber() {
     // decrease bomber health on collision walker
     this.walkers.forEach((walker) => {
       if (this.collision(this.bomber, walker)) {
@@ -34,13 +36,17 @@ class Game extends GameObject {
     })
   }
 
+  private damageHandlerWalker() {
+
+  }
+
   private gameLoop(): void {
 
     this.bomber.update();
     this.walkers.forEach((walker) => {
       walker.update();
     })
-    this.damageHandler();
+    this.damageHandlerBomber();
 
     requestAnimationFrame(() => this.gameLoop());
   }

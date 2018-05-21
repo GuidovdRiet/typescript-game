@@ -6,11 +6,10 @@ class HealthBar extends GameObject {
     this.element = document.createElement("healthbar");
     document.body.appendChild(this.element);
 
-    this.start(character);
+    this.update(character);
   }
 
-  private start(character: Character): void {
-    console.log(character.getPosition())
+  public update(character: Character) {
     this.x = character.getPosition().x;
     this.y = character.getPosition().y;
     this.draw();
