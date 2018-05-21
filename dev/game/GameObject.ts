@@ -34,6 +34,13 @@ class GameObject {
     }
   }
 
+  protected removeIfLeavesScreenInterval(intervalId: number): void {
+    if (this.x > window.innerWidth || this.x < 0) {
+      this.element.remove();
+    }
+    clearInterval(intervalId);
+  }
+
   protected draw(): void {
     this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0px)`;
   }

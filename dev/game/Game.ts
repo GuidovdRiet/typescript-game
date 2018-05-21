@@ -4,7 +4,7 @@ class Game extends GameObject {
 
   private bomber: Bomber;
   private walkers: Array<Walker> = new Array<Walker>();
-  private MachineGunBullets: Array<MachineGunBullet> = new Array<MachineGunBullet>();
+  private bullets: Array<Bullet> = new Array<Bullet>();
   private static instance: Game;
 
   constructor() {
@@ -41,7 +41,6 @@ class Game extends GameObject {
   }
 
   private gameLoop(): void {
-
     this.bomber.update();
     this.walkers.forEach((walker) => {
       walker.update();
@@ -50,4 +49,9 @@ class Game extends GameObject {
 
     requestAnimationFrame(() => this.gameLoop());
   }
+
+  public addBulletsToArray(bullet: Bullet) {
+    this.bullets.push(bullet);
+  }
+
 }

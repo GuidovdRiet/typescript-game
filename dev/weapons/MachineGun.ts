@@ -38,8 +38,8 @@ class MachineGun extends Gun {
 
   private shoot(): void {
     document.addEventListener("click", () => {
-      // console.log(Game.getInstance());
       this.machineGunBullet = new MachineGunBullet(this);
+      Game.getInstance().addBulletsToArray(this.machineGunBullet);
     });
   }
 

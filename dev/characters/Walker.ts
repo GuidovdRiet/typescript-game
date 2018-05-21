@@ -2,6 +2,7 @@
 
 class Walker extends Character {
   private baseUrlBackgroundAnimation: string = "../docs/img/characters/zombies/walker/spr_zombie1_attack_";
+  private intervalId: number;
 
   constructor() {
     super("walker");
@@ -23,12 +24,12 @@ class Walker extends Character {
   public update() {
     this.x = this.x - this.moveSpeed;
     this.healthBar.update(this);
-    this.removeIfLeavesScreen();
+    this.removeIfLeavesScreenInterval(this.intervalId);
     this.draw();
   }
 
   private animate() {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.setWalkingBackground(false, 3, this.baseUrlBackgroundAnimation);
     }, 500);
   }

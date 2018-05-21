@@ -33,6 +33,12 @@ var GameObject = (function () {
             this.element.remove();
         }
     };
+    GameObject.prototype.removeIfLeavesScreenInterval = function (intervalId) {
+        if (this.x > window.innerWidth || this.x < 0) {
+            this.element.remove();
+        }
+        clearInterval(intervalId);
+    };
     GameObject.prototype.draw = function () {
         this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
     };
@@ -167,12 +173,12 @@ var Walker = (function (_super) {
     Walker.prototype.update = function () {
         this.x = this.x - this.moveSpeed;
         this.healthBar.update(this);
-        this.removeIfLeavesScreen();
+        this.removeIfLeavesScreenInterval(this.intervalId);
         this.draw();
     };
     Walker.prototype.animate = function () {
         var _this = this;
-        setInterval(function () {
+        this.intervalId = setInterval(function () {
             _this.setWalkingBackground(false, 3, _this.baseUrlBackgroundAnimation);
         }, 500);
     };
@@ -183,7 +189,7 @@ var Game = (function (_super) {
     function Game() {
         var _this = _super.call(this) || this;
         _this.walkers = new Array();
-        _this.MachineGunBullets = new Array();
+        _this.bullets = new Array();
         _this.bomber = new Bomber();
         _this.walkers.push(new Walker());
         setInterval(function () {
@@ -217,6 +223,9 @@ var Game = (function (_super) {
         this.damageHandlerBomber();
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
+    Game.prototype.addBulletsToArray = function (bullet) {
+        this.bullets.push(bullet);
+    };
     return Game;
 }(GameObject));
 var HealthBar = (function (_super) {
@@ -231,6 +240,7 @@ var HealthBar = (function (_super) {
     HealthBar.prototype.update = function (character) {
         this.x = character.getPosition().x;
         this.y = character.getPosition().y;
+        this.removeIfLeavesScreen();
         this.draw();
     };
     return HealthBar;
@@ -270,6 +280,7 @@ var MachineGun = (function (_super) {
         var _this = this;
         document.addEventListener("click", function () {
             _this.machineGunBullet = new MachineGunBullet(_this);
+            Game.getInstance().addBulletsToArray(_this.machineGunBullet);
         });
     };
     MachineGun.prototype.start = function () {
