@@ -157,7 +157,7 @@ var Walker = (function (_super) {
     }
     Walker.prototype.start = function () {
         this.x = window.innerWidth - this.width;
-        this.y = window.innerHeight / 100 * (Math.random() * 100);
+        this.y = window.innerHeight / 100 * (Math.random() * 90);
         this.healthBar = new HealthBar(this);
         this.moveSpeed = 2;
         this.setAttackPower(3);
