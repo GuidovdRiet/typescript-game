@@ -28,17 +28,18 @@ class GameObject {
     }
   }
 
-  protected removeIfLeavesScreen(): void {
+  protected removeDomElementIfLeavesScreen(): void {
     if (this.x > window.innerWidth || this.x < 0) {
       this.element.remove();
     }
   }
 
-  protected removeIfLeavesScreenInterval(intervalId: number): void {
-    if (this.x > window.innerWidth || this.x < 0) {
-      this.element.remove();
-    }
+  protected clearInterval(intervalId: number): void {
     clearInterval(intervalId);
+  }
+
+  protected removeListener(eventType: string, callBack: EventListener) {
+    window.removeEventListener(eventType, callBack);
   }
 
   protected draw(): void {

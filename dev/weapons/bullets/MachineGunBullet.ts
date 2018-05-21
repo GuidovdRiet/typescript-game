@@ -2,17 +2,22 @@
 
 class MachineGunBullet extends Bullet {
   private machineGun: MachineGun;
-  private bulletSpeed: number = 10;
+  private bulletSpeed: number = 2;
+  private index: number;
+  private MachineGunBulletArray: Array<
+    Bullet
+  > = Game.getInstance().getBulletsArray();
 
   constructor(machineGun: MachineGun) {
     super();
+
+    this.index = this.MachineGunBulletArray.indexOf(this);
 
     this.element = document.createElement("MachineGunBullet");
     document.body.appendChild(this.element);
 
     this.width = this.element.offsetWidth;
     this.height = this.element.offsetHeight;
-
     this.machineGun = machineGun;
 
     this.start();
@@ -34,7 +39,8 @@ class MachineGunBullet extends Bullet {
 
     this.x = this.x + this.bulletSpeed;
 
-    this.removeIfLeavesScreen();
+    this.removeDomElementIfLeavesScreen();
+
     this.draw();
   }
 }

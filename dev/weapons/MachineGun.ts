@@ -1,6 +1,7 @@
 /// <reference path="./Gun.ts" />
 
 class MachineGun extends Gun {
+
   private bomber: Bomber;
   private bomberWidth: number;
   private bomberHeight: number;

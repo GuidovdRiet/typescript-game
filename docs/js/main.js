@@ -28,16 +28,16 @@ var GameObject = (function () {
                 c2.y + c2.height < c1.y);
         }
     };
-    GameObject.prototype.removeIfLeavesScreen = function () {
+    GameObject.prototype.removeDomElementIfLeavesScreen = function () {
         if (this.x > window.innerWidth || this.x < 0) {
             this.element.remove();
         }
     };
-    GameObject.prototype.removeIfLeavesScreenInterval = function (intervalId) {
-        if (this.x > window.innerWidth || this.x < 0) {
-            this.element.remove();
-        }
+    GameObject.prototype.clearInterval = function (intervalId) {
         clearInterval(intervalId);
+    };
+    GameObject.prototype.removeListener = function (eventType, callBack) {
+        window.removeEventListener(eventType, callBack);
     };
     GameObject.prototype.draw = function () {
         this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
@@ -173,7 +173,10 @@ var Walker = (function (_super) {
     Walker.prototype.update = function () {
         this.x = this.x - this.moveSpeed;
         this.healthBar.update(this);
-        this.removeIfLeavesScreenInterval(this.intervalId);
+        this.removeDomElementIfLeavesScreen();
+        if (this.removeDomElementIfLeavesScreen()) {
+            this.clearInterval(this.intervalId);
+        }
         this.draw();
     };
     Walker.prototype.animate = function () {
@@ -226,6 +229,9 @@ var Game = (function (_super) {
     Game.prototype.addBulletsToArray = function (bullet) {
         this.bullets.push(bullet);
     };
+    Game.prototype.getBulletsArray = function () {
+        return this.bullets;
+    };
     return Game;
 }(GameObject));
 var HealthBar = (function (_super) {
@@ -240,7 +246,7 @@ var HealthBar = (function (_super) {
     HealthBar.prototype.update = function (character) {
         this.x = character.getPosition().x;
         this.y = character.getPosition().y;
-        this.removeIfLeavesScreen();
+        this.removeDomElementIfLeavesScreen();
         this.draw();
     };
     return HealthBar;
@@ -302,7 +308,9 @@ var MachineGunBullet = (function (_super) {
     __extends(MachineGunBullet, _super);
     function MachineGunBullet(machineGun) {
         var _this = _super.call(this) || this;
-        _this.bulletSpeed = 10;
+        _this.bulletSpeed = 2;
+        _this.MachineGunBulletArray = Game.getInstance().getBulletsArray();
+        _this.index = _this.MachineGunBulletArray.indexOf(_this);
         _this.element = document.createElement("MachineGunBullet");
         document.body.appendChild(_this.element);
         _this.width = _this.element.offsetWidth;
@@ -324,7 +332,7 @@ var MachineGunBullet = (function (_super) {
         var _this = this;
         requestAnimationFrame(function () { return _this.update(); });
         this.x = this.x + this.bulletSpeed;
-        this.removeIfLeavesScreen();
+        this.removeDomElementIfLeavesScreen();
         this.draw();
     };
     return MachineGunBullet;

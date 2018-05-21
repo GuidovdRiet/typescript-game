@@ -54,4 +54,8 @@ class Game extends GameObject {
     this.bullets.push(bullet);
   }
 
+  public getBulletsArray() {
+    return this.bullets;
+  }
+
 }
