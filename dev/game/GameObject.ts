@@ -18,7 +18,7 @@ class GameObject {
     return this.attackPower;
   }
 
-  public getvisibility(): boolean {
+  public getVisibility(): boolean {
     return this.visibility;
   }
 

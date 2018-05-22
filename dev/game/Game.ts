@@ -24,7 +24,8 @@ class Game extends GameObject {
     this.damageHandlerBomber();
 
     this.bomber.getHealth();
-
+    console.log(this.bullets);
+    
     this.removeObjectsHandler();
 
     requestAnimationFrame(() => this.gameLoop());
@@ -50,7 +51,7 @@ class Game extends GameObject {
   private removeObjectsFromArrayIfNotVisible(arrays: any) {
     arrays.map((array: any) => {
       array.map((item: GameObject, index: number) => {
-        if (!item.getVisible()) {
+        if (!item.getVisibility()) {
           array.splice(index, 1);
         }
       });

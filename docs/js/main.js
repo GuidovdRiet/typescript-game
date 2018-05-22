@@ -21,7 +21,7 @@ var GameObject = (function () {
     GameObject.prototype.getAttackPower = function () {
         return this.attackPower;
     };
-    GameObject.prototype.getvisibility = function () {
+    GameObject.prototype.getVisibility = function () {
         return this.visibility;
     };
     GameObject.prototype.collision = function (c1, c2) {
@@ -215,6 +215,7 @@ var Game = (function (_super) {
         });
         this.damageHandlerBomber();
         this.bomber.getHealth();
+        console.log(this.bullets);
         this.removeObjectsHandler();
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
@@ -235,7 +236,7 @@ var Game = (function (_super) {
     Game.prototype.removeObjectsFromArrayIfNotVisible = function (arrays) {
         arrays.map(function (array) {
             array.map(function (item, index) {
-                if (!item.getVisible()) {
+                if (!item.getVisibility()) {
                     array.splice(index, 1);
                 }
             });
