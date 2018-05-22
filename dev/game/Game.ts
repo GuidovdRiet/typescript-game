@@ -8,24 +8,19 @@ class Game extends GameObject {
 
   constructor() {
     super();
-
     this.bomber = new Bomber();
     this.walkers.push(new Walker());
-
     setInterval(() => {
       this.walkers.push(new Walker());
     }, 7000);
-
     this.gameLoop();
   }
 
   private gameLoop(): void {
     this.bomber.update();
-
     this.walkers.forEach(walker => {
       walker.update();
     });
-
     this.damageHandlerBomber();
 
     this.bomber.getHealth();

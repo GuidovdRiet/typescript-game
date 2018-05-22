@@ -8,7 +8,7 @@ class GameObject {
   protected width: number;
   protected height: number;
   protected attackPower: number;
-  protected visible: boolean = true;
+  protected visibility: boolean = true;
 
   public setAttackPower(maxDamage: number): void {
     this.attackPower = Math.floor(Math.random() * 10 / maxDamage);
@@ -18,8 +18,8 @@ class GameObject {
     return this.attackPower;
   }
 
-  public getVisible(): boolean {
-    return this.visible;
+  public getvisibility(): boolean {
+    return this.visibility;
   }
 
   protected collision(c1: any, c2: any): any {
@@ -36,7 +36,7 @@ class GameObject {
   protected removeDomElementIfLeavesScreen(): void {
     if (this.x > window.innerWidth || this.x < 0) {
       this.element.remove();
-      this.visible = false;
+      this.visibility = false;
     }
   }
 

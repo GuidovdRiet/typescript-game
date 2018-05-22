@@ -12,10 +12,12 @@ class Walker extends Character {
   private start() {
     this.x = window.innerWidth - this.width;
     this.y = window.innerHeight / 100 * (Math.random() * 90);
-    this.healthBar = new HealthBar(this);
+
+    this.attackPower = 3;
     this.moveSpeed = 2;
 
-    this.setAttackPower(3);
+    this.healthBar = new HealthBar(this);
+    this.setAttackPower(this.attackPower);
 
     this.update();
     this.animate();
@@ -26,10 +28,10 @@ class Walker extends Character {
     this.healthBar.update(this);
 
     this.removeDomElementIfLeavesScreen();
-    if(this.removeDomElementIfLeavesScreen()) {
+    if (this.removeDomElementIfLeavesScreen()) {
       this.clearInterval(this.intervalId);
     }
-    
+
     this.draw();
   }
 
