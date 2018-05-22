@@ -25,7 +25,6 @@ class Walker extends Character {
     this.x = this.x - this.moveSpeed;
     this.healthBar.update(this);
 
-    
     this.removeDomElementIfLeavesScreen();
     if(this.removeDomElementIfLeavesScreen()) {
       this.clearInterval(this.intervalId);

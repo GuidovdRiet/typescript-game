@@ -206,11 +206,20 @@ var Game = (function (_super) {
         _this.gameLoop();
         return _this;
     }
-    Game.getInstance = function () {
-        if (!Game.instance) {
-            Game.instance = new Game();
-        }
-        return Game.instance;
+    Game.prototype.gameLoop = function () {
+        var _this = this;
+        this.bomber.update();
+        this.walkers.forEach(function (walker) {
+            walker.update();
+        });
+        this.damageHandlerBomber();
+        this.removeObjectsHandler();
+        this.removeObjectsFromArrayIfNotVisible(this.bullets);
+        this.removeObjectsFromArrayIfNotVisible(this.walkers);
+        requestAnimationFrame(function () { return _this.gameLoop(); });
+    };
+    Game.prototype.addBulletsToArray = function (bullet) {
+        this.bullets.push(bullet);
     };
     Game.prototype.damageHandlerBomber = function () {
         var _this = this;
@@ -220,32 +229,21 @@ var Game = (function (_super) {
             }
         });
     };
-    Game.prototype.damageHandlerWalker = function () {
-    };
-    Game.prototype.gameLoop = function () {
-        var _this = this;
-        this.bomber.update();
-        this.walkers.forEach(function (walker) {
-            walker.update();
-        });
-        this.damageHandlerBomber();
-        this.removeBulletsFromArray();
-        console.log(this.bullets);
-        requestAnimationFrame(function () { return _this.gameLoop(); });
-    };
-    Game.prototype.addBulletsToArray = function (bullet) {
-        this.bullets.push(bullet);
-    };
-    Game.prototype.removeBulletsFromArray = function () {
-        var _this = this;
-        this.bullets.map(function (bullet, index) {
-            if (!bullet.getVisible()) {
-                _this.bullets.splice(index, 1);
+    Game.prototype.removeObjectsFromArrayIfNotVisible = function (array) {
+        array.map(function (item, index) {
+            if (!item.getVisible()) {
+                array.splice(index, 1);
             }
         });
     };
     Game.prototype.getBulletsArray = function () {
         return this.bullets;
+    };
+    Game.getInstance = function () {
+        if (!Game.instance) {
+            Game.instance = new Game();
+        }
+        return Game.instance;
     };
     return Game;
 }(GameObject));

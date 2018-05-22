@@ -1,7 +1,6 @@
 /// <reference path="../characters/Walker.ts"/>
 
 class Game extends GameObject {
-
   private bomber: Bomber;
   private walkers: Array<Walker> = new Array<Walker>();
   private bullets: Array<Bullet> = new Array<Bullet>();
@@ -9,47 +8,29 @@ class Game extends GameObject {
 
   constructor() {
     super();
-    
+
     this.bomber = new Bomber();
     this.walkers.push(new Walker());
 
     setInterval(() => {
       this.walkers.push(new Walker());
     }, 7000);
-    
+
     this.gameLoop();
-  }
-
-  public static getInstance(): Game {
-    if (!Game.instance) {
-      Game.instance = new Game();
-    }
-    return Game.instance;
-  }
-
-  private damageHandlerBomber() {
-    // decrease bomber health on collision walker
-    this.walkers.forEach((walker) => {
-      if (this.collision(this.bomber, walker)) {
-        this.bomber.damage(walker.getAttackPower());
-      }
-    })
-  }
-
-  private damageHandlerWalker() {
-
   }
 
   private gameLoop(): void {
     this.bomber.update();
 
-    this.walkers.forEach((walker) => {
+    this.walkers.forEach(walker => {
       walker.update();
-    })
+    });
 
     this.damageHandlerBomber();
-    this.removeBulletsFromArray();
-    console.log(this.bullets);
+    this.removeObjectsHandler();
+
+    this.removeObjectsFromArrayIfNotVisible(this.bullets);
+    this.removeObjectsFromArrayIfNotVisible(this.walkers);
 
     requestAnimationFrame(() => this.gameLoop());
   }
@@ -58,16 +39,31 @@ class Game extends GameObject {
     this.bullets.push(bullet);
   }
 
-  public removeBulletsFromArray() {
-    this.bullets.map((bullet, index) => {
-      if(!bullet.getVisible()) {
-        this.bullets.splice(index, 1);
+  private damageHandlerBomber() {
+    // decrease bomber health on collision walker
+    this.walkers.forEach(walker => {
+      if (this.collision(this.bomber, walker)) {
+        this.bomber.damage(walker.getAttackPower());
       }
-    })
+    });
+  }
+
+  private removeObjectsFromArrayIfNotVisible(array: any) {
+    array.map((item: GameObject, index: number) => {
+      if (!item.getVisible()) {
+        array.splice(index, 1);
+      }
+    });
   }
 
   public getBulletsArray() {
     return this.bullets;
   }
 
+  public static getInstance(): Game {
+    if (!Game.instance) {
+      Game.instance = new Game();
+    }
+    return Game.instance;
+  }
 }
