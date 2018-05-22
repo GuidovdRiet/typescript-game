@@ -13,7 +13,7 @@ window.addEventListener('load', function () {
 });
 var GameObject = (function () {
     function GameObject() {
-        this.visible = true;
+        this.visibility = true;
     }
     GameObject.prototype.setAttackPower = function (maxDamage) {
         this.attackPower = Math.floor(Math.random() * 10 / maxDamage);
@@ -21,8 +21,8 @@ var GameObject = (function () {
     GameObject.prototype.getAttackPower = function () {
         return this.attackPower;
     };
-    GameObject.prototype.getVisible = function () {
-        return this.visible;
+    GameObject.prototype.getvisibility = function () {
+        return this.visibility;
     };
     GameObject.prototype.collision = function (c1, c2) {
         if (c1 || c2) {
@@ -35,7 +35,7 @@ var GameObject = (function () {
     GameObject.prototype.removeDomElementIfLeavesScreen = function () {
         if (this.x > window.innerWidth || this.x < 0) {
             this.element.remove();
-            this.visible = false;
+            this.visibility = false;
         }
     };
     GameObject.prototype.clearInterval = function (intervalId) {
@@ -169,9 +169,10 @@ var Walker = (function (_super) {
     Walker.prototype.start = function () {
         this.x = window.innerWidth - this.width;
         this.y = window.innerHeight / 100 * (Math.random() * 90);
-        this.healthBar = new HealthBar(this);
+        this.attackPower = 3;
         this.moveSpeed = 2;
-        this.setAttackPower(3);
+        this.healthBar = new HealthBar(this);
+        this.setAttackPower(this.attackPower);
         this.update();
         this.animate();
     };
@@ -214,12 +215,7 @@ var Game = (function (_super) {
         });
         this.damageHandlerBomber();
         this.removeObjectsHandler();
-        this.removeObjectsFromArrayIfNotVisible(this.bullets);
-        this.removeObjectsFromArrayIfNotVisible(this.walkers);
         requestAnimationFrame(function () { return _this.gameLoop(); });
-    };
-    Game.prototype.addBulletsToArray = function (bullet) {
-        this.bullets.push(bullet);
     };
     Game.prototype.damageHandlerBomber = function () {
         var _this = this;
@@ -229,11 +225,24 @@ var Game = (function (_super) {
             }
         });
     };
-    Game.prototype.removeObjectsFromArrayIfNotVisible = function (array) {
-        array.map(function (item, index) {
-            if (!item.getVisible()) {
-                array.splice(index, 1);
-            }
+    Game.prototype.removeObjectsHandler = function () {
+        this.removeObjectsFromArrayIfNotVisible(this.bullets, this.walkers);
+    };
+    Game.prototype.addBulletsToArray = function (bullet) {
+        this.bullets.push(bullet);
+    };
+    Game.prototype.removeObjectsFromArrayIfNotVisible = function () {
+        var arrays = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            arrays[_i] = arguments[_i];
+        }
+        var walkers = arrays[0], bullets = arrays[1];
+        arrays.map(function (array) {
+            array.map(function (item, index) {
+                if (!item.getvisibility) {
+                    array.splice(index, 1);
+                }
+            });
         });
     };
     Game.prototype.getBulletsArray = function () {
@@ -321,7 +330,7 @@ var MachineGunBullet = (function (_super) {
     __extends(MachineGunBullet, _super);
     function MachineGunBullet(machineGun) {
         var _this = _super.call(this) || this;
-        _this.bulletSpeed = 2;
+        _this.bulletSpeed = 10;
         _this.MachineGunBulletArray = Game.getInstance().getBulletsArray();
         _this.index = _this.MachineGunBulletArray.indexOf(_this);
         _this.element = document.createElement("MachineGunBullet");

@@ -8,35 +8,22 @@ class Game extends GameObject {
 
   constructor() {
     super();
-
     this.bomber = new Bomber();
     this.walkers.push(new Walker());
-
     setInterval(() => {
       this.walkers.push(new Walker());
     }, 7000);
-
     this.gameLoop();
   }
 
   private gameLoop(): void {
     this.bomber.update();
-
     this.walkers.forEach(walker => {
       walker.update();
     });
-
     this.damageHandlerBomber();
     this.removeObjectsHandler();
-
-    this.removeObjectsFromArrayIfNotVisible(this.bullets);
-    this.removeObjectsFromArrayIfNotVisible(this.walkers);
-
     requestAnimationFrame(() => this.gameLoop());
-  }
-
-  public addBulletsToArray(bullet: Bullet) {
-    this.bullets.push(bullet);
   }
 
   private damageHandlerBomber() {
@@ -48,11 +35,23 @@ class Game extends GameObject {
     });
   }
 
-  private removeObjectsFromArrayIfNotVisible(array: any) {
-    array.map((item: GameObject, index: number) => {
-      if (!item.getVisible()) {
-        array.splice(index, 1);
-      }
+  private removeObjectsHandler() {
+    // remove objects from array if not visible on screen
+    this.removeObjectsFromArrayIfNotVisible(this.bullets, this.walkers);
+  }
+
+  public addBulletsToArray(bullet: Bullet) {
+    this.bullets.push(bullet);
+  }
+
+  private removeObjectsFromArrayIfNotVisible(...arrays: any[]) {
+    const [walkers, bullets] = arrays;
+    arrays.map(array => {
+      array.map((item: GameObject, index: number) => {
+        if (!item.getvisibility) {
+          array.splice(index, 1);
+        }
+      });
     });
   }
 

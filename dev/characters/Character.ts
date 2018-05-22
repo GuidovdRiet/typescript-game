@@ -5,6 +5,7 @@ class Character extends GameObject {
   protected animationCount: number = 0;
   protected moveSpeed: number;
   protected healthBar: HealthBar;
+  protected attackPower: number;
   protected health = 100;
 
   constructor(name: string) {
