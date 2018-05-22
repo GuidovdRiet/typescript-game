@@ -27,16 +27,20 @@ class Game extends GameObject {
     });
 
     this.damageHandlerBomber();
-    this.removeObjectsHandler();
 
-    this.removeObjectsFromArrayIfNotVisible(this.bullets);
-    this.removeObjectsFromArrayIfNotVisible(this.walkers);
+    this.bomber.getHealth();
+
+    this.removeObjectsHandler();
 
     requestAnimationFrame(() => this.gameLoop());
   }
 
   public addBulletsToArray(bullet: Bullet) {
     this.bullets.push(bullet);
+  }
+
+  private removeObjectsHandler() {
+    this.removeObjectsFromArrayIfNotVisible([this.bullets, this.walkers]);
   }
 
   private damageHandlerBomber() {
@@ -48,12 +52,14 @@ class Game extends GameObject {
     });
   }
 
-  private removeObjectsFromArrayIfNotVisible(array: any) {
-    array.map((item: GameObject, index: number) => {
-      if (!item.getVisible()) {
-        array.splice(index, 1);
-      }
-    });
+  private removeObjectsFromArrayIfNotVisible(arrays: any) {
+    arrays.map((array: any) => {
+      array.map((item: GameObject, index: number) => {
+        if (!item.getVisible()) {
+          array.splice(index, 1);
+        }
+      });
+    })
   }
 
   public getBulletsArray() {

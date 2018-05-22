@@ -3,7 +3,7 @@
 class MachineGunBullet extends Bullet {
 
   private machineGun: MachineGun;
-  private bulletSpeed: number = 2;
+  private bulletSpeed: number = 10;
   private index: number;
 
   private MachineGunBulletArray: Array<

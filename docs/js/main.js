@@ -213,13 +213,15 @@ var Game = (function (_super) {
             walker.update();
         });
         this.damageHandlerBomber();
+        this.bomber.getHealth();
         this.removeObjectsHandler();
-        this.removeObjectsFromArrayIfNotVisible(this.bullets);
-        this.removeObjectsFromArrayIfNotVisible(this.walkers);
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     Game.prototype.addBulletsToArray = function (bullet) {
         this.bullets.push(bullet);
+    };
+    Game.prototype.removeObjectsHandler = function () {
+        this.removeObjectsFromArrayIfNotVisible([this.bullets, this.walkers]);
     };
     Game.prototype.damageHandlerBomber = function () {
         var _this = this;
@@ -229,11 +231,13 @@ var Game = (function (_super) {
             }
         });
     };
-    Game.prototype.removeObjectsFromArrayIfNotVisible = function (array) {
-        array.map(function (item, index) {
-            if (!item.getVisible()) {
-                array.splice(index, 1);
-            }
+    Game.prototype.removeObjectsFromArrayIfNotVisible = function (arrays) {
+        arrays.map(function (array) {
+            array.map(function (item, index) {
+                if (!item.getVisible()) {
+                    array.splice(index, 1);
+                }
+            });
         });
     };
     Game.prototype.getBulletsArray = function () {
@@ -321,7 +325,7 @@ var MachineGunBullet = (function (_super) {
     __extends(MachineGunBullet, _super);
     function MachineGunBullet(machineGun) {
         var _this = _super.call(this) || this;
-        _this.bulletSpeed = 2;
+        _this.bulletSpeed = 10;
         _this.MachineGunBulletArray = Game.getInstance().getBulletsArray();
         _this.index = _this.MachineGunBulletArray.indexOf(_this);
         _this.element = document.createElement("MachineGunBullet");
