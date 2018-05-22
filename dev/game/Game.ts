@@ -42,16 +42,28 @@ class Game extends GameObject {
 
   private gameLoop(): void {
     this.bomber.update();
+
     this.walkers.forEach((walker) => {
       walker.update();
     })
+
     this.damageHandlerBomber();
+    this.removeBulletsFromArray();
+    console.log(this.bullets);
 
     requestAnimationFrame(() => this.gameLoop());
   }
 
   public addBulletsToArray(bullet: Bullet) {
     this.bullets.push(bullet);
+  }
+
+  public removeBulletsFromArray() {
+    this.bullets.map((bullet, index) => {
+      if(!bullet.getVisible()) {
+        this.bullets.splice(index, 1);
+      }
+    })
   }
 
   public getBulletsArray() {

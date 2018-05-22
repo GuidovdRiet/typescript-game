@@ -13,12 +13,16 @@ window.addEventListener('load', function () {
 });
 var GameObject = (function () {
     function GameObject() {
+        this.visible = true;
     }
     GameObject.prototype.setAttackPower = function (maxDamage) {
         this.attackPower = Math.floor(Math.random() * 10 / maxDamage);
     };
     GameObject.prototype.getAttackPower = function () {
         return this.attackPower;
+    };
+    GameObject.prototype.getVisible = function () {
+        return this.visible;
     };
     GameObject.prototype.collision = function (c1, c2) {
         if (c1 || c2) {
@@ -31,6 +35,7 @@ var GameObject = (function () {
     GameObject.prototype.removeDomElementIfLeavesScreen = function () {
         if (this.x > window.innerWidth || this.x < 0) {
             this.element.remove();
+            this.visible = false;
         }
     };
     GameObject.prototype.clearInterval = function (intervalId) {
@@ -224,10 +229,20 @@ var Game = (function (_super) {
             walker.update();
         });
         this.damageHandlerBomber();
+        this.removeBulletsFromArray();
+        console.log(this.bullets);
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     Game.prototype.addBulletsToArray = function (bullet) {
         this.bullets.push(bullet);
+    };
+    Game.prototype.removeBulletsFromArray = function () {
+        var _this = this;
+        this.bullets.map(function (bullet, index) {
+            if (!bullet.getVisible()) {
+                _this.bullets.splice(index, 1);
+            }
+        });
     };
     Game.prototype.getBulletsArray = function () {
         return this.bullets;
@@ -317,6 +332,11 @@ var MachineGunBullet = (function (_super) {
         _this.height = _this.element.offsetHeight;
         _this.machineGun = machineGun;
         _this.start();
+        window.addEventListener('keydown', function (event) {
+            if (event.keyCode === 32) {
+                var index = _this.MachineGunBulletArray.indexOf(_this);
+            }
+        });
         return _this;
     }
     MachineGunBullet.prototype.start = function () {

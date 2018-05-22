@@ -1,9 +1,11 @@
 /// <reference path="./Bullet.ts"/>
 
 class MachineGunBullet extends Bullet {
+
   private machineGun: MachineGun;
   private bulletSpeed: number = 2;
   private index: number;
+
   private MachineGunBulletArray: Array<
     Bullet
   > = Game.getInstance().getBulletsArray();
@@ -21,6 +23,11 @@ class MachineGunBullet extends Bullet {
     this.machineGun = machineGun;
 
     this.start();
+    window.addEventListener('keydown', (event) => {
+      if(event.keyCode === 32) {
+        const index = this.MachineGunBulletArray.indexOf(this);
+      }
+    })
   }
 
   private start(): void {
@@ -36,11 +43,8 @@ class MachineGunBullet extends Bullet {
 
   private update(): void {
     requestAnimationFrame(() => this.update());
-
     this.x = this.x + this.bulletSpeed;
-
     this.removeDomElementIfLeavesScreen();
-
     this.draw();
   }
 }

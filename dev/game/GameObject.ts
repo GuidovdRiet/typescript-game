@@ -8,6 +8,7 @@ class GameObject {
   protected width: number;
   protected height: number;
   protected attackPower: number;
+  protected visible: boolean = true;
 
   public setAttackPower(maxDamage: number): void {
     this.attackPower = Math.floor(Math.random() * 10 / maxDamage);
@@ -15,6 +16,10 @@ class GameObject {
 
   public getAttackPower(): number {
     return this.attackPower;
+  }
+
+  public getVisible(): boolean {
+    return this.visible;
   }
 
   protected collision(c1: any, c2: any): any {
@@ -31,6 +36,7 @@ class GameObject {
   protected removeDomElementIfLeavesScreen(): void {
     if (this.x > window.innerWidth || this.x < 0) {
       this.element.remove();
+      this.visible = false;
     }
   }
 
@@ -38,7 +44,7 @@ class GameObject {
     clearInterval(intervalId);
   }
 
-  protected removeListener(eventType: string, callBack: EventListener) {
+  protected removeListener(eventType: string, callBack: EventListener): void {
     window.removeEventListener(eventType, callBack);
   }
 
