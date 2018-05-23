@@ -104,6 +104,7 @@ var Bomber = (function (_super) {
         _this.baseUrlBackgroundAnimation = "../docs/img/characters/bomber/spr_player_";
         _this.start();
         _this.moveSpeed = 4;
+        _this.attackPower = 3;
         window.addEventListener("keydown", function (event) {
             return _this.move(event, _this.moveSpeed);
         });
@@ -213,10 +214,9 @@ var Game = (function (_super) {
         this.walkers.forEach(function (walker) {
             walker.update();
         });
-        this.damageHandlerBomber();
         this.bomber.getHealth();
-        console.log(this.bullets);
         this.removeObjectsHandler();
+        this.damageHandler();
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     Game.prototype.addBulletsToArray = function (bullet) {
@@ -225,13 +225,20 @@ var Game = (function (_super) {
     Game.prototype.removeObjectsHandler = function () {
         this.removeObjectsFromArrayIfNotVisible([this.bullets, this.walkers]);
     };
-    Game.prototype.damageHandlerBomber = function () {
-        var _this = this;
-        this.walkers.forEach(function (walker) {
-            if (_this.collision(_this.bomber, walker)) {
-                _this.bomber.damage(walker.getAttackPower());
+    Game.prototype.damageHandler = function () {
+        for (var _i = 0, _a = this.walkers; _i < _a.length; _i++) {
+            var walker = _a[_i];
+            if (this.collision(this.bomber, walker)) {
+                this.bomber.damage(walker.getAttackPower());
             }
-        });
+            for (var _b = 0, _c = this.bullets; _b < _c.length; _b++) {
+                var bullet = _c[_b];
+                if (this.collision(bullet, walker)) {
+                    walker.damage(this.bomber.getAttackPower());
+                }
+            }
+        }
+        ;
     };
     Game.prototype.removeObjectsFromArrayIfNotVisible = function (arrays) {
         arrays.map(function (array) {

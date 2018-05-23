@@ -15,7 +15,9 @@ class Bomber extends Character {
     super("bomber");
 
     this.start();
+
     this.moveSpeed = 4;
+    this.attackPower = 3;
 
     window.addEventListener("keydown", (event: KeyboardEvent) =>
       this.move(event, this.moveSpeed)

@@ -21,12 +21,10 @@ class Game extends GameObject {
     this.walkers.forEach(walker => {
       walker.update();
     });
-    this.damageHandlerBomber();
 
     this.bomber.getHealth();
-    console.log(this.bullets);
-    
     this.removeObjectsHandler();
+    this.damageHandler();
 
     requestAnimationFrame(() => this.gameLoop());
   }
@@ -39,13 +37,23 @@ class Game extends GameObject {
     this.removeObjectsFromArrayIfNotVisible([this.bullets, this.walkers]);
   }
 
-  private damageHandlerBomber() {
+  private damageHandler() {
     // decrease bomber health on collision walker
-    this.walkers.forEach(walker => {
+    for (const walker of this.walkers) {
+
+      // check collision Bomber | Walker
       if (this.collision(this.bomber, walker)) {
         this.bomber.damage(walker.getAttackPower());
       }
-    });
+
+      // check collision Bullet | Walker
+      for(const bullet of this.bullets) {
+        if(this.collision(bullet, walker)) {
+          walker.damage(this.bomber.getAttackPower())
+        }
+      }
+
+    };
   }
 
   private removeObjectsFromArrayIfNotVisible(arrays: any) {
