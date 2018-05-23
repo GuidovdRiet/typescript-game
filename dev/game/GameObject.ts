@@ -33,11 +33,16 @@ class GameObject {
     }
   }
 
-  protected removeDomElementIfLeavesScreen(): void {
+  protected removeDomElementIfLeavesScreen(): boolean {
     if (this.x > window.innerWidth || this.x < 0) {
-      this.element.remove();
-      this.visibility = false;
+      this.removeElement();
+      return true;
     }
+  }
+
+  public removeElement() {
+    this.element.remove();
+    this.visibility = false;
   }
 
   protected clearInterval(intervalId: number): void {

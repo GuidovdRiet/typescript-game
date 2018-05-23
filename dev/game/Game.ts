@@ -38,21 +38,19 @@ class Game extends GameObject {
   }
 
   private damageHandler() {
-    // decrease bomber health on collision walker
+    // decrease health on collision
     for (const walker of this.walkers) {
-
       // check collision Bomber | Walker
       if (this.collision(this.bomber, walker)) {
         this.bomber.damage(walker.getAttackPower());
       }
-
       // check collision Bullet | Walker
       for(const bullet of this.bullets) {
         if(this.collision(bullet, walker)) {
-          walker.damage(this.bomber.getAttackPower())
+          walker.damage(this.bomber.getWeapon().getAttackPower())
+          bullet.removeElement();
         }
       }
-
     };
   }
 

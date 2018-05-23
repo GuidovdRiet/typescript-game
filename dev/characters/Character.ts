@@ -6,6 +6,7 @@ class Character extends GameObject {
   protected moveSpeed: number;
   protected healthBar: HealthBar;
   protected attackPower: number;
+  protected intervalId: number;
   protected health = 100;
 
   constructor(name: string) {
@@ -33,6 +34,32 @@ class Character extends GameObject {
     this.element.style.backgroundImage = `url(${baseUrl}${
       this.animationCount
     }.png)`;
+  }
+
+  public update() {
+    this.x = this.x - this.moveSpeed;
+    this.healthBar.update();
+    this.removeElementHandler();
+    this.draw();
+  }
+
+  protected removeElementHandler() {
+    //  remove if leaves screen;
+    this.removeDomElementIfLeavesScreen();
+    if (this.removeDomElementIfLeavesScreen()) {
+      this.clearInterval(this.intervalId);
+    }
+    // remove if dead
+    if (this.health <= 0) {
+      this.removeElement();
+      this.clearInterval(this.intervalId);
+    }
+  }
+
+  protected animate(url: string) {
+    this.intervalId = setInterval(() => {
+      this.setWalkingBackground(false, 3, url);
+    }, 500);
   }
 
   public getHealth(): number {

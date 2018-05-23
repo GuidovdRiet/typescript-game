@@ -16,6 +16,8 @@ class MachineGun extends Gun {
     this.element = document.createElement("machinegun");
     document.body.appendChild(this.element);
 
+    this.attackPower = 10;
+
     this.height = this.element.offsetHeight;
     this.width = this.element.offsetWidth;
 

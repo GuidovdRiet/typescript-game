@@ -34,9 +34,13 @@ var GameObject = (function () {
     };
     GameObject.prototype.removeDomElementIfLeavesScreen = function () {
         if (this.x > window.innerWidth || this.x < 0) {
-            this.element.remove();
-            this.visibility = false;
+            this.removeElement();
+            return true;
         }
+    };
+    GameObject.prototype.removeElement = function () {
+        this.element.remove();
+        this.visibility = false;
     };
     GameObject.prototype.clearInterval = function (intervalId) {
         clearInterval(intervalId);
@@ -72,6 +76,28 @@ var Character = (function (_super) {
         }
         this.element.style.backgroundImage = "url(" + baseUrl + this.animationCount + ".png)";
     };
+    Character.prototype.update = function () {
+        this.x = this.x - this.moveSpeed;
+        this.healthBar.update();
+        this.removeElementHandler();
+        this.draw();
+    };
+    Character.prototype.removeElementHandler = function () {
+        this.removeDomElementIfLeavesScreen();
+        if (this.removeDomElementIfLeavesScreen()) {
+            this.clearInterval(this.intervalId);
+        }
+        if (this.health <= 0) {
+            this.removeElement();
+            this.clearInterval(this.intervalId);
+        }
+    };
+    Character.prototype.animate = function (url) {
+        var _this = this;
+        this.intervalId = setInterval(function () {
+            _this.setWalkingBackground(false, 3, url);
+        }, 500);
+    };
     Character.prototype.getHealth = function () {
         return this.health;
     };
@@ -104,7 +130,6 @@ var Bomber = (function (_super) {
         _this.baseUrlBackgroundAnimation = "../docs/img/characters/bomber/spr_player_";
         _this.start();
         _this.moveSpeed = 4;
-        _this.attackPower = 3;
         window.addEventListener("keydown", function (event) {
             return _this.move(event, _this.moveSpeed);
         });
@@ -144,6 +169,9 @@ var Bomber = (function (_super) {
                 break;
         }
     };
+    Bomber.prototype.getWeapon = function () {
+        return this.weapon;
+    };
     Bomber.prototype.update = function () {
         var targetX = this.x - this.leftSpeed + this.rightSpeed;
         var targetY = this.y - this.upSpeed + this.downSpeed;
@@ -175,22 +203,7 @@ var Walker = (function (_super) {
         this.healthBar = new HealthBar(this);
         this.setAttackPower(this.attackPower);
         this.update();
-        this.animate();
-    };
-    Walker.prototype.update = function () {
-        this.x = this.x - this.moveSpeed;
-        this.healthBar.update(this);
-        this.removeDomElementIfLeavesScreen();
-        if (this.removeDomElementIfLeavesScreen()) {
-            this.clearInterval(this.intervalId);
-        }
-        this.draw();
-    };
-    Walker.prototype.animate = function () {
-        var _this = this;
-        this.intervalId = setInterval(function () {
-            _this.setWalkingBackground(false, 3, _this.baseUrlBackgroundAnimation);
-        }, 500);
+        this.animate(this.baseUrlBackgroundAnimation);
     };
     return Walker;
 }(Character));
@@ -234,7 +247,8 @@ var Game = (function (_super) {
             for (var _b = 0, _c = this.bullets; _b < _c.length; _b++) {
                 var bullet = _c[_b];
                 if (this.collision(bullet, walker)) {
-                    walker.damage(this.bomber.getAttackPower());
+                    walker.damage(this.bomber.getWeapon().getAttackPower());
+                    bullet.removeElement();
                 }
             }
         }
@@ -266,13 +280,22 @@ var HealthBar = (function (_super) {
         var _this = _super.call(this) || this;
         _this.element = document.createElement("healthbar");
         document.body.appendChild(_this.element);
-        _this.update(character);
+        _this.character = character;
+        _this.health = _this.character.getHealth();
+        _this.width = _this.element.clientWidth;
+        _this.update();
         return _this;
     }
-    HealthBar.prototype.update = function (character) {
-        this.x = character.getPosition().x;
-        this.y = character.getPosition().y;
+    HealthBar.prototype.decreaseWidthOnDamage = function () {
+        console.log(this.element.clientWidth, 'before');
+        this.element.style.width = this.character.getHealth() / 2 + "px";
+        console.log(this.element.clientWidth, 'after');
+    };
+    HealthBar.prototype.update = function () {
+        this.x = this.character.getPosition().x;
+        this.y = this.character.getPosition().y;
         this.removeDomElementIfLeavesScreen();
+        this.decreaseWidthOnDamage();
         this.draw();
     };
     return HealthBar;
@@ -291,6 +314,7 @@ var MachineGun = (function (_super) {
         _this.bomber = bomber;
         _this.element = document.createElement("machinegun");
         document.body.appendChild(_this.element);
+        _this.attackPower = 10;
         _this.height = _this.element.offsetHeight;
         _this.width = _this.element.offsetWidth;
         _this.bomberHeight = bomber.getHeight();
