@@ -38,6 +38,7 @@ class GameObject {
       this.removeElement();
       return true;
     }
+    return false;
   }
 
   public removeElement() {

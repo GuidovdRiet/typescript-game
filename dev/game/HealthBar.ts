@@ -1,5 +1,4 @@
 class HealthBar extends GameObject {
-
   private character: Character;
   private health: number;
 
@@ -17,9 +16,7 @@ class HealthBar extends GameObject {
   }
 
   private decreaseWidthOnDamage() {
-    console.log(this.element.clientWidth, 'before');
     this.element.style.width = `${this.character.getHealth() / 2}px`;
-    console.log(this.element.clientWidth, 'after');
   }
 
   public update() {

@@ -37,6 +37,7 @@ var GameObject = (function () {
             this.removeElement();
             return true;
         }
+        return false;
     };
     GameObject.prototype.removeElement = function () {
         this.element.remove();
@@ -66,18 +67,14 @@ var Character = (function (_super) {
         return _this;
     }
     Character.prototype.setWalkingBackground = function (startPostion, backgrounds, baseUrl) {
-        if (startPostion) {
-            this.animationCount = 0;
-        }
-        else {
-            this.animationCount <= backgrounds
+        startPostion
+            ? (this.animationCount = 0)
+            : this.animationCount <= backgrounds
                 ? this.animationCount++
                 : (this.animationCount = 0);
-        }
         this.element.style.backgroundImage = "url(" + baseUrl + this.animationCount + ".png)";
     };
     Character.prototype.update = function () {
-        this.x = this.x - this.moveSpeed;
         this.healthBar.update();
         this.removeElementHandler();
         this.draw();
@@ -104,12 +101,19 @@ var Character = (function (_super) {
     Character.prototype.damage = function (damage) {
         this.health = this.health - damage;
     };
+    Character.prototype.getMoveSpeed = function () {
+        return this.moveSpeed;
+    };
     Character.prototype.getPosition = function () {
         var position = {
             x: this.x,
             y: this.y
         };
         return position;
+    };
+    Character.prototype.setPosition = function (x, y) {
+        this.x = x;
+        this.y = y;
     };
     Character.prototype.getHeight = function () {
         return this.height;
@@ -203,7 +207,6 @@ var Walker = (function (_super) {
         this.healthBar = new HealthBar(this);
         this.setAttackPower(this.attackPower);
         this.update();
-        this.animate(this.baseUrlBackgroundAnimation);
     };
     return Walker;
 }(Character));
@@ -224,9 +227,7 @@ var Game = (function (_super) {
     Game.prototype.gameLoop = function () {
         var _this = this;
         this.bomber.update();
-        this.walkers.forEach(function (walker) {
-            walker.update();
-        });
+        this.moveToTarget();
         this.bomber.getHealth();
         this.removeObjectsHandler();
         this.damageHandler();
@@ -252,7 +253,6 @@ var Game = (function (_super) {
                 }
             }
         }
-        ;
     };
     Game.prototype.removeObjectsFromArrayIfNotVisible = function (arrays) {
         arrays.map(function (array) {
@@ -272,6 +272,18 @@ var Game = (function (_super) {
         }
         return Game.instance;
     };
+    Game.prototype.moveToTarget = function () {
+        var _a = this.bomber.getPosition(), bomberX = _a.x, bomberY = _a.y;
+        for (var _i = 0, _b = this.walkers; _i < _b.length; _i++) {
+            var walker = _b[_i];
+            var _c = walker.getPosition(), walkerX = _c.x, walkerY = _c.y;
+            walkerX = walkerX - walker.getMoveSpeed();
+            walkerY <= bomberY
+                ? walker.setPosition((walkerY = walkerY + walker.getMoveSpeed()), walkerX)
+                : walker.setPosition((walkerY = walkerY - walker.getMoveSpeed()), walkerX);
+            walker.update();
+        }
+    };
     return Game;
 }(GameObject));
 var HealthBar = (function (_super) {
@@ -287,9 +299,7 @@ var HealthBar = (function (_super) {
         return _this;
     }
     HealthBar.prototype.decreaseWidthOnDamage = function () {
-        console.log(this.element.clientWidth, 'before');
         this.element.style.width = this.character.getHealth() / 2 + "px";
-        console.log(this.element.clientWidth, 'after');
     };
     HealthBar.prototype.update = function () {
         this.x = this.character.getPosition().x;

@@ -1,7 +1,6 @@
 /// <reference path="../game/GameObject.ts"/>
 
 class Character extends GameObject {
-
   protected animationCount: number = 0;
   protected moveSpeed: number;
   protected healthBar: HealthBar;
@@ -24,20 +23,18 @@ class Character extends GameObject {
     backgrounds: number,
     baseUrl: string
   ): void {
-    if (startPostion) {
-      this.animationCount = 0;
-    } else {
-      this.animationCount <= backgrounds
+    startPostion
+      ? (this.animationCount = 0)
+      : this.animationCount <= backgrounds
         ? this.animationCount++
         : (this.animationCount = 0);
-    }
+
     this.element.style.backgroundImage = `url(${baseUrl}${
       this.animationCount
     }.png)`;
   }
 
   public update() {
-    this.x = this.x - this.moveSpeed;
     this.healthBar.update();
     this.removeElementHandler();
     this.draw();
@@ -49,7 +46,7 @@ class Character extends GameObject {
     if (this.removeDomElementIfLeavesScreen()) {
       this.clearInterval(this.intervalId);
     }
-    // remove if dead
+    // remove if target is dead
     if (this.health <= 0) {
       this.removeElement();
       this.clearInterval(this.intervalId);
@@ -70,12 +67,21 @@ class Character extends GameObject {
     this.health = this.health - damage;
   }
 
+  public getMoveSpeed() {
+    return this.moveSpeed;
+  }
+
   public getPosition() {
     const position = {
       x: this.x,
       y: this.y
     };
     return position;
+  }
+
+  public setPosition(x: number, y: number) {
+    this.x = x;
+    this.y = y;
   }
 
   public getHeight(): number {
