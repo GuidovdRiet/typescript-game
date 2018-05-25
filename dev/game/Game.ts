@@ -72,25 +72,33 @@ class Game extends GameObject {
     return Game.instance;
   }
 
-  public moveToTarget() {
-    // Bekijk de positie van de bomber
-    // Bekijk de positie van de walkers
-    // Als de positie y de walker lager is dan die van de bomber moet hij verhoogt worden
-    // Als de positie y van de walker hoger is dan die van de bomber moet hij verlaagt worden
-    // Als de x & y positie van de walker gelijk zijn zet de positie van de walker dan gelijk aan die van de bomber - de breedte van het object
+  private moveToTarget() {
     const { x: bomberX, y: bomberY } = this.bomber.getPosition();
+
     for (const walker of this.walkers) {
       let { x: walkerX, y: walkerY } = walker.getPosition();
-      walkerX = walkerX - walker.getMoveSpeed();
+      // walkerX = walkerX - walker.getMoveSpeed();
+
       walkerY <= bomberY
         ? walker.setPosition(
-            (walkerY = walkerY + walker.getMoveSpeed()),
-            walkerX
+            walkerX,
+            (walkerY = walkerY + walker.getMoveSpeed())
           )
         : walker.setPosition(
-            (walkerY = walkerY - walker.getMoveSpeed()),
-            walkerX
+            walkerX,
+            (walkerY = walkerY - walker.getMoveSpeed())
           );
+
+      walkerX <= bomberX
+        ? walker.setPosition(
+            (walkerX = walkerX + walker.getMoveSpeed()),
+            walkerY
+          )
+        : walker.setPosition(
+            (walkerX = walkerX - walker.getMoveSpeed()),
+            walkerY
+          );
+
       walker.update();
     }
   }

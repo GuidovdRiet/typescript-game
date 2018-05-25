@@ -74,11 +74,6 @@ var Character = (function (_super) {
                 : (this.animationCount = 0);
         this.element.style.backgroundImage = "url(" + baseUrl + this.animationCount + ".png)";
     };
-    Character.prototype.update = function () {
-        this.healthBar.update();
-        this.removeElementHandler();
-        this.draw();
-    };
     Character.prototype.removeElementHandler = function () {
         this.removeDomElementIfLeavesScreen();
         if (this.removeDomElementIfLeavesScreen()) {
@@ -208,6 +203,11 @@ var Walker = (function (_super) {
         this.setAttackPower(this.attackPower);
         this.update();
     };
+    Walker.prototype.update = function () {
+        this.healthBar.update();
+        this.removeElementHandler();
+        this.draw();
+    };
     return Walker;
 }(Character));
 var Game = (function (_super) {
@@ -277,10 +277,12 @@ var Game = (function (_super) {
         for (var _i = 0, _b = this.walkers; _i < _b.length; _i++) {
             var walker = _b[_i];
             var _c = walker.getPosition(), walkerX = _c.x, walkerY = _c.y;
-            walkerX = walkerX - walker.getMoveSpeed();
             walkerY <= bomberY
-                ? walker.setPosition((walkerY = walkerY + walker.getMoveSpeed()), walkerX)
-                : walker.setPosition((walkerY = walkerY - walker.getMoveSpeed()), walkerX);
+                ? walker.setPosition(walkerX, (walkerY = walkerY + walker.getMoveSpeed()))
+                : walker.setPosition(walkerX, (walkerY = walkerY - walker.getMoveSpeed()));
+            walkerX <= bomberX
+                ? walker.setPosition((walkerX = walkerX + walker.getMoveSpeed()), walkerY)
+                : walker.setPosition((walkerX = walkerX - walker.getMoveSpeed()), walkerY);
             walker.update();
         }
     };

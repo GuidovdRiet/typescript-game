@@ -34,12 +34,6 @@ class Character extends GameObject {
     }.png)`;
   }
 
-  public update() {
-    this.healthBar.update();
-    this.removeElementHandler();
-    this.draw();
-  }
-
   protected removeElementHandler() {
     //  remove if leaves screen;
     this.removeDomElementIfLeavesScreen();
