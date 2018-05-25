@@ -7,6 +7,7 @@ class Character extends GameObject {
   protected attackPower: number;
   protected intervalId: number;
   protected health = 100;
+  protected targetIsLeft: boolean = true;
 
   constructor(name: string) {
     super();
@@ -34,23 +35,19 @@ class Character extends GameObject {
     }.png)`;
   }
 
-  protected removeElementHandler() {
-    //  remove if leaves screen;
-    this.removeDomElementIfLeavesScreen();
-    if (this.removeDomElementIfLeavesScreen()) {
-      this.clearInterval(this.intervalId);
-    }
+  protected animate(url: string) {
+    this.intervalId = setInterval(() => {
+      this.setWalkingBackground(false, 2, url);
+    }, 150);
+  }
+
+  protected checkIfDead() {
     // remove if target is dead
     if (this.health <= 0) {
       this.removeElement();
+      this.healthBar.removeElement();
       this.clearInterval(this.intervalId);
     }
-  }
-
-  protected animate(url: string) {
-    this.intervalId = setInterval(() => {
-      this.setWalkingBackground(false, 3, url);
-    }, 500);
   }
 
   public getHealth(): number {

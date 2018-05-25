@@ -20,12 +20,13 @@ class Walker extends Character {
     this.setAttackPower(this.attackPower);
 
     this.update();
-    // this.animate(this.baseUrlBackgroundAnimation);
+    this.animate(this.baseUrlBackgroundAnimation);
   }
 
   public update() {
     this.healthBar.update();
     this.removeElementHandler();
+    this.checkIfDead();
     this.draw();
   }
 

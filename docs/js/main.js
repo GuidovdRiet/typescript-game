@@ -32,16 +32,22 @@ var GameObject = (function () {
                 c2.y + c2.height < c1.y);
         }
     };
+    GameObject.prototype.removeElement = function () {
+        this.element.remove();
+        this.visibility = false;
+    };
+    GameObject.prototype.removeElementHandler = function () {
+        this.removeDomElementIfLeavesScreen();
+        if (this.removeDomElementIfLeavesScreen()) {
+            this.clearInterval(this.intervalId);
+        }
+    };
     GameObject.prototype.removeDomElementIfLeavesScreen = function () {
         if (this.x > window.innerWidth || this.x < 0) {
             this.removeElement();
             return true;
         }
         return false;
-    };
-    GameObject.prototype.removeElement = function () {
-        this.element.remove();
-        this.visibility = false;
     };
     GameObject.prototype.clearInterval = function (intervalId) {
         clearInterval(intervalId);
@@ -60,6 +66,7 @@ var Character = (function (_super) {
         var _this = _super.call(this) || this;
         _this.animationCount = 0;
         _this.health = 100;
+        _this.targetIsLeft = true;
         _this.element = document.createElement(name);
         document.body.appendChild(_this.element);
         _this.width = _this.element.clientWidth;
@@ -74,21 +81,18 @@ var Character = (function (_super) {
                 : (this.animationCount = 0);
         this.element.style.backgroundImage = "url(" + baseUrl + this.animationCount + ".png)";
     };
-    Character.prototype.removeElementHandler = function () {
-        this.removeDomElementIfLeavesScreen();
-        if (this.removeDomElementIfLeavesScreen()) {
-            this.clearInterval(this.intervalId);
-        }
-        if (this.health <= 0) {
-            this.removeElement();
-            this.clearInterval(this.intervalId);
-        }
-    };
     Character.prototype.animate = function (url) {
         var _this = this;
         this.intervalId = setInterval(function () {
-            _this.setWalkingBackground(false, 3, url);
-        }, 500);
+            _this.setWalkingBackground(false, 2, url);
+        }, 150);
+    };
+    Character.prototype.checkIfDead = function () {
+        if (this.health <= 0) {
+            this.removeElement();
+            this.healthBar.removeElement();
+            this.clearInterval(this.intervalId);
+        }
     };
     Character.prototype.getHealth = function () {
         return this.health;
@@ -202,10 +206,12 @@ var Walker = (function (_super) {
         this.healthBar = new HealthBar(this);
         this.setAttackPower(this.attackPower);
         this.update();
+        this.animate(this.baseUrlBackgroundAnimation);
     };
     Walker.prototype.update = function () {
         this.healthBar.update();
         this.removeElementHandler();
+        this.checkIfDead();
         this.draw();
     };
     return Walker;
@@ -306,7 +312,6 @@ var HealthBar = (function (_super) {
     HealthBar.prototype.update = function () {
         this.x = this.character.getPosition().x;
         this.y = this.character.getPosition().y;
-        this.removeDomElementIfLeavesScreen();
         this.decreaseWidthOnDamage();
         this.draw();
     };

@@ -8,6 +8,7 @@ class GameObject {
   protected width: number;
   protected height: number;
   protected attackPower: number;
+  protected intervalId: number;
   protected visibility: boolean = true;
 
   public setAttackPower(maxDamage: number): void {
@@ -33,17 +34,25 @@ class GameObject {
     }
   }
 
+  public removeElement() {
+    this.element.remove();
+    this.visibility = false;
+  }
+
+  protected removeElementHandler() {
+    //  remove if leaves screen;
+    this.removeDomElementIfLeavesScreen();
+    if (this.removeDomElementIfLeavesScreen()) {
+      this.clearInterval(this.intervalId);
+    }
+  }
+
   protected removeDomElementIfLeavesScreen(): boolean {
     if (this.x > window.innerWidth || this.x < 0) {
       this.removeElement();
       return true;
     }
     return false;
-  }
-
-  public removeElement() {
-    this.element.remove();
-    this.visibility = false;
   }
 
   protected clearInterval(intervalId: number): void {

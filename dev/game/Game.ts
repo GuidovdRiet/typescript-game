@@ -77,7 +77,6 @@ class Game extends GameObject {
 
     for (const walker of this.walkers) {
       let { x: walkerX, y: walkerY } = walker.getPosition();
-      // walkerX = walkerX - walker.getMoveSpeed();
 
       walkerY <= bomberY
         ? walker.setPosition(
@@ -98,6 +97,8 @@ class Game extends GameObject {
             (walkerX = walkerX - walker.getMoveSpeed()),
             walkerY
           );
+
+      
 
       walker.update();
     }
