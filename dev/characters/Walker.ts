@@ -14,7 +14,7 @@ class Walker extends Character {
     this.y = window.innerHeight / 100 * (Math.random() * 90);
 
     this.attackPower = 3;
-    this.moveSpeed = 2;
+    this.moveSpeed = 3;
 
     this.healthBar = new HealthBar(this);
     this.setAttackPower(this.attackPower);
@@ -24,6 +24,7 @@ class Walker extends Character {
   }
 
   public update() {
+    this.x = this.x - this.moveSpeed;
     this.healthBar.update();
     this.removeElementHandler();
     this.checkIfDead();

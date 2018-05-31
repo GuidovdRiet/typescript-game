@@ -22,6 +22,7 @@ class HealthBar extends GameObject {
   public update() {
     this.x = this.character.getPosition().x;
     this.y = this.character.getPosition().y;
+    this.removeElementHandler();
     this.decreaseWidthOnDamage();
     this.draw();
   }

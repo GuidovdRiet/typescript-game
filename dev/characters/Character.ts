@@ -62,8 +62,8 @@ class Character extends GameObject {
     return this.moveSpeed;
   }
 
-  public getPosition() {
-    const position = {
+  public getPosition(): Vector {
+    const position: Vector = {
       x: this.x,
       y: this.y
     };
@@ -79,7 +79,7 @@ class Character extends GameObject {
     return this.height;
   }
 
-  protected getWidth(): number {
+  public getWidth(): number {
     return this.height;
   }
 }

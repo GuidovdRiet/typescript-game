@@ -190,6 +190,7 @@ var Bomber = (function (_super) {
     };
     return Bomber;
 }(Character));
+;
 var Walker = (function (_super) {
     __extends(Walker, _super);
     function Walker() {
@@ -202,13 +203,14 @@ var Walker = (function (_super) {
         this.x = window.innerWidth - this.width;
         this.y = window.innerHeight / 100 * (Math.random() * 90);
         this.attackPower = 3;
-        this.moveSpeed = 2;
+        this.moveSpeed = 3;
         this.healthBar = new HealthBar(this);
         this.setAttackPower(this.attackPower);
         this.update();
         this.animate(this.baseUrlBackgroundAnimation);
     };
     Walker.prototype.update = function () {
+        this.x = this.x - this.moveSpeed;
         this.healthBar.update();
         this.removeElementHandler();
         this.checkIfDead();
@@ -233,7 +235,9 @@ var Game = (function (_super) {
     Game.prototype.gameLoop = function () {
         var _this = this;
         this.bomber.update();
-        this.moveToTarget();
+        this.walkers.forEach(function (walker) {
+            walker.update();
+        });
         this.bomber.getHealth();
         this.removeObjectsHandler();
         this.damageHandler();
@@ -278,20 +282,6 @@ var Game = (function (_super) {
         }
         return Game.instance;
     };
-    Game.prototype.moveToTarget = function () {
-        var _a = this.bomber.getPosition(), bomberX = _a.x, bomberY = _a.y;
-        for (var _i = 0, _b = this.walkers; _i < _b.length; _i++) {
-            var walker = _b[_i];
-            var _c = walker.getPosition(), walkerX = _c.x, walkerY = _c.y;
-            walkerY <= bomberY
-                ? walker.setPosition(walkerX, (walkerY = walkerY + walker.getMoveSpeed()))
-                : walker.setPosition(walkerX, (walkerY = walkerY - walker.getMoveSpeed()));
-            walkerX <= bomberX
-                ? walker.setPosition((walkerX = walkerX + walker.getMoveSpeed()), walkerY)
-                : walker.setPosition((walkerX = walkerX - walker.getMoveSpeed()), walkerY);
-            walker.update();
-        }
-    };
     return Game;
 }(GameObject));
 var HealthBar = (function (_super) {
@@ -312,6 +302,7 @@ var HealthBar = (function (_super) {
     HealthBar.prototype.update = function () {
         this.x = this.character.getPosition().x;
         this.y = this.character.getPosition().y;
+        this.removeElementHandler();
         this.decreaseWidthOnDamage();
         this.draw();
     };

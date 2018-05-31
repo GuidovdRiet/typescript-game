@@ -18,12 +18,12 @@ class Game extends GameObject {
 
   private gameLoop(): void {
     this.bomber.update();
-    this.moveToTarget();
-
+    this.walkers.forEach(walker => {
+      walker.update();
+    });
     this.bomber.getHealth();
     this.removeObjectsHandler();
     this.damageHandler();
-
     requestAnimationFrame(() => this.gameLoop());
   }
 
@@ -70,37 +70,5 @@ class Game extends GameObject {
       Game.instance = new Game();
     }
     return Game.instance;
-  }
-
-  private moveToTarget() {
-    const { x: bomberX, y: bomberY } = this.bomber.getPosition();
-
-    for (const walker of this.walkers) {
-      let { x: walkerX, y: walkerY } = walker.getPosition();
-
-      walkerY <= bomberY
-        ? walker.setPosition(
-            walkerX,
-            (walkerY = walkerY + walker.getMoveSpeed())
-          )
-        : walker.setPosition(
-            walkerX,
-            (walkerY = walkerY - walker.getMoveSpeed())
-          );
-
-      walkerX <= bomberX
-        ? walker.setPosition(
-            (walkerX = walkerX + walker.getMoveSpeed()),
-            walkerY
-          )
-        : walker.setPosition(
-            (walkerX = walkerX - walker.getMoveSpeed()),
-            walkerY
-          );
-
-      
-
-      walker.update();
-    }
   }
 }
