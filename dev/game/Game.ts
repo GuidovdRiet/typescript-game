@@ -1,15 +1,18 @@
 /// <reference path="../characters/Walker.ts"/>
 
 class Game extends GameObject {
+
   private bomber: Bomber;
   private walkers: Array<Walker> = new Array<Walker>();
   private bullets: Array<Bullet> = new Array<Bullet>();
+  private health: Health;
   private static instance: Game;
 
   constructor() {
     super();
     this.bomber = new Bomber();
     this.walkers.push(new Walker());
+    this.createUi();
     setInterval(() => {
       this.walkers.push(new Walker());
     }, 7000);
@@ -17,14 +20,26 @@ class Game extends GameObject {
   }
 
   private gameLoop(): void {
-    this.bomber.update();
-    this.walkers.forEach(walker => {
-      walker.update();
-    });
-    this.bomber.getHealth();
+    this.createBomber();
+    this.createEnemies();
     this.removeObjectsHandler();
     this.damageHandler();
     requestAnimationFrame(() => this.gameLoop());
+  }
+
+  private createBomber() {
+    this.bomber.update();
+    this.bomber.getHealth();
+  }
+
+  private createEnemies() {
+    this.walkers.forEach(walker => {
+      walker.update();
+    });
+  }
+
+  private createUi() {
+    new Health();
   }
 
   public addBulletsToArray(bullet: Bullet) {

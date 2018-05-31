@@ -49,3 +49,38 @@ healthbar {
   height: 10px;
   background: green;
 }
+
+.health-icon {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 20px;
+  z-index: 3;
+}
+
+health {
+  width: 150px;
+  height: 23px;
+  position: absolute;
+  top: 4px;
+  left: 2px;
+  background: #21B84D;
+  border: 3px solid #232323;
+}
+
+.ui__top--left,
+.ui__top--right {
+  -khtml-user-select: none;
+  -o-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  width: 300px;
+}
+
+.ui__top--right {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: scaleX(-1);
+}

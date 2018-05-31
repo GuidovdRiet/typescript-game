@@ -226,6 +226,7 @@ var Game = (function (_super) {
         _this.bullets = new Array();
         _this.bomber = new Bomber();
         _this.walkers.push(new Walker());
+        _this.createUi();
         setInterval(function () {
             _this.walkers.push(new Walker());
         }, 7000);
@@ -234,14 +235,23 @@ var Game = (function (_super) {
     }
     Game.prototype.gameLoop = function () {
         var _this = this;
-        this.bomber.update();
-        this.walkers.forEach(function (walker) {
-            walker.update();
-        });
-        this.bomber.getHealth();
+        this.createBomber();
+        this.createEnemies();
         this.removeObjectsHandler();
         this.damageHandler();
         requestAnimationFrame(function () { return _this.gameLoop(); });
+    };
+    Game.prototype.createBomber = function () {
+        this.bomber.update();
+        this.bomber.getHealth();
+    };
+    Game.prototype.createEnemies = function () {
+        this.walkers.forEach(function (walker) {
+            walker.update();
+        });
+    };
+    Game.prototype.createUi = function () {
+        new Health();
     };
     Game.prototype.addBulletsToArray = function (bullet) {
         this.bullets.push(bullet);
@@ -308,6 +318,31 @@ var HealthBar = (function (_super) {
     };
     return HealthBar;
 }(GameObject));
+var Ui = (function (_super) {
+    __extends(Ui, _super);
+    function Ui(name) {
+        var _this = _super.call(this) || this;
+        _this.element = document.createElement(name);
+        document.body.appendChild(_this.element);
+        _this.width = _this.element.clientWidth;
+        _this.height = _this.element.clientHeight;
+        return _this;
+    }
+    return Ui;
+}(GameObject));
+var Health = (function (_super) {
+    __extends(Health, _super);
+    function Health() {
+        var _this = _super.call(this, "health") || this;
+        _this.start();
+        return _this;
+    }
+    Health.prototype.start = function () {
+        this.width = this.element.clientWidth;
+        this.height = this.element.clientHeight;
+    };
+    return Health;
+}(Ui));
 var Gun = (function (_super) {
     __extends(Gun, _super);
     function Gun() {
