@@ -320,24 +320,22 @@ var HealthBar = (function (_super) {
 }(GameObject));
 var Ui = (function (_super) {
     __extends(Ui, _super);
-    function Ui(name) {
-        var _this = _super.call(this) || this;
-        _this.element = document.createElement(name);
-        document.body.appendChild(_this.element);
-        _this.width = _this.element.clientWidth;
-        _this.height = _this.element.clientHeight;
-        return _this;
+    function Ui() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     return Ui;
 }(GameObject));
 var Health = (function (_super) {
     __extends(Health, _super);
     function Health() {
-        var _this = _super.call(this, "health") || this;
+        var _this = _super.call(this) || this;
         _this.start();
         return _this;
     }
     Health.prototype.start = function () {
+        this.element = document.createElement("health");
+        var healthbarContainer = document.querySelector('healthbarcontainer');
+        healthbarContainer.appendChild(this.element);
         this.width = this.element.clientWidth;
         this.height = this.element.clientHeight;
     };
