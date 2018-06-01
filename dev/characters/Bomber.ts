@@ -12,9 +12,7 @@ class Bomber extends Character {
 
   constructor() {
     super("bomber");
-
     this.start();
-
     this.moveSpeed = 4;
 
     window.addEventListener("keydown", (event: KeyboardEvent) =>

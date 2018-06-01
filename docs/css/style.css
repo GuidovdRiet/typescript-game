@@ -56,14 +56,14 @@ healthbar {
 
 .health-icon {
   position: absolute;
-  top: 10px;
-  left: 12px;
-  width: 20px;
+  top: 11px;
+  left: 14px;
+  width: 18px;
   z-index: 3;
 }
 
 healthbarcontainer {
-  width: 157px;
+  width: 133px;
   height: 31px;
   background: #232323;
   position: absolute;
@@ -72,11 +72,11 @@ healthbarcontainer {
 }
 
 health {
-  width: 150px;
+  width: 125px;
   height: 23px;
   position: absolute;
   top: 4px;
-  left: 3px;
+  left: 4px;
   background: #21b84d;
 }
 
