@@ -56,23 +56,28 @@ healthbar {
 
 .health-icon {
   position: absolute;
-  top: 11px;
-  left: 14px;
-  width: 18px;
+  top: 4px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
   z-index: 3;
+  background: #232323;
+  transform: rotate(-10deg);
+  border-radius: 100%;
+  padding: 4px;
 }
 
 healthbarcontainer {
-  width: 133px;
+  width: 208px;
   height: 31px;
   background: #232323;
   position: absolute;
-  top: 3px;
-  left: 6px;
+  top: 5px;
+  left: 10px;
 }
 
 health {
-  width: 125px;
+  width: 200px;
   height: 23px;
   position: absolute;
   top: 4px;
@@ -80,15 +85,9 @@ health {
   background: #21b84d;
 }
 
-.ui__top--left,
-.ui__top--right {
-  user-select: none;
-  width: 300px;
-}
-
-.ui__top--right {
-  position: absolute;
-  right: 0;
-  top: 0;
-  transform: scaleX(-1);
+coin {
+  width: 22px;
+  height: 25px;
+  display: none;
+  background: url("../img/items/spr_coin_0.png");
 }

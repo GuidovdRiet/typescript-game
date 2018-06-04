@@ -66,7 +66,6 @@ var Character = (function (_super) {
         var _this = _super.call(this) || this;
         _this.animationCount = 0;
         _this.health = 100;
-        _this.targetIsLeft = true;
         _this.element = document.createElement(name);
         document.body.appendChild(_this.element);
         _this.width = _this.element.clientWidth;
@@ -87,9 +86,12 @@ var Character = (function (_super) {
             _this.setWalkingBackground(false, 2, url);
         }, 150);
     };
-    Character.prototype.checkIfDead = function () {
+    Character.prototype.checkIfDead = function (character) {
         if (this.health <= 0) {
             this.removeElement();
+            Game.getInstance()
+                .getitems()
+                .push(new Coin(character));
             this.healthBar.removeElement();
             this.clearInterval(this.intervalId);
         }
@@ -190,6 +192,7 @@ var Bomber = (function (_super) {
     };
     return Bomber;
 }(Character));
+;
 var Walker = (function (_super) {
     __extends(Walker, _super);
     function Walker() {
@@ -200,7 +203,7 @@ var Walker = (function (_super) {
     }
     Walker.prototype.start = function () {
         this.x = window.innerWidth - this.width;
-        this.y = window.innerHeight / 100 * (Math.random() * 90);
+        this.y = (window.innerHeight / 100) * (Math.random() * 90);
         this.attackPower = 3;
         this.moveSpeed = 3;
         this.healthBar = new HealthBar(this);
@@ -212,18 +215,19 @@ var Walker = (function (_super) {
         this.x = this.x - this.moveSpeed;
         this.healthBar.update();
         this.removeElementHandler();
-        this.checkIfDead();
+        this.checkIfDead(this);
         this.draw();
     };
     return Walker;
 }(Character));
-;
 var Game = (function (_super) {
     __extends(Game, _super);
     function Game() {
         var _this = _super.call(this) || this;
-        _this.walkers = new Array();
-        _this.bullets = new Array();
+        _this.walkers = [];
+        _this.bullets = [];
+        _this.items = [];
+        _this.pickedUpItems = [];
         _this.bomber = new Bomber();
         _this.walkers.push(new Walker());
         setInterval(function () {
@@ -238,7 +242,8 @@ var Game = (function (_super) {
         this.createBomber();
         this.createEnemies();
         this.removeObjectsHandler();
-        this.damageHandler();
+        this.collisionHandler();
+        console.log(this.pickedUpItems.length);
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     Game.prototype.createBomber = function () {
@@ -259,15 +264,25 @@ var Game = (function (_super) {
     Game.prototype.removeObjectsHandler = function () {
         this.removeObjectsFromArrayIfNotVisible([this.bullets, this.walkers]);
     };
-    Game.prototype.damageHandler = function () {
-        for (var _i = 0, _a = this.walkers; _i < _a.length; _i++) {
-            var walker = _a[_i];
+    Game.prototype.collisionHandler = function () {
+        for (var _i = 0, _a = this.items; _i < _a.length; _i++) {
+            var item = _a[_i];
+            if (this.collision(item, this.bomber)) {
+                item.setPickedUp(true);
+                if (item.getPickedUp() === true) {
+                    this.pickedUpItems.push(item);
+                    item.removeElement();
+                }
+            }
+        }
+        for (var _b = 0, _c = this.walkers; _b < _c.length; _b++) {
+            var walker = _c[_b];
             if (this.collision(this.bomber, walker)) {
                 this.bomber.damage(walker.getAttackPower());
-                this.health.update(this.bomber.getHealth());
+                this.health.update(this.bomber);
             }
-            for (var _b = 0, _c = this.bullets; _b < _c.length; _b++) {
-                var bullet = _c[_b];
+            for (var _d = 0, _e = this.bullets; _d < _e.length; _d++) {
+                var bullet = _e[_d];
                 if (this.collision(bullet, walker)) {
                     walker.damage(this.bomber.getWeapon().getAttackPower());
                     bullet.removeElement();
@@ -286,6 +301,9 @@ var Game = (function (_super) {
     };
     Game.prototype.getBulletsArray = function () {
         return this.bullets;
+    };
+    Game.prototype.getitems = function () {
+        return this.items;
     };
     Game.getInstance = function () {
         if (!Game.instance) {
@@ -319,6 +337,35 @@ var HealthBar = (function (_super) {
     };
     return HealthBar;
 }(GameObject));
+var Item = (function (_super) {
+    __extends(Item, _super);
+    function Item() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.pickedUp = false;
+        return _this;
+    }
+    Item.prototype.setPickedUp = function (pickedUp) {
+        this.pickedUp = pickedUp;
+    };
+    Item.prototype.getPickedUp = function () {
+        return this.pickedUp;
+    };
+    return Item;
+}(GameObject));
+var Coin = (function (_super) {
+    __extends(Coin, _super);
+    function Coin(character) {
+        var _this = _super.call(this) || this;
+        _this.x = character.getPosition().x;
+        _this.y = character.getPosition().y;
+        _this.element = document.createElement("coin");
+        document.body.appendChild(_this.element);
+        _this.element.style.display = "block";
+        _this.draw();
+        return _this;
+    }
+    return Coin;
+}(Item));
 var Ui = (function (_super) {
     __extends(Ui, _super);
     function Ui() {
@@ -340,9 +387,15 @@ var Health = (function (_super) {
         this.width = this.element.clientWidth;
         this.height = this.element.clientHeight;
     };
-    Health.prototype.update = function (health) {
-        console.log(health);
-        this.element.style.width = this.width / 100 * health + "px";
+    Health.prototype.update = function (bomber) {
+        var colorHealthOrange = 60;
+        var colorHealthRed = 30;
+        var bomberHealth = bomber.getHealth();
+        if (bomberHealth < colorHealthOrange)
+            this.element.style.background = "#F78C6C";
+        if (bomberHealth < colorHealthRed)
+            this.element.style.background = "#B83C3C";
+        this.element.style.width = (this.width / 100) * bomberHealth + "px";
     };
     return Health;
 }(Ui));
