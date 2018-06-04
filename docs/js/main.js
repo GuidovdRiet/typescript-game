@@ -190,7 +190,6 @@ var Bomber = (function (_super) {
     };
     return Bomber;
 }(Character));
-;
 var Walker = (function (_super) {
     __extends(Walker, _super);
     function Walker() {
@@ -218,6 +217,7 @@ var Walker = (function (_super) {
     };
     return Walker;
 }(Character));
+;
 var Game = (function (_super) {
     __extends(Game, _super);
     function Game() {
@@ -226,11 +226,11 @@ var Game = (function (_super) {
         _this.bullets = new Array();
         _this.bomber = new Bomber();
         _this.walkers.push(new Walker());
-        _this.createUi();
         setInterval(function () {
             _this.walkers.push(new Walker());
         }, 7000);
         _this.gameLoop();
+        _this.createUi();
         return _this;
     }
     Game.prototype.gameLoop = function () {
@@ -251,7 +251,7 @@ var Game = (function (_super) {
         });
     };
     Game.prototype.createUi = function () {
-        new Health();
+        this.health = new Health();
     };
     Game.prototype.addBulletsToArray = function (bullet) {
         this.bullets.push(bullet);
@@ -264,6 +264,7 @@ var Game = (function (_super) {
             var walker = _a[_i];
             if (this.collision(this.bomber, walker)) {
                 this.bomber.damage(walker.getAttackPower());
+                this.health.update(this.bomber.getHealth());
             }
             for (var _b = 0, _c = this.bullets; _b < _c.length; _b++) {
                 var bullet = _c[_b];
@@ -334,10 +335,14 @@ var Health = (function (_super) {
     }
     Health.prototype.start = function () {
         this.element = document.createElement("health");
-        var healthbarContainer = document.querySelector('healthbarcontainer');
+        var healthbarContainer = document.querySelector("healthbarcontainer");
         healthbarContainer.appendChild(this.element);
         this.width = this.element.clientWidth;
         this.height = this.element.clientHeight;
+    };
+    Health.prototype.update = function (health) {
+        console.log(health);
+        this.element.style.width = this.width / 100 * health + "px";
     };
     return Health;
 }(Ui));
