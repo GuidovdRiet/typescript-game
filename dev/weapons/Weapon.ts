@@ -1,8 +1,9 @@
-class Weapon extends GameObject {
+abstract class Weapon extends GameObject {
   protected bomber: Bomber;
   protected bomberWidth: number;
   protected bomberHeight: number;
-  protected yPosCorrection: number;
+  protected yPos: number;
+  protected bullet: Bullet;
 
   constructor(bomber: Bomber) {
     super();
@@ -20,7 +21,7 @@ class Weapon extends GameObject {
     return this.width;
   }
 
-  public getYPosCorrection() {
-    return this.yPosCorrection;
+  public getYPos(): number {
+    return this.yPos;
   }
 }

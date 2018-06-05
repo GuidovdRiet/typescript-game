@@ -96,7 +96,7 @@ class Bomber extends Character {
         )
             this.y = targetY;
 
-        this.weapon.start(this.weapon.getYPosCorrection());
+        this.weapon.start(this.weapon.getYPos());
         this.draw();
     }
 }

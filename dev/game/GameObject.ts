@@ -1,4 +1,4 @@
-class GameObject {
+abstract class GameObject {
   protected element: HTMLElement;
   protected domName: string;
 
@@ -10,7 +10,6 @@ class GameObject {
   protected attackPower: number;
   protected intervalId: number;
   protected visibility: boolean = true;
-  
 
   protected collision(c1: any, c2: any): any {
     if (c1 || c2) {
