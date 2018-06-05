@@ -63,7 +63,7 @@ var GameObject = (function () {
         clearInterval(intervalId);
     };
     GameObject.prototype.removeListener = function (eventType, callBack) {
-        window.removeEventListener(eventType, callBack);
+        window.removeEventListener('click', callBack);
     };
     GameObject.prototype.draw = function () {
         this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
@@ -139,7 +139,8 @@ var Bomber = (function (_super) {
         _this.start();
         _this.moveSpeed = 4;
         window.addEventListener("keydown", function (event) {
-            return _this.move(event, _this.moveSpeed);
+            _this.move(event, _this.moveSpeed);
+            _this.switchWeapons(event);
         });
         window.addEventListener("keyup", function (event) {
             _this.move(event, 0);
@@ -151,7 +152,21 @@ var Bomber = (function (_super) {
         this.x = window.innerWidth / 2 - this.width;
         this.y = window.innerHeight / 2 - this.height;
         this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
-        this.weapon = new Rocketlauncher(this);
+        this.weapon = new MachineGun(this);
+    };
+    Bomber.prototype.switchWeapons = function (event) {
+        var firstWeaponKey = 49;
+        var secondWeaponKey = 50;
+        switch (event.keyCode) {
+            case firstWeaponKey:
+                this.weapon.removeElement();
+                this.weapon = new MachineGun(this);
+                break;
+            case secondWeaponKey:
+                this.weapon.removeElement();
+                this.weapon = new Rocketlauncher(this);
+                break;
+        }
     };
     Bomber.prototype.move = function (event, speed) {
         var leftKey = 65;
@@ -435,6 +450,10 @@ var MachineGun = (function (_super) {
         _this.shoot();
         return _this;
     }
+    MachineGun.prototype.createBullet = function () {
+        this.bullet = new MachineGunBullet(this);
+        return this.bullet;
+    };
     MachineGun.prototype.shoot = function () {
         var _this = this;
         document.addEventListener("click", function () {
@@ -497,6 +516,10 @@ var Rocketlauncher = (function (_super) {
         _this.shoot();
         return _this;
     }
+    Rocketlauncher.prototype.createBullet = function () {
+        this.bullet = new RocketlauncherBullet(this);
+        return this.bullet;
+    };
     Rocketlauncher.prototype.shoot = function () {
         var _this = this;
         document.addEventListener("click", function () {

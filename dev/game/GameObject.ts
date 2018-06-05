@@ -71,8 +71,8 @@ abstract class GameObject {
     clearInterval(intervalId);
   }
 
-  protected removeListener(eventType: string, callBack: EventListener): void {
-    window.removeEventListener(eventType, callBack);
+  public removeListener(eventType: string, callBack: EventListener): void {
+    window.removeEventListener('click', callBack);
   }
 
   protected draw(): void {

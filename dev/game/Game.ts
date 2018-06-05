@@ -8,7 +8,7 @@ class Game extends GameObject {
 
   private items: Item[] = [];
   private pickedUpItems: Item[] = [];
-  
+
   private static instance: Game;
 
   constructor() {
@@ -54,7 +54,6 @@ class Game extends GameObject {
   }
 
   private collisionHandler() {
-    
     for (const item of this.items) {
       if (this.collision(item, this.bomber)) {
         item.removeElement();

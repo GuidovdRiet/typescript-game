@@ -1,8 +1,6 @@
 /// <reference path="./bullets/RocketlauncherBullet"/>
 
 class Rocketlauncher extends Weapon implements WeaponBehaviour {
-  private rocketLauncherBullet: Bullet;
-
   constructor(bomber: Bomber) {
     super(bomber);
 
@@ -18,7 +16,12 @@ class Rocketlauncher extends Weapon implements WeaponBehaviour {
     this.bomberHeight = bomber.getHeight();
 
     this.start(this.yPos);
-    this.shoot();
+    this.shoot()
+  }
+
+  public createBullet(): Bullet {
+    this.bullet = new RocketlauncherBullet(this);
+    return this.bullet;
   }
 
   public shoot(): void {
