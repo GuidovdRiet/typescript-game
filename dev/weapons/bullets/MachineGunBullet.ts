@@ -1,19 +1,12 @@
 /// <reference path="./Bullet.ts"/>
 
 class MachineGunBullet extends Bullet {
-
   private machineGun: MachineGun;
   private bulletSpeed: number = 10;
   private index: number;
 
-  private MachineGunBulletArray: Array<
-    Bullet
-  > = Game.getInstance().getBulletsArray();
-
   constructor(machineGun: MachineGun) {
     super();
-
-    this.index = this.MachineGunBulletArray.indexOf(this);
 
     this.element = document.createElement("MachineGunBullet");
     document.body.appendChild(this.element);
@@ -23,15 +16,10 @@ class MachineGunBullet extends Bullet {
     this.machineGun = machineGun;
 
     this.start();
-    window.addEventListener('keydown', (event) => {
-      if(event.keyCode === 32) {
-        const index = this.MachineGunBulletArray.indexOf(this);
-      }
-    })
   }
 
   private start(): void {
-    const weaponPosition = this.machineGun.getPostion();
+    const weaponPosition = this.machineGun.getPosition();
     const weaponWidth = this.machineGun.getWidth();
     const bulletHeight = this.element.offsetHeight;
 

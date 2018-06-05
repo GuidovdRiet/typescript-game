@@ -1,8 +1,7 @@
-/// <reference path="./Weapon.ts" />
+/// <reference path="./bullets/RocketlauncherBullet"/>
 
-class MachineGun extends Weapon {
-
-  private machineGunBullet: MachineGunBullet;
+class RocketLauncher extends Weapon {
+  private rocketlauncherBullet: RocketlauncherBullet;
 
   constructor(bomber: Bomber) {
     super(bomber);
@@ -10,25 +9,21 @@ class MachineGun extends Weapon {
     this.element = document.createElement("machinegun");
     document.body.appendChild(this.element);
 
-    this.attackPower = 10;
+    this.attackPower = 50;
 
     this.height = this.element.offsetHeight;
     this.width = this.element.offsetWidth;
-    
+
     this.bomberHeight = bomber.getHeight();
 
     this.shoot();
     this.start();
   }
 
-  public getWidth(): number {
-    return this.width;
-  }
-
   private shoot(): void {
     document.addEventListener("click", () => {
-      this.machineGunBullet = new MachineGunBullet(this);
-      Game.getInstance().addBulletsToArray(this.machineGunBullet);
+      this.rocketlauncherBullet = new RocketlauncherBullet(this);
+      Game.getInstance().addBulletsToArray(this.rocketlauncherBullet);
     });
   }
 }

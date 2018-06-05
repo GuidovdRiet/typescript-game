@@ -27,7 +27,6 @@ class Game extends GameObject {
     this.createEnemies();
     this.removeObjectsHandler();
     this.collisionHandler();
-    console.log(this.items);
     requestAnimationFrame(() => this.gameLoop());
   }
 
@@ -61,7 +60,6 @@ class Game extends GameObject {
         item.removeElement();
         this.pickedUpItems.push(item);
         this.removeObjectsFromArrayIfNotVisible([this.items]);
-        console.log(this.pickedUpItems, 'picked up');
       }
     }
 

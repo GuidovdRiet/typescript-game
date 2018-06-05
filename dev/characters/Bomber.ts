@@ -74,7 +74,7 @@ class Bomber extends Character {
         }
     }
 
-    public getWeapon(): Gun {
+    public getWeapon(): Weapon {
         return this.weapon;
     }
 

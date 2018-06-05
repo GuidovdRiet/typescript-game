@@ -65,14 +65,6 @@ class Character extends GameObject {
     return this.moveSpeed;
   }
 
-  public getPosition(): Vector {
-    const position: Vector = {
-      x: this.x,
-      y: this.y
-    };
-    return position;
-  }
-
   public setPosition(x: number, y: number) {
     this.x = x;
     this.y = y;

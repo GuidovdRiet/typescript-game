@@ -43,6 +43,14 @@ class GameObject {
     return this.attackPower;
   }
 
+  public getPosition(): Vector {
+    const position: Vector = {
+      x: this.x,
+      y: this.y
+    };
+    return position;
+  }
+
   protected removeElementHandler() {
     //  remove if leaves screen;
     this.removeDomElementIfLeavesScreen();
