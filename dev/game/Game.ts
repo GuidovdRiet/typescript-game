@@ -27,7 +27,7 @@ class Game extends GameObject {
     this.createEnemies();
     this.removeObjectsHandler();
     this.collisionHandler();
-    console.log(this.pickedUpItems.length);
+    console.log(this.items);
     requestAnimationFrame(() => this.gameLoop());
   }
 
@@ -58,12 +58,10 @@ class Game extends GameObject {
     
     for (const item of this.items) {
       if (this.collision(item, this.bomber)) {
-        item.setPickedUp(true);
-        if (item.getPickedUp() === true) {
-          // set visibility to false en verwijder element
-          this.pickedUpItems.push(item);
-          item.removeElement();
-        }
+        item.removeElement();
+        this.pickedUpItems.push(item);
+        this.removeObjectsFromArrayIfNotVisible([this.items]);
+        console.log(this.pickedUpItems, 'picked up');
       }
     }
 

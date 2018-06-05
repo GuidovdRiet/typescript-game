@@ -15,15 +15,6 @@ var GameObject = (function () {
     function GameObject() {
         this.visibility = true;
     }
-    GameObject.prototype.setAttackPower = function (maxDamage) {
-        this.attackPower = Math.floor(Math.random() * 10 / maxDamage);
-    };
-    GameObject.prototype.getAttackPower = function () {
-        return this.attackPower;
-    };
-    GameObject.prototype.getVisibility = function () {
-        return this.visibility;
-    };
     GameObject.prototype.collision = function (c1, c2) {
         if (c1 || c2) {
             return !(c2.x > c1.x + c1.width ||
@@ -32,9 +23,21 @@ var GameObject = (function () {
                 c2.y + c2.height < c1.y);
         }
     };
+    GameObject.prototype.setVisibility = function (visibility) {
+        this.visibility = visibility;
+    };
+    GameObject.prototype.getVisibility = function () {
+        return this.visibility;
+    };
     GameObject.prototype.removeElement = function () {
         this.element.remove();
         this.visibility = false;
+    };
+    GameObject.prototype.setAttackPower = function (maxDamage) {
+        this.attackPower = Math.floor((Math.random() * 10) / maxDamage);
+    };
+    GameObject.prototype.getAttackPower = function () {
+        return this.attackPower;
     };
     GameObject.prototype.removeElementHandler = function () {
         this.removeDomElementIfLeavesScreen();
@@ -243,7 +246,7 @@ var Game = (function (_super) {
         this.createEnemies();
         this.removeObjectsHandler();
         this.collisionHandler();
-        console.log(this.pickedUpItems.length);
+        console.log(this.items);
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     Game.prototype.createBomber = function () {
@@ -268,11 +271,10 @@ var Game = (function (_super) {
         for (var _i = 0, _a = this.items; _i < _a.length; _i++) {
             var item = _a[_i];
             if (this.collision(item, this.bomber)) {
-                item.setPickedUp(true);
-                if (item.getPickedUp() === true) {
-                    this.pickedUpItems.push(item);
-                    item.removeElement();
-                }
+                item.removeElement();
+                this.pickedUpItems.push(item);
+                this.removeObjectsFromArrayIfNotVisible([this.items]);
+                console.log(this.pickedUpItems, 'picked up');
             }
         }
         for (var _b = 0, _c = this.walkers; _b < _c.length; _b++) {

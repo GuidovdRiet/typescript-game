@@ -11,18 +11,6 @@ class GameObject {
   protected intervalId: number;
   protected visibility: boolean = true;
 
-  public setAttackPower(maxDamage: number): void {
-    this.attackPower = Math.floor(Math.random() * 10 / maxDamage);
-  }
-
-  public getAttackPower(): number {
-    return this.attackPower;
-  }
-
-  public getVisibility(): boolean {
-    return this.visibility;
-  }
-
   protected collision(c1: any, c2: any): any {
     if (c1 || c2) {
       return !(
@@ -34,9 +22,25 @@ class GameObject {
     }
   }
 
+  public setVisibility(visibility: boolean) {
+    this.visibility = visibility;
+  }
+
+  public getVisibility(): boolean {
+    return this.visibility;
+  }
+
   public removeElement() {
     this.element.remove();
     this.visibility = false;
+  }
+
+  public setAttackPower(maxDamage: number): void {
+    this.attackPower = Math.floor((Math.random() * 10) / maxDamage);
+  }
+
+  public getAttackPower(): number {
+    return this.attackPower;
   }
 
   protected removeElementHandler() {
