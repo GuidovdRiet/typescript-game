@@ -8,7 +8,7 @@ class Bomber extends Character {
 
     private baseUrlBackgroundAnimation: string = "../docs/img/characters/bomber/spr_player_";
 
-    private weapon: MachineGun;
+    private weapon: Weapon;
 
     constructor() {
         super("bomber");
@@ -29,7 +29,8 @@ class Bomber extends Character {
         this.x = window.innerWidth / 2 - this.width;
         this.y = window.innerHeight / 2 - this.height;
         this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
-        this.weapon = new MachineGun(this);
+        // this.weapon = new MachineGun(this);
+        this.weapon = new Rocketlauncher(this);
     }
 
     public move(event: KeyboardEvent, speed: number): void {
@@ -95,7 +96,7 @@ class Bomber extends Character {
         )
             this.y = targetY;
 
-        this.weapon.start();
+        this.weapon.start(this.weapon.getYPosCorrection());
         this.draw();
     }
 }

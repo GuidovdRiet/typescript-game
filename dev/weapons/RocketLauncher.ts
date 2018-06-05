@@ -1,15 +1,16 @@
 /// <reference path="./bullets/RocketlauncherBullet"/>
 
-class RocketLauncher extends Weapon {
+class Rocketlauncher extends Weapon {
   private rocketlauncherBullet: RocketlauncherBullet;
 
   constructor(bomber: Bomber) {
     super(bomber);
 
-    this.element = document.createElement("machinegun");
+    this.element = document.createElement("rocketlauncher");
     document.body.appendChild(this.element);
 
-    this.attackPower = 50;
+    this.attackPower = 100;
+    this.yPosCorrection = 3;
 
     this.height = this.element.offsetHeight;
     this.width = this.element.offsetWidth;
@@ -17,7 +18,7 @@ class RocketLauncher extends Weapon {
     this.bomberHeight = bomber.getHeight();
 
     this.shoot();
-    this.start();
+    this.start(this.yPosCorrection);
   }
 
   private shoot(): void {

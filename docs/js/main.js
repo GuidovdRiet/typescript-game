@@ -151,7 +151,7 @@ var Bomber = (function (_super) {
         this.x = window.innerWidth / 2 - this.width;
         this.y = window.innerHeight / 2 - this.height;
         this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
-        this.weapon = new MachineGun(this);
+        this.weapon = new Rocketlauncher(this);
     };
     Bomber.prototype.move = function (event, speed) {
         var leftKey = 65;
@@ -190,7 +190,7 @@ var Bomber = (function (_super) {
         if (targetY < window.innerHeight - screenCorrection - this.height &&
             targetY > 0)
             this.y = targetY;
-        this.weapon.start();
+        this.weapon.start(this.weapon.getYPosCorrection());
         this.draw();
     };
     return Bomber;
@@ -406,11 +406,17 @@ var Weapon = (function (_super) {
         _this.bomber = bomber;
         return _this;
     }
-    Weapon.prototype.start = function () {
+    Weapon.prototype.start = function (yPos) {
         var bomberPosition = this.bomber.getPosition();
         this.x = bomberPosition.x;
-        this.y = bomberPosition.y + this.height / 2 + this.bomberHeight / 2;
+        this.y = bomberPosition.y + this.height / yPos + this.bomberHeight / yPos;
         this.draw();
+    };
+    Weapon.prototype.getWidth = function () {
+        return this.width;
+    };
+    Weapon.prototype.getYPosCorrection = function () {
+        return this.yPosCorrection;
     };
     return Weapon;
 }(GameObject));
@@ -421,16 +427,14 @@ var MachineGun = (function (_super) {
         _this.element = document.createElement("machinegun");
         document.body.appendChild(_this.element);
         _this.attackPower = 10;
+        _this.yPosCorrection = 2;
         _this.height = _this.element.offsetHeight;
         _this.width = _this.element.offsetWidth;
         _this.bomberHeight = bomber.getHeight();
         _this.shoot();
-        _this.start();
+        _this.start(_this.yPosCorrection);
         return _this;
     }
-    MachineGun.prototype.getWidth = function () {
-        return this.width;
-    };
     MachineGun.prototype.shoot = function () {
         var _this = this;
         document.addEventListener("click", function () {
@@ -449,40 +453,65 @@ var Bullet = (function (_super) {
 }(GameObject));
 var RocketlauncherBullet = (function (_super) {
     __extends(RocketlauncherBullet, _super);
-    function RocketlauncherBullet(rocketLauncher) {
-        return _super.call(this) || this;
+    function RocketlauncherBullet(rocketlauncher) {
+        var _this = _super.call(this) || this;
+        _this.bulletSpeed = 7;
+        _this.element = document.createElement("rocketlauncherbullet");
+        document.body.appendChild(_this.element);
+        _this.width = _this.element.offsetWidth;
+        _this.height = _this.element.offsetHeight;
+        _this.rocketlauncher = rocketlauncher;
+        _this.start();
+        return _this;
     }
+    RocketlauncherBullet.prototype.start = function () {
+        var weaponPosition = this.rocketlauncher.getPosition();
+        var weaponWidth = this.rocketlauncher.getWidth();
+        var bulletHeight = this.element.offsetHeight;
+        this.x = weaponPosition.x + weaponWidth;
+        this.y = weaponPosition.y + bulletHeight - 1;
+        this.draw();
+        this.update();
+    };
+    RocketlauncherBullet.prototype.update = function () {
+        var _this = this;
+        requestAnimationFrame(function () { return _this.update(); });
+        this.x = this.x + this.bulletSpeed;
+        this.removeDomElementIfLeavesScreen();
+        this.draw();
+    };
     return RocketlauncherBullet;
 }(Bullet));
-var RocketLauncher = (function (_super) {
-    __extends(RocketLauncher, _super);
-    function RocketLauncher(bomber) {
+var Rocketlauncher = (function (_super) {
+    __extends(Rocketlauncher, _super);
+    function Rocketlauncher(bomber) {
         var _this = _super.call(this, bomber) || this;
-        _this.element = document.createElement("machinegun");
+        _this.element = document.createElement("rocketlauncher");
         document.body.appendChild(_this.element);
-        _this.attackPower = 50;
+        _this.attackPower = 100;
+        _this.yPosCorrection = 3;
         _this.height = _this.element.offsetHeight;
         _this.width = _this.element.offsetWidth;
         _this.bomberHeight = bomber.getHeight();
         _this.shoot();
-        _this.start();
+        _this.start(_this.yPosCorrection);
         return _this;
     }
-    RocketLauncher.prototype.shoot = function () {
+    Rocketlauncher.prototype.shoot = function () {
         var _this = this;
         document.addEventListener("click", function () {
             _this.rocketlauncherBullet = new RocketlauncherBullet(_this);
             Game.getInstance().addBulletsToArray(_this.rocketlauncherBullet);
         });
     };
-    return RocketLauncher;
+    return Rocketlauncher;
 }(Weapon));
 var MachineGunBullet = (function (_super) {
     __extends(MachineGunBullet, _super);
     function MachineGunBullet(machineGun) {
         var _this = _super.call(this) || this;
         _this.bulletSpeed = 10;
-        _this.element = document.createElement("MachineGunBullet");
+        _this.element = document.createElement("machinegunbullet");
         document.body.appendChild(_this.element);
         _this.width = _this.element.offsetWidth;
         _this.height = _this.element.offsetHeight;

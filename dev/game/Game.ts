@@ -8,7 +8,7 @@ class Game extends GameObject {
 
   private items: Item[] = [];
   private pickedUpItems: Item[] = [];
-
+  
   private static instance: Game;
 
   constructor() {

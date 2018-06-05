@@ -3,12 +3,11 @@
 class MachineGunBullet extends Bullet {
   private machineGun: MachineGun;
   private bulletSpeed: number = 10;
-  private index: number;
 
   constructor(machineGun: MachineGun) {
     super();
 
-    this.element = document.createElement("MachineGunBullet");
+    this.element = document.createElement("machinegunbullet");
     document.body.appendChild(this.element);
 
     this.width = this.element.offsetWidth;

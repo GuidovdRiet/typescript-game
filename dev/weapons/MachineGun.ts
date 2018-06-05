@@ -1,7 +1,6 @@
 /// <reference path="./Weapon.ts" />
 
 class MachineGun extends Weapon {
-
   private machineGunBullet: MachineGunBullet;
 
   constructor(bomber: Bomber) {
@@ -11,18 +10,15 @@ class MachineGun extends Weapon {
     document.body.appendChild(this.element);
 
     this.attackPower = 10;
+    this.yPosCorrection = 2;
 
     this.height = this.element.offsetHeight;
     this.width = this.element.offsetWidth;
-    
+
     this.bomberHeight = bomber.getHeight();
 
     this.shoot();
-    this.start();
-  }
-
-  public getWidth(): number {
-    return this.width;
+    this.start(this.yPosCorrection);
   }
 
   private shoot(): void {

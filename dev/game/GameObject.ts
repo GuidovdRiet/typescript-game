@@ -10,6 +10,7 @@ class GameObject {
   protected attackPower: number;
   protected intervalId: number;
   protected visibility: boolean = true;
+  
 
   protected collision(c1: any, c2: any): any {
     if (c1 || c2) {
