@@ -1,7 +1,6 @@
 /// <reference path="./Weapon.ts" />
 
-class MachineGun extends Weapon implements WeaponBehaviour {
-
+class MachineGun extends Weapon {
   constructor(bomber: Bomber) {
     super(bomber);
 
@@ -17,18 +16,5 @@ class MachineGun extends Weapon implements WeaponBehaviour {
     this.bomberHeight = bomber.getHeight();
 
     this.start(this.yPos);
-    this.shoot();
-  }
-
-  public createBullet(): Bullet {
-    this.bullet = new MachineGunBullet(this);
-    return this.bullet;
-  }
-
-  public shoot(): void {
-    document.addEventListener("click", () => {
-      this.bullet = new MachineGunBullet(this);
-      Game.getInstance().addBulletsToArray(this.bullet);
-    });
   }
 }

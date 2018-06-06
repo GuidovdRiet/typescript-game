@@ -24,4 +24,11 @@ abstract class Weapon extends GameObject {
   public getYPos(): number {
     return this.yPos;
   }
+
+  public shoot(instance: Weapon): void {
+    this instanceof Rocketlauncher
+      ? (this.bullet = new RocketlauncherBullet(this))
+      : (this.bullet = new MachineGunBullet(this));
+    Game.getInstance().addBulletsToArray(this.bullet);
+  }
 }

@@ -25,6 +25,10 @@ class Bomber extends Character {
       this.move(event, 0);
       this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
     });
+    
+    window.addEventListener("click", (event: any) => {
+      this.weapon.shoot(this.weapon);
+    });
   }
 
   private start(): void {
@@ -43,7 +47,7 @@ class Bomber extends Character {
         this.weapon = new MachineGun(this);
         break;
       case secondWeaponKey:
-      this.weapon.removeElement();
+        this.weapon.removeElement();
         this.weapon = new Rocketlauncher(this);
         break;
     }
