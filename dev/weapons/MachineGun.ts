@@ -1,6 +1,6 @@
-/// <reference path="./Weapon.ts" />
+/// <reference path="./WeaponBehaviour.ts" />
 
-class MachineGun extends Weapon {
+class MachineGun extends WeaponBehaviour {
   constructor(bomber: Bomber) {
     super(bomber);
 

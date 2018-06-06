@@ -1,6 +1,6 @@
 class Bullet extends GameObject {
 
-  protected weapon: Weapon;
+  protected weapon: WeaponBehaviour;
   protected bulletSpeed: number;
 
   protected start(): void {

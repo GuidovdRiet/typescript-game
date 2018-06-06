@@ -9,7 +9,7 @@ class Bomber extends Character {
   private shootEventListener: EventListener;
   private baseUrlBackgroundAnimation: string =
     "../docs/img/characters/bomber/spr_player_";
-  private weapon: Weapon;
+  private weapon: WeaponBehaviour;
 
   constructor() {
     super("bomber");
@@ -26,6 +26,10 @@ class Bomber extends Character {
       this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
     });
 
+    this.addShootingEvent();
+  }
+
+  private addShootingEvent(): void {
     this.shootEventListener = () => this.weapon.shoot(this.weapon);
     window.addEventListener("click", this.shootEventListener);
   }
@@ -43,12 +47,14 @@ class Bomber extends Character {
     switch (event.keyCode) {
       case firstWeaponKey:
         this.weapon.removeElement();
-        this.weapon.removeListener('click', this.shootEventListener);
+        this.weapon.removeListener("click", this.shootEventListener);
+        this.addShootingEvent();
         this.weapon = new MachineGun(this);
         break;
       case secondWeaponKey:
         this.weapon.removeElement();
-        this.weapon.removeListener('click', this.shootEventListener);
+        this.weapon.removeListener("click", this.shootEventListener);
+        this.addShootingEvent();
         this.weapon = new Rocketlauncher(this);
         break;
     }
@@ -80,7 +86,7 @@ class Bomber extends Character {
     }
   }
 
-  public getWeapon(): Weapon {
+  public getWeapon(): WeaponBehaviour {
     return this.weapon;
   }
 

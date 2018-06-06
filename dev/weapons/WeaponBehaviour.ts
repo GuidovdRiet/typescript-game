@@ -1,4 +1,5 @@
-abstract class Weapon extends GameObject {
+abstract class WeaponBehaviour extends GameObject {
+  
   protected bomber: Bomber;
   protected bomberWidth: number;
   protected bomberHeight: number;
@@ -25,7 +26,7 @@ abstract class Weapon extends GameObject {
     return this.yPos;
   }
 
-  public shoot(instance: Weapon): void {
+  public shoot(instance: WeaponBehaviour): void {
     this instanceof Rocketlauncher
       ? (this.bullet = new RocketlauncherBullet(this))
       : (this.bullet = new MachineGunBullet(this));

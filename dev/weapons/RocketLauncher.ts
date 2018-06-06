@@ -1,6 +1,4 @@
-/// <reference path="./bullets/RocketlauncherBullet"/>
-
-class Rocketlauncher extends Weapon {
+class Rocketlauncher extends WeaponBehaviour {
   constructor(bomber: Bomber) {
     super(bomber);
 
