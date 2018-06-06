@@ -1,3 +1,7 @@
+:root {
+  --ui-height: 31px;
+}
+
 html {
   box-sizing: border-box;
   width: 100%;
@@ -6,6 +10,7 @@ html {
   -o-user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
+  font-family: "Bowlby One SC", cursive;
 }
 
 html * {
@@ -48,37 +53,6 @@ machinegunbullet {
   background: url("../img/weapons/bullets/spr_machinegunBullet_0.png");
 }
 
-healthbar {
-  width: 50px;
-  height: 10px;
-  background: green;
-}
-
-healthbarcontainer {
-  width: 208px;
-  height: 31px;
-  background: #232323;
-  position: absolute;
-  top: 5px;
-  left: 10px;
-}
-
-health {
-  width: 200px;
-  height: 23px;
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  background: #21b84d;
-}
-
-coin {
-  width: 22px;
-  height: 25px;
-  display: none;
-  background: url("../img/items/spr_coin_0.png");
-}
-
 rocketlauncher {
   width: 80px;
   height: 30px;
@@ -91,12 +65,91 @@ rocketlauncherbullet {
   background: url("../img/weapons/bullets/spr_bazookaBullet_0.png");
 }
 
-.health-icon {
+/* UI */
+ui {
+  /* background: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: var(--ui-height);
+  margin-top: 10px;
+}
+
+healthbar {
+  width: 50px;
+  height: 10px;
+  background: green;
+}
+
+barscontainer {
+  display: flex;
+  justify-content: space-between;
+  /* background: blue; */
+  width: 470px;
+}
+
+barscontainer * {
+  position: relative;
+}
+
+coinbarcontainer,
+healthbarcontainer {
+  width: 208px;
+  height: var(--ui-height);
+  background: #232323;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+coinbarcontainer {
+  display: flex;
+}
+
+health,
+coins {
+  width: 200px;
+  height: 23px;
+  margin-left: 4px;
+}
+
+health {
+  background: #21b84d;
+}
+
+coins {
+  background: #d59f2b;
+  justify-content: flex-end;
+}
+
+coins > h4 {
+  color: #ffffffab;
   position: absolute;
-  top: 3px;
-  left: 2px;
+  right: 4px;
+  font-size: 2.3em;
+  margin-top: -15px;
+}
+
+coin {
   width: 22px;
-  height: 22px;
+  height: 25px;
+  display: none;
+  background: url("../img/items/spr_coin_0.png");
+}
+
+.ui-icon {
   z-index: 3;
   transform: rotate(-10deg);
+  position: absolute;
+  top: -4px;
+  left: -2px;
+}
+
+.ui-icon__health {
+  width: 22px;
+}
+
+.ui-icon__coin {
+  width: 20px;
 }
