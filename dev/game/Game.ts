@@ -2,7 +2,7 @@
 
 class Game extends GameObject {
   private bomber: Bomber;
-  private health: Health;
+  private coinsBar: CoinsBar;
   private walkers: Walker[] = [];
   private bullets: Bullet[] = [];
 
@@ -10,6 +10,7 @@ class Game extends GameObject {
   private pickedUpItems: Item[] = [];
 
   private static instance: Game;
+  private playerHealthBar: PlayerHealthBar;
 
   constructor() {
     super();
@@ -19,7 +20,7 @@ class Game extends GameObject {
       this.walkers.push(new Walker());
     }, 7000);
     this.gameLoop();
-    this.createUi();
+    this.createUI();
   }
 
   private gameLoop(): void {
@@ -41,8 +42,9 @@ class Game extends GameObject {
     });
   }
 
-  private createUi() {
-    this.health = new Health();
+  private createUI() {
+    this.playerHealthBar = new PlayerHealthBar();
+    this.coinsBar = new CoinsBar(this.pickedUpItems);
   }
 
   public addBulletsToArray(bullet: Bullet) {
@@ -54,10 +56,12 @@ class Game extends GameObject {
   }
 
   private collisionHandler() {
+
     for (const item of this.items) {
       if (this.collision(item, this.bomber)) {
         item.removeElement();
         this.pickedUpItems.push(item);
+        this.coinsBar.update(this.pickedUpItems);
         this.removeObjectsFromArrayIfNotVisible([this.items]);
       }
     }
@@ -66,7 +70,7 @@ class Game extends GameObject {
       // check collision Bomber | Walker
       if (this.collision(this.bomber, walker)) {
         this.bomber.damage(walker.getAttackPower());
-        this.health.update(this.bomber);
+        this.playerHealthBar.update(this.bomber);
       }
 
       // check collision Bullet | Walker

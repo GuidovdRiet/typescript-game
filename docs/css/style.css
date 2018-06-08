@@ -76,7 +76,7 @@ ui {
   margin-top: 10px;
 }
 
-healthbar {
+walkerhealthbar {
   width: 50px;
   height: 10px;
   background: green;
@@ -107,28 +107,29 @@ coinbarcontainer {
   display: flex;
 }
 
-health,
-coins {
-  width: 200px;
+playerhealthbar,
+coinsbar {
   height: 23px;
   margin-left: 4px;
 }
 
-health {
+playerhealthbar {
+  width: 200px;
   background: #21b84d;
 }
 
-coins {
+coinsbar {
   background: #d59f2b;
   justify-content: flex-end;
+  overflow: hidden;
 }
 
-coins > h4 {
+coinsbar > h4 {
   color: #ffffffab;
   position: absolute;
   right: 4px;
-  font-size: 2.3em;
-  margin-top: -15px;
+  font-size: 2em;
+  margin-top: -12px;
 }
 
 coin {

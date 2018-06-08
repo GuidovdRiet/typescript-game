@@ -1,11 +1,11 @@
-class HealthBar extends GameObject {
+class WalkerHealthBar extends GameObject {
   private character: Character;
   private health: number;
 
   constructor(character: Character) {
     super();
 
-    this.element = document.createElement("healthbar");
+    this.element = document.createElement("walkerhealthbar");
     document.body.appendChild(this.element);
 
     this.character = character;

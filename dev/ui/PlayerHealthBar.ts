@@ -1,18 +1,15 @@
 /// <reference path="./UI.ts" />
 
-class Health extends Ui {
-  private bomber: Bomber;
-
+class PlayerHealthBar extends Ui {
   constructor() {
     super();
     this.start();
   }
 
   private start() {
-    this.element = document.createElement("health");
+    this.element = document.createElement("playerhealthbar");
     const healthbarContainer = document.querySelector("healthbarcontainer");
     healthbarContainer.appendChild(this.element);
-
     this.width = this.element.clientWidth;
     this.height = this.element.clientHeight;
   }

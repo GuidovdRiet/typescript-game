@@ -102,7 +102,7 @@ var Character = (function (_super) {
             Game.getInstance()
                 .getitems()
                 .push(new Coin(character));
-            this.healthBar.removeElement();
+            this.walkerHealthBar.removeElement();
             this.clearInterval(this.intervalId);
         }
     };
@@ -220,7 +220,6 @@ var Bomber = (function (_super) {
     };
     return Bomber;
 }(Character));
-;
 var Walker = (function (_super) {
     __extends(Walker, _super);
     function Walker() {
@@ -234,20 +233,21 @@ var Walker = (function (_super) {
         this.y = (window.innerHeight / 100) * (Math.random() * 90);
         this.attackPower = 3;
         this.moveSpeed = 3;
-        this.healthBar = new HealthBar(this);
+        this.walkerHealthBar = new WalkerHealthBar(this);
         this.setAttackPower(this.attackPower);
         this.update();
         this.animate(this.baseUrlBackgroundAnimation);
     };
     Walker.prototype.update = function () {
         this.x = this.x - this.moveSpeed;
-        this.healthBar.update();
+        this.walkerHealthBar.update();
         this.removeElementHandler();
         this.checkIfDead(this);
         this.draw();
     };
     return Walker;
 }(Character));
+;
 var Game = (function (_super) {
     __extends(Game, _super);
     function Game() {
@@ -262,7 +262,7 @@ var Game = (function (_super) {
             _this.walkers.push(new Walker());
         }, 7000);
         _this.gameLoop();
-        _this.createUi();
+        _this.createUI();
         return _this;
     }
     Game.prototype.gameLoop = function () {
@@ -282,8 +282,9 @@ var Game = (function (_super) {
             walker.update();
         });
     };
-    Game.prototype.createUi = function () {
-        this.health = new Health();
+    Game.prototype.createUI = function () {
+        this.playerHealthBar = new PlayerHealthBar();
+        this.coinsBar = new CoinsBar(this.pickedUpItems);
     };
     Game.prototype.addBulletsToArray = function (bullet) {
         this.bullets.push(bullet);
@@ -297,6 +298,7 @@ var Game = (function (_super) {
             if (this.collision(item, this.bomber)) {
                 item.removeElement();
                 this.pickedUpItems.push(item);
+                this.coinsBar.update(this.pickedUpItems);
                 this.removeObjectsFromArrayIfNotVisible([this.items]);
             }
         }
@@ -304,7 +306,7 @@ var Game = (function (_super) {
             var walker = _c[_b];
             if (this.collision(this.bomber, walker)) {
                 this.bomber.damage(walker.getAttackPower());
-                this.health.update(this.bomber);
+                this.playerHealthBar.update(this.bomber);
             }
             for (var _d = 0, _e = this.bullets; _d < _e.length; _d++) {
                 var bullet = _e[_d];
@@ -338,11 +340,11 @@ var Game = (function (_super) {
     };
     return Game;
 }(GameObject));
-var HealthBar = (function (_super) {
-    __extends(HealthBar, _super);
-    function HealthBar(character) {
+var WalkerHealthBar = (function (_super) {
+    __extends(WalkerHealthBar, _super);
+    function WalkerHealthBar(character) {
         var _this = _super.call(this) || this;
-        _this.element = document.createElement("healthbar");
+        _this.element = document.createElement("walkerhealthbar");
         document.body.appendChild(_this.element);
         _this.character = character;
         _this.health = _this.character.getHealth();
@@ -350,17 +352,17 @@ var HealthBar = (function (_super) {
         _this.update();
         return _this;
     }
-    HealthBar.prototype.decreaseWidthOnDamage = function () {
+    WalkerHealthBar.prototype.decreaseWidthOnDamage = function () {
         this.element.style.width = this.character.getHealth() / 2 + "px";
     };
-    HealthBar.prototype.update = function () {
+    WalkerHealthBar.prototype.update = function () {
         this.x = this.character.getPosition().x;
         this.y = this.character.getPosition().y;
         this.removeElementHandler();
         this.decreaseWidthOnDamage();
         this.draw();
     };
-    return HealthBar;
+    return WalkerHealthBar;
 }(GameObject));
 var Item = (function (_super) {
     __extends(Item, _super);
@@ -398,21 +400,49 @@ var Ui = (function (_super) {
     }
     return Ui;
 }(GameObject));
-var Health = (function (_super) {
-    __extends(Health, _super);
-    function Health() {
+var CoinsBar = (function (_super) {
+    __extends(CoinsBar, _super);
+    function CoinsBar(pickedUpItems) {
+        var _this = _super.call(this) || this;
+        _this.coins = [];
+        _this.element = document.createElement("coinsbar");
+        var coinbarContainer = document.querySelector("coinbarcontainer");
+        coinbarContainer.appendChild(_this.element);
+        _this.update(pickedUpItems);
+        return _this;
+    }
+    CoinsBar.prototype.update = function (pickedUpItems) {
+        this.coins = pickedUpItems.map(function (pickedUpItem) {
+            if (pickedUpItem instanceof Coin) {
+                return pickedUpItem;
+            }
+        });
+        this.totalCoins = this.coins.length;
+        this.displayTotalCoins();
+    };
+    CoinsBar.prototype.displayTotalCoins = function () {
+        this.element.innerHTML = '';
+        var h4 = document.createElement('h4');
+        h4.innerHTML = "" + this.totalCoins;
+        this.element.appendChild(h4);
+    };
+    return CoinsBar;
+}(Ui));
+var PlayerHealthBar = (function (_super) {
+    __extends(PlayerHealthBar, _super);
+    function PlayerHealthBar() {
         var _this = _super.call(this) || this;
         _this.start();
         return _this;
     }
-    Health.prototype.start = function () {
-        this.element = document.createElement("health");
+    PlayerHealthBar.prototype.start = function () {
+        this.element = document.createElement("playerhealthbar");
         var healthbarContainer = document.querySelector("healthbarcontainer");
         healthbarContainer.appendChild(this.element);
         this.width = this.element.clientWidth;
         this.height = this.element.clientHeight;
     };
-    Health.prototype.update = function (bomber) {
+    PlayerHealthBar.prototype.update = function (bomber) {
         var colorHealthOrange = 60;
         var colorHealthRed = 30;
         var bomberHealth = bomber.getHealth();
@@ -422,7 +452,7 @@ var Health = (function (_super) {
             this.element.style.background = "#B83C3C";
         this.element.style.width = (this.width / 100) * bomberHealth + "px";
     };
-    return Health;
+    return PlayerHealthBar;
 }(Ui));
 var WeaponBehaviour = (function (_super) {
     __extends(WeaponBehaviour, _super);

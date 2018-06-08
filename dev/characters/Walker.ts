@@ -16,7 +16,7 @@ class Walker extends Character {
     this.attackPower = 3;
     this.moveSpeed = 3;
 
-    this.healthBar = new HealthBar(this);
+    this.walkerHealthBar = new WalkerHealthBar(this);
     this.setAttackPower(this.attackPower);
 
     this.update();
@@ -25,7 +25,7 @@ class Walker extends Character {
 
   public update() {
     this.x = this.x - this.moveSpeed;
-    this.healthBar.update();
+    this.walkerHealthBar.update();
     this.removeElementHandler();
     this.checkIfDead(this);
     this.draw();

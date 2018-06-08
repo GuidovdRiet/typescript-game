@@ -3,7 +3,7 @@
 class Character extends GameObject {
   protected animationCount: number = 0;
   protected moveSpeed: number;
-  protected healthBar: HealthBar;
+  protected walkerHealthBar: WalkerHealthBar;
   protected attackPower: number;
   protected intervalId: number;
   protected item: Item;
@@ -48,7 +48,7 @@ class Character extends GameObject {
       Game.getInstance()
         .getitems()
         .push(new Coin(character));
-      this.healthBar.removeElement();
+      this.walkerHealthBar.removeElement();
       this.clearInterval(this.intervalId);
     }
   }
