@@ -20,12 +20,18 @@ class CoinsBar extends Ui {
     });
     this.totalCoins = this.coins.length;
     this.displayTotalCoins();
+    this.setCoinBarWidth();
   }
 
   private displayTotalCoins() {
-    this.element.innerHTML = '';
-    const h4 = document.createElement('h4');
+    this.element.innerHTML = "";
+    const h4 = document.createElement("h4");
     h4.innerHTML = `${this.totalCoins}`;
     this.element.appendChild(h4);
+  }
+
+  private setCoinBarWidth() {
+    let width = this.totalCoins * 10;
+    this.element.style.width = `${width}px`;
   }
 }

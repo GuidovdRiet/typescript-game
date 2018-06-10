@@ -419,12 +419,17 @@ var CoinsBar = (function (_super) {
         });
         this.totalCoins = this.coins.length;
         this.displayTotalCoins();
+        this.setCoinBarWidth();
     };
     CoinsBar.prototype.displayTotalCoins = function () {
-        this.element.innerHTML = '';
-        var h4 = document.createElement('h4');
+        this.element.innerHTML = "";
+        var h4 = document.createElement("h4");
         h4.innerHTML = "" + this.totalCoins;
         this.element.appendChild(h4);
+    };
+    CoinsBar.prototype.setCoinBarWidth = function () {
+        var width = this.totalCoins * 10;
+        this.element.style.width = width + "px";
     };
     return CoinsBar;
 }(Ui));
