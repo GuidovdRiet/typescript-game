@@ -2,7 +2,7 @@
 
 class CoinsBar extends Ui {
   private coins: Item[] = [];
-  private totalCoins: number;
+  private totalCoins: number = 0;
 
   constructor(pickedUpItems: Item[]) {
     super();
@@ -21,6 +21,10 @@ class CoinsBar extends Ui {
     this.totalCoins = this.coins.length;
     this.displayTotalCoins();
     this.setCoinBarWidth();
+  }
+
+  public getTotalCoins(): number {
+    return this.totalCoins;
   }
 
   private displayTotalCoins() {

@@ -222,10 +222,11 @@ var Bomber = (function (_super) {
 }(Character));
 var Walker = (function (_super) {
     __extends(Walker, _super);
-    function Walker() {
+    function Walker(subject) {
         var _this = _super.call(this, "walker") || this;
         _this.baseUrlBackgroundAnimation = "../docs/img/characters/zombies/walker/spr_zombie1_attack_";
         _this.start();
+        _this.shop = subject;
         return _this;
     }
     Walker.prototype.start = function () {
@@ -245,6 +246,9 @@ var Walker = (function (_super) {
         this.checkIfDead(this);
         this.draw();
     };
+    Walker.prototype.notify = function (p) {
+        console.log(p + " is notified");
+    };
     return Walker;
 }(Character));
 ;
@@ -256,13 +260,15 @@ var Game = (function (_super) {
         _this.bullets = [];
         _this.items = [];
         _this.pickedUpItems = [];
+        _this.observers = [];
         _this.bomber = new Bomber();
-        _this.walkers.push(new Walker());
+        _this.level = new Level();
+        _this.walkers.push(new Walker(_this));
         setInterval(function () {
-            _this.walkers.push(new Walker());
-        }, 7000);
-        _this.gameLoop();
+            _this.walkers.push(new Walker(_this));
+        }, 2000);
         _this.createUI();
+        _this.gameLoop();
         return _this;
     }
     Game.prototype.gameLoop = function () {
@@ -271,7 +277,20 @@ var Game = (function (_super) {
         this.createEnemies();
         this.removeObjectsHandler();
         this.collisionHandler();
+        this.levelHandler();
         requestAnimationFrame(function () { return _this.gameLoop(); });
+    };
+    Game.prototype.levelHandler = function () {
+        if (this.level.getTotalCoinsTillNextLevel() === this.coinsBar.getTotalCoins()) {
+            this.level.levelUp();
+        }
+        console.log(this.level.getTotalCoinsTillNextLevel());
+    };
+    Game.prototype.subscribe = function (observer) {
+        this.observers.push(observer);
+    };
+    Game.prototype.unsubscribe = function (observer) {
+        console.log("remove from array unsubscribe");
     };
     Game.prototype.createBomber = function () {
         this.bomber.update();
@@ -340,6 +359,33 @@ var Game = (function (_super) {
     };
     return Game;
 }(GameObject));
+var Level = (function (_super) {
+    __extends(Level, _super);
+    function Level() {
+        var _this = _super.call(this) || this;
+        _this.level = 1;
+        _this.totalCoinsTillNextLevel = 3;
+        _this.attackPowerIncrease = 3;
+        _this.walkingSpeedIncrease = 3;
+        return _this;
+    }
+    Level.prototype.levelUp = function () {
+        this.level = this.level + 1;
+        this.totalCoinsTillNextLevel = this.totalCoinsTillNextLevel + 2;
+        this.attackPowerIncrease = this.attackPowerIncrease + 3;
+        this.walkingSpeedIncrease = this.walkingSpeedIncrease + 3;
+    };
+    Level.prototype.getTotalCoinsTillNextLevel = function () {
+        return this.totalCoinsTillNextLevel;
+    };
+    Level.prototype.getAttackPowerIncrease = function () {
+        return this.getAttackPowerIncrease;
+    };
+    Level.prototype.getLevelCount = function () {
+        return this.level;
+    };
+    return Level;
+}(GameObject));
 var WalkerHealthBar = (function (_super) {
     __extends(WalkerHealthBar, _super);
     function WalkerHealthBar(character) {
@@ -405,6 +451,7 @@ var CoinsBar = (function (_super) {
     function CoinsBar(pickedUpItems) {
         var _this = _super.call(this) || this;
         _this.coins = [];
+        _this.totalCoins = 0;
         _this.element = document.createElement("coinsbar");
         var coinbarContainer = document.querySelector("coinbarcontainer");
         coinbarContainer.appendChild(_this.element);
@@ -420,6 +467,9 @@ var CoinsBar = (function (_super) {
         this.totalCoins = this.coins.length;
         this.displayTotalCoins();
         this.setCoinBarWidth();
+    };
+    CoinsBar.prototype.getTotalCoins = function () {
+        return this.totalCoins;
     };
     CoinsBar.prototype.displayTotalCoins = function () {
         this.element.innerHTML = "";

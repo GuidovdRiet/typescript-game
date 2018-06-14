@@ -1,13 +1,15 @@
 /// <reference path="../characters/Walker.ts"/>
 
-class Game extends GameObject {
+class Game extends GameObject implements Subject {
   private bomber: Bomber;
   private coinsBar: CoinsBar;
   private walkers: Walker[] = [];
   private bullets: Bullet[] = [];
+  private level: Level;
 
   private items: Item[] = [];
   private pickedUpItems: Item[] = [];
+  public observers: Observer[] = [];
 
   private static instance: Game;
   private playerHealthBar: PlayerHealthBar;
@@ -15,12 +17,13 @@ class Game extends GameObject {
   constructor() {
     super();
     this.bomber = new Bomber();
-    this.walkers.push(new Walker());
+    this.level = new Level();
+    this.walkers.push(new Walker(this));
     setInterval(() => {
-      this.walkers.push(new Walker());
-    }, 7000);
-    this.gameLoop();
+      this.walkers.push(new Walker(this));
+    }, 2000);
     this.createUI();
+    this.gameLoop();
   }
 
   private gameLoop(): void {
@@ -28,35 +31,58 @@ class Game extends GameObject {
     this.createEnemies();
     this.removeObjectsHandler();
     this.collisionHandler();
+    this.levelHandler();
     requestAnimationFrame(() => this.gameLoop());
   }
 
-  private createBomber() {
+  private levelHandler(): void {
+    if (
+      this.level.getTotalCoinsTillNextLevel() === this.coinsBar.getTotalCoins()
+    ) {
+      this.level.levelUp();
+    }
+    console.log(this.level.getTotalCoinsTillNextLevel());
+  }
+
+  // public dealGlobalDamage(): void {
+  //   for(const observer of this.observers) {
+  //     observer.notify('Notified');
+  //   }
+  // }
+
+  public subscribe(observer: Observer): void {
+    this.observers.push(observer);
+  }
+
+  public unsubscribe(observer: Observer): void {
+    console.log("remove from array unsubscribe");
+  }
+
+  private createBomber(): void {
     this.bomber.update();
     this.bomber.getHealth();
   }
 
-  private createEnemies() {
+  private createEnemies(): void {
     this.walkers.forEach(walker => {
       walker.update();
     });
   }
 
-  private createUI() {
+  private createUI(): void {
     this.playerHealthBar = new PlayerHealthBar();
     this.coinsBar = new CoinsBar(this.pickedUpItems);
   }
 
-  public addBulletsToArray(bullet: Bullet) {
+  public addBulletsToArray(bullet: Bullet): void {
     this.bullets.push(bullet);
   }
 
-  private removeObjectsHandler() {
+  private removeObjectsHandler(): void {
     this.removeObjectsFromArrayIfNotVisible([this.bullets, this.walkers]);
   }
 
-  private collisionHandler() {
-
+  private collisionHandler(): void {
     for (const item of this.items) {
       if (this.collision(item, this.bomber)) {
         item.removeElement();
@@ -83,7 +109,7 @@ class Game extends GameObject {
     }
   }
 
-  private removeObjectsFromArrayIfNotVisible(arrays: any) {
+  private removeObjectsFromArrayIfNotVisible(arrays: any): void {
     arrays.map((array: any) => {
       array.map((item: GameObject, index: number) => {
         if (!item.getVisibility()) {
@@ -93,11 +119,11 @@ class Game extends GameObject {
     });
   }
 
-  public getBulletsArray() {
+  public getBulletsArray(): Bullet[] {
     return this.bullets;
   }
 
-  public getitems() {
+  public getitems(): Item[] {
     return this.items;
   }
 

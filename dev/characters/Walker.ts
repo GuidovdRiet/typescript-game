@@ -1,12 +1,14 @@
 /// <reference path="./Character.ts"/>
 
-class Walker extends Character {
+class Walker extends Character implements Observer {
   private baseUrlBackgroundAnimation: string =
     "../docs/img/characters/zombies/walker/spr_zombie1_attack_";
+  shop: Subject;
 
-  constructor() {
+  constructor(subject: Subject) {
     super("walker");
     this.start();
+    this.shop = subject;
   }
 
   private start() {
@@ -29,5 +31,9 @@ class Walker extends Character {
     this.removeElementHandler();
     this.checkIfDead(this);
     this.draw();
+  }
+
+  public notify(p: string) {
+    console.log(`${p} is notified`);
   }
 }
