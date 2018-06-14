@@ -3,12 +3,11 @@
 class Walker extends Character implements Observer {
   private baseUrlBackgroundAnimation: string =
     "../docs/img/characters/zombies/walker/spr_zombie1_attack_";
-  shop: Subject;
 
-  constructor(subject: Subject) {
+  constructor(level: Level) {
     super("walker");
+    level.subscribe(this);
     this.start();
-    this.shop = subject;
   }
 
   private start() {
@@ -31,9 +30,5 @@ class Walker extends Character implements Observer {
     this.removeElementHandler();
     this.checkIfDead(this);
     this.draw();
-  }
-
-  public notify(p: string) {
-    console.log(`${p} is notified`);
   }
 }

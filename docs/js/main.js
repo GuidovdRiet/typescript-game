@@ -82,6 +82,9 @@ var Character = (function (_super) {
         _this.height = _this.element.clientHeight;
         return _this;
     }
+    Character.prototype.notify = function (p) {
+        console.log('notified');
+    };
     Character.prototype.setWalkingBackground = function (startPostion, backgrounds, baseUrl) {
         startPostion
             ? (this.animationCount = 0)
@@ -129,7 +132,7 @@ var Character = (function (_super) {
 }(GameObject));
 var Bomber = (function (_super) {
     __extends(Bomber, _super);
-    function Bomber() {
+    function Bomber(level) {
         var _this = _super.call(this, "bomber") || this;
         _this.leftSpeed = 0;
         _this.upSpeed = 0;
@@ -138,6 +141,7 @@ var Bomber = (function (_super) {
         _this.baseUrlBackgroundAnimation = "../docs/img/characters/bomber/spr_player_";
         _this.start();
         _this.moveSpeed = 4;
+        level.subscribe(_this);
         window.addEventListener("keydown", function (event) {
             _this.move(event, _this.moveSpeed);
             _this.switchWeapons(event);
@@ -222,11 +226,11 @@ var Bomber = (function (_super) {
 }(Character));
 var Walker = (function (_super) {
     __extends(Walker, _super);
-    function Walker(subject) {
+    function Walker(level) {
         var _this = _super.call(this, "walker") || this;
         _this.baseUrlBackgroundAnimation = "../docs/img/characters/zombies/walker/spr_zombie1_attack_";
+        level.subscribe(_this);
         _this.start();
-        _this.shop = subject;
         return _this;
     }
     Walker.prototype.start = function () {
@@ -246,9 +250,6 @@ var Walker = (function (_super) {
         this.checkIfDead(this);
         this.draw();
     };
-    Walker.prototype.notify = function (p) {
-        console.log(p + " is notified");
-    };
     return Walker;
 }(Character));
 ;
@@ -260,21 +261,25 @@ var Game = (function (_super) {
         _this.bullets = [];
         _this.items = [];
         _this.pickedUpItems = [];
-        _this.observers = [];
-        _this.bomber = new Bomber();
         _this.level = new Level();
-        _this.walkers.push(new Walker(_this));
+        _this.bomber = new Bomber(_this.level);
         setInterval(function () {
-            _this.walkers.push(new Walker(_this));
+            _this.walkers.push(new Walker(_this.level));
         }, 2000);
         _this.createUI();
         _this.gameLoop();
         return _this;
     }
+    Game.getInstance = function () {
+        if (!Game.instance) {
+            Game.instance = new Game();
+        }
+        return Game.instance;
+    };
     Game.prototype.gameLoop = function () {
         var _this = this;
-        this.createBomber();
-        this.createEnemies();
+        this.updateBomber();
+        this.updateEnemies();
         this.removeObjectsHandler();
         this.collisionHandler();
         this.levelHandler();
@@ -286,17 +291,14 @@ var Game = (function (_super) {
         }
         console.log(this.level.getTotalCoinsTillNextLevel());
     };
-    Game.prototype.subscribe = function (observer) {
-        this.observers.push(observer);
-    };
     Game.prototype.unsubscribe = function (observer) {
         console.log("remove from array unsubscribe");
     };
-    Game.prototype.createBomber = function () {
+    Game.prototype.updateBomber = function () {
         this.bomber.update();
         this.bomber.getHealth();
     };
-    Game.prototype.createEnemies = function () {
+    Game.prototype.updateEnemies = function () {
         this.walkers.forEach(function (walker) {
             walker.update();
         });
@@ -351,12 +353,6 @@ var Game = (function (_super) {
     Game.prototype.getitems = function () {
         return this.items;
     };
-    Game.getInstance = function () {
-        if (!Game.instance) {
-            Game.instance = new Game();
-        }
-        return Game.instance;
-    };
     return Game;
 }(GameObject));
 var Level = (function (_super) {
@@ -367,13 +363,21 @@ var Level = (function (_super) {
         _this.totalCoinsTillNextLevel = 3;
         _this.attackPowerIncrease = 3;
         _this.walkingSpeedIncrease = 3;
+        _this.observers = [];
         return _this;
     }
+    Level.prototype.subscribe = function (observer) {
+        this.observers.push(observer);
+        console.log(this.observers);
+    };
     Level.prototype.levelUp = function () {
         this.level = this.level + 1;
         this.totalCoinsTillNextLevel = this.totalCoinsTillNextLevel + 2;
         this.attackPowerIncrease = this.attackPowerIncrease + 3;
         this.walkingSpeedIncrease = this.walkingSpeedIncrease + 3;
+    };
+    Level.prototype.getObservers = function () {
+        return this.observers;
     };
     Level.prototype.getTotalCoinsTillNextLevel = function () {
         return this.totalCoinsTillNextLevel;
@@ -463,6 +467,7 @@ var CoinsBar = (function (_super) {
             if (pickedUpItem instanceof Coin) {
                 return pickedUpItem;
             }
+            return null;
         });
         this.totalCoins = this.coins.length;
         this.displayTotalCoins();

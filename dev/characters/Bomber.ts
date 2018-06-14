@@ -1,6 +1,7 @@
 /// <reference path="./Character.ts"/>
 
-class Bomber extends Character {
+class Bomber extends Character implements Observer {
+
   private leftSpeed: number = 0;
   private upSpeed: number = 0;
   private downSpeed: number = 0;
@@ -11,10 +12,13 @@ class Bomber extends Character {
     "../docs/img/characters/bomber/spr_player_";
   private weapon: WeaponBehaviour;
 
-  constructor() {
+  constructor(level: Level) {
     super("bomber");
+    
     this.start();
     this.moveSpeed = 4;
+
+    level.subscribe(this);
 
     window.addEventListener("keydown", (event: KeyboardEvent) => {
       this.move(event, this.moveSpeed);

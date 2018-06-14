@@ -17,6 +17,7 @@ class CoinsBar extends Ui {
       if (pickedUpItem instanceof Coin) {
         return pickedUpItem;
       }
+      return null;
     });
     this.totalCoins = this.coins.length;
     this.displayTotalCoins();

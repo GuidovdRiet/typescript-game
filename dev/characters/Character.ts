@@ -1,6 +1,6 @@
 /// <reference path="../game/GameObject.ts"/>
 
-class Character extends GameObject {
+class Character extends GameObject implements Observer {
   protected animationCount: number = 0;
   protected moveSpeed: number;
   protected walkerHealthBar: WalkerHealthBar;
@@ -14,9 +14,13 @@ class Character extends GameObject {
 
     this.element = document.createElement(name);
     document.body.appendChild(this.element);
-
+    
     this.width = this.element.clientWidth;
     this.height = this.element.clientHeight;
+  }
+
+  public notify(p: string): void {
+    console.log('notified');
   }
 
   protected setWalkingBackground(

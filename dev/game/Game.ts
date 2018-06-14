@@ -1,6 +1,6 @@
 /// <reference path="../characters/Walker.ts"/>
 
-class Game extends GameObject implements Subject {
+class Game extends GameObject {
   private bomber: Bomber;
   private coinsBar: CoinsBar;
   private walkers: Walker[] = [];
@@ -9,26 +9,32 @@ class Game extends GameObject implements Subject {
 
   private items: Item[] = [];
   private pickedUpItems: Item[] = [];
-  public observers: Observer[] = [];
 
   private static instance: Game;
   private playerHealthBar: PlayerHealthBar;
 
   constructor() {
     super();
-    this.bomber = new Bomber();
     this.level = new Level();
-    this.walkers.push(new Walker(this));
+    this.bomber = new Bomber(this.level);
     setInterval(() => {
-      this.walkers.push(new Walker(this));
+      this.walkers.push(new Walker(this.level));
     }, 2000);
     this.createUI();
     this.gameLoop();
   }
 
+  public static getInstance() {
+    if (!Game.instance) {
+      Game.instance = new Game();
+    }
+    return Game.instance;
+  }
+
+
   private gameLoop(): void {
-    this.createBomber();
-    this.createEnemies();
+    this.updateBomber();
+    this.updateEnemies();
     this.removeObjectsHandler();
     this.collisionHandler();
     this.levelHandler();
@@ -50,20 +56,16 @@ class Game extends GameObject implements Subject {
   //   }
   // }
 
-  public subscribe(observer: Observer): void {
-    this.observers.push(observer);
-  }
-
   public unsubscribe(observer: Observer): void {
     console.log("remove from array unsubscribe");
   }
 
-  private createBomber(): void {
+  private updateBomber(): void {
     this.bomber.update();
     this.bomber.getHealth();
   }
 
-  private createEnemies(): void {
+  private updateEnemies(): void {
     this.walkers.forEach(walker => {
       walker.update();
     });
@@ -125,12 +127,5 @@ class Game extends GameObject implements Subject {
 
   public getitems(): Item[] {
     return this.items;
-  }
-
-  public static getInstance(): Game {
-    if (!Game.instance) {
-      Game.instance = new Game();
-    }
-    return Game.instance;
   }
 }
