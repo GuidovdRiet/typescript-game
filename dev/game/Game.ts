@@ -38,6 +38,7 @@ class Game extends GameObject {
     this.removeObjectsHandler();
     this.collisionHandler();
     this.levelHandler();
+    this.level.unsubscribe();
     requestAnimationFrame(() => this.gameLoop());
   }
 
@@ -47,14 +48,7 @@ class Game extends GameObject {
     ) {
       this.level.levelUp();
     }
-    console.log(this.level.getTotalCoinsTillNextLevel());
   }
-
-  // public dealGlobalDamage(): void {
-  //   for(const observer of this.observers) {
-  //     observer.notify('Notified');
-  //   }
-  // }
 
   public unsubscribe(observer: Observer): void {
     console.log("remove from array unsubscribe");
@@ -109,16 +103,6 @@ class Game extends GameObject {
         }
       }
     }
-  }
-
-  private removeObjectsFromArrayIfNotVisible(arrays: any): void {
-    arrays.map((array: any) => {
-      array.map((item: GameObject, index: number) => {
-        if (!item.getVisibility()) {
-          array.splice(index, 1);
-        }
-      });
-    });
   }
 
   public getBulletsArray(): Bullet[] {

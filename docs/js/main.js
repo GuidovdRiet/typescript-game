@@ -52,6 +52,15 @@ var GameObject = (function () {
             this.clearInterval(this.intervalId);
         }
     };
+    GameObject.prototype.removeObjectsFromArrayIfNotVisible = function (arrays) {
+        arrays.map(function (array) {
+            array.map(function (item, index) {
+                if (!item.getVisibility()) {
+                    array.splice(index, 1);
+                }
+            });
+        });
+    };
     GameObject.prototype.removeDomElementIfLeavesScreen = function () {
         if (this.x > window.innerWidth || this.x < 0) {
             this.removeElement();
@@ -63,7 +72,7 @@ var GameObject = (function () {
         clearInterval(intervalId);
     };
     GameObject.prototype.removeListener = function (eventType, callBack) {
-        window.removeEventListener('click', callBack);
+        window.removeEventListener("click", callBack);
     };
     GameObject.prototype.draw = function () {
         this.element.style.transform = "translate3d(" + this.x + "px, " + this.y + "px, 0px)";
@@ -72,18 +81,23 @@ var GameObject = (function () {
 }());
 var Character = (function (_super) {
     __extends(Character, _super);
-    function Character(name) {
+    function Character(name, level) {
         var _this = _super.call(this) || this;
         _this.animationCount = 0;
         _this.health = 100;
         _this.element = document.createElement(name);
         document.body.appendChild(_this.element);
+        _this.level = level;
         _this.width = _this.element.clientWidth;
         _this.height = _this.element.clientHeight;
         return _this;
     }
-    Character.prototype.notify = function (p) {
-        console.log('notified');
+    Character.prototype.notify = function () {
+        this.attackPower = this.level.getAttackPowerLevel();
+        this.moveSpeed = this.level.getMoveSpeedLevel();
+        console.log(this.element, 'is notified');
+        console.log(this.element, this.attackPower);
+        console.log(this.element, this.moveSpeed);
     };
     Character.prototype.setWalkingBackground = function (startPostion, backgrounds, baseUrl) {
         startPostion
@@ -133,7 +147,7 @@ var Character = (function (_super) {
 var Bomber = (function (_super) {
     __extends(Bomber, _super);
     function Bomber(level) {
-        var _this = _super.call(this, "bomber") || this;
+        var _this = _super.call(this, "bomber", level) || this;
         _this.leftSpeed = 0;
         _this.upSpeed = 0;
         _this.downSpeed = 0;
@@ -227,7 +241,7 @@ var Bomber = (function (_super) {
 var Walker = (function (_super) {
     __extends(Walker, _super);
     function Walker(level) {
-        var _this = _super.call(this, "walker") || this;
+        var _this = _super.call(this, "walker", level) || this;
         _this.baseUrlBackgroundAnimation = "../docs/img/characters/zombies/walker/spr_zombie1_attack_";
         level.subscribe(_this);
         _this.start();
@@ -236,8 +250,8 @@ var Walker = (function (_super) {
     Walker.prototype.start = function () {
         this.x = window.innerWidth - this.width;
         this.y = (window.innerHeight / 100) * (Math.random() * 90);
-        this.attackPower = 3;
-        this.moveSpeed = 3;
+        this.attackPower = this.level.getAttackPowerLevel();
+        this.moveSpeed = this.level.getMoveSpeedLevel();
         this.walkerHealthBar = new WalkerHealthBar(this);
         this.setAttackPower(this.attackPower);
         this.update();
@@ -283,13 +297,13 @@ var Game = (function (_super) {
         this.removeObjectsHandler();
         this.collisionHandler();
         this.levelHandler();
+        this.level.unsubscribe();
         requestAnimationFrame(function () { return _this.gameLoop(); });
     };
     Game.prototype.levelHandler = function () {
         if (this.level.getTotalCoinsTillNextLevel() === this.coinsBar.getTotalCoins()) {
             this.level.levelUp();
         }
-        console.log(this.level.getTotalCoinsTillNextLevel());
     };
     Game.prototype.unsubscribe = function (observer) {
         console.log("remove from array unsubscribe");
@@ -338,15 +352,6 @@ var Game = (function (_super) {
             }
         }
     };
-    Game.prototype.removeObjectsFromArrayIfNotVisible = function (arrays) {
-        arrays.map(function (array) {
-            array.map(function (item, index) {
-                if (!item.getVisibility()) {
-                    array.splice(index, 1);
-                }
-            });
-        });
-    };
     Game.prototype.getBulletsArray = function () {
         return this.bullets;
     };
@@ -361,20 +366,27 @@ var Level = (function (_super) {
         var _this = _super.call(this) || this;
         _this.level = 1;
         _this.totalCoinsTillNextLevel = 3;
-        _this.attackPowerIncrease = 3;
-        _this.walkingSpeedIncrease = 3;
+        _this.attackPowerLevel = 3;
+        _this.moveSpeedLevel = 3;
         _this.observers = [];
         return _this;
     }
     Level.prototype.subscribe = function (observer) {
         this.observers.push(observer);
-        console.log(this.observers);
+    };
+    Level.prototype.unsubscribe = function () {
+        this.removeObjectsFromArrayIfNotVisible([this.observers]);
     };
     Level.prototype.levelUp = function () {
+        console.log('Level up!', this.level);
         this.level = this.level + 1;
         this.totalCoinsTillNextLevel = this.totalCoinsTillNextLevel + 2;
-        this.attackPowerIncrease = this.attackPowerIncrease + 3;
-        this.walkingSpeedIncrease = this.walkingSpeedIncrease + 3;
+        this.attackPowerLevel = this.attackPowerLevel + 3;
+        this.moveSpeedLevel = this.moveSpeedLevel + 3;
+        for (var _i = 0, _a = this.observers; _i < _a.length; _i++) {
+            var observer = _a[_i];
+            observer.notify();
+        }
     };
     Level.prototype.getObservers = function () {
         return this.observers;
@@ -382,8 +394,11 @@ var Level = (function (_super) {
     Level.prototype.getTotalCoinsTillNextLevel = function () {
         return this.totalCoinsTillNextLevel;
     };
-    Level.prototype.getAttackPowerIncrease = function () {
-        return this.getAttackPowerIncrease;
+    Level.prototype.getMoveSpeedLevel = function () {
+        return this.moveSpeedLevel;
+    };
+    Level.prototype.getAttackPowerLevel = function () {
+        return this.attackPowerLevel;
     };
     Level.prototype.getLevelCount = function () {
         return this.level;

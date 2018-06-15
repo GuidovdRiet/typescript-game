@@ -1,6 +1,6 @@
 /// <reference path="./Character.ts"/>
 
-class Bomber extends Character implements Observer {
+class Bomber extends Character {
 
   private leftSpeed: number = 0;
   private upSpeed: number = 0;
@@ -13,7 +13,7 @@ class Bomber extends Character implements Observer {
   private weapon: WeaponBehaviour;
 
   constructor(level: Level) {
-    super("bomber");
+    super("bomber", level);
     
     this.start();
     this.moveSpeed = 4;

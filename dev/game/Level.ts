@@ -1,8 +1,8 @@
 class Level extends GameObject implements Subject {
   private level: number = 1;
   private totalCoinsTillNextLevel: number = 3;
-  private attackPowerIncrease: number = 3;
-  private walkingSpeedIncrease: number = 3;
+  private attackPowerLevel: number = 3;
+  private moveSpeedLevel: number = 3;
   public observers: Observer[] = [];
 
   constructor() {
@@ -11,14 +11,21 @@ class Level extends GameObject implements Subject {
 
   public subscribe(observer: Observer): void {
     this.observers.push(observer);
-    console.log(this.observers);
+  }
+
+  public unsubscribe(): void {
+    this.removeObjectsFromArrayIfNotVisible([this.observers]);
   }
 
   public levelUp() {
+    console.log('Level up!', this.level);
     this.level = this.level + 1;
     this.totalCoinsTillNextLevel = this.totalCoinsTillNextLevel + 2;
-    this.attackPowerIncrease = this.attackPowerIncrease + 3;
-    this.walkingSpeedIncrease = this.walkingSpeedIncrease + 3;
+    this.attackPowerLevel = this.attackPowerLevel + 3;
+    this.moveSpeedLevel = this.moveSpeedLevel + 3;
+    for(const observer of this.observers) {
+      observer.notify();
+    }
   }
 
   public getObservers() {
@@ -29,8 +36,12 @@ class Level extends GameObject implements Subject {
     return this.totalCoinsTillNextLevel;
   }
 
-  public getAttackPowerIncrease() {
-    return this.getAttackPowerIncrease;
+  public getMoveSpeedLevel() {
+    return this.moveSpeedLevel;
+  }
+
+  public getAttackPowerLevel() {
+    return this.attackPowerLevel;
   }
 
   public getLevelCount() {

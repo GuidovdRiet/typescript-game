@@ -59,6 +59,16 @@ abstract class GameObject {
     }
   }
 
+  protected removeObjectsFromArrayIfNotVisible(arrays: any): void {
+    arrays.map((array: any) => {
+      array.map((item: GameObject, index: number) => {
+        if (!item.getVisibility()) {
+          array.splice(index, 1);
+        }
+      });
+    });
+  }
+
   protected removeDomElementIfLeavesScreen(): boolean {
     if (this.x > window.innerWidth || this.x < 0) {
       this.removeElement();
@@ -72,7 +82,7 @@ abstract class GameObject {
   }
 
   public removeListener(eventType: string, callBack: EventListener): void {
-    window.removeEventListener('click', callBack);
+    window.removeEventListener("click", callBack);
   }
 
   protected draw(): void {

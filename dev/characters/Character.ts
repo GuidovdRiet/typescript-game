@@ -8,19 +8,25 @@ class Character extends GameObject implements Observer {
   protected intervalId: number;
   protected item: Item;
   protected health = 100;
+  protected level: Level;
 
-  constructor(name: string) {
+  constructor(name: string, level: Level) {
     super();
 
     this.element = document.createElement(name);
     document.body.appendChild(this.element);
-    
+    this.level = level;
+
     this.width = this.element.clientWidth;
     this.height = this.element.clientHeight;
   }
 
-  public notify(p: string): void {
-    console.log('notified');
+  public notify(): void {
+    this.attackPower = this.level.getAttackPowerLevel();
+    this.moveSpeed = this.level.getMoveSpeedLevel();
+    console.log(this.element, 'is notified');
+    console.log(this.element, this.attackPower);
+    console.log(this.element, this.moveSpeed);
   }
 
   protected setWalkingBackground(
