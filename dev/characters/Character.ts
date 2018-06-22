@@ -25,8 +25,6 @@ class Character extends GameObject implements Observer {
     this.attackPower = this.level.getAttackPowerLevel();
     this.moveSpeed = this.level.getMoveSpeedLevel();
     console.log(this.element, 'is notified');
-    console.log(this.element, this.attackPower);
-    console.log(this.element, this.moveSpeed);
   }
 
   protected setWalkingBackground(

@@ -6,6 +6,7 @@ class Game extends GameObject {
   private walkers: Walker[] = [];
   private bullets: Bullet[] = [];
   private level: Level;
+  private levelCounter: LevelCounter;
 
   private items: Item[] = [];
   private pickedUpItems: Item[] = [];
@@ -47,6 +48,7 @@ class Game extends GameObject {
       this.level.getTotalCoinsTillNextLevel() === this.coinsBar.getTotalCoins()
     ) {
       this.level.levelUp();
+      this.levelCounter.setLevel();
     }
   }
 
@@ -68,6 +70,7 @@ class Game extends GameObject {
   private createUI(): void {
     this.playerHealthBar = new PlayerHealthBar();
     this.coinsBar = new CoinsBar(this.pickedUpItems);
+    this.levelCounter = new LevelCounter(this.level);
   }
 
   public addBulletsToArray(bullet: Bullet): void {

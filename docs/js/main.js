@@ -96,8 +96,6 @@ var Character = (function (_super) {
         this.attackPower = this.level.getAttackPowerLevel();
         this.moveSpeed = this.level.getMoveSpeedLevel();
         console.log(this.element, 'is notified');
-        console.log(this.element, this.attackPower);
-        console.log(this.element, this.moveSpeed);
     };
     Character.prototype.setWalkingBackground = function (startPostion, backgrounds, baseUrl) {
         startPostion
@@ -303,6 +301,7 @@ var Game = (function (_super) {
     Game.prototype.levelHandler = function () {
         if (this.level.getTotalCoinsTillNextLevel() === this.coinsBar.getTotalCoins()) {
             this.level.levelUp();
+            this.levelCounter.setLevel();
         }
     };
     Game.prototype.unsubscribe = function (observer) {
@@ -320,6 +319,7 @@ var Game = (function (_super) {
     Game.prototype.createUI = function () {
         this.playerHealthBar = new PlayerHealthBar();
         this.coinsBar = new CoinsBar(this.pickedUpItems);
+        this.levelCounter = new LevelCounter(this.level);
     };
     Game.prototype.addBulletsToArray = function (bullet) {
         this.bullets.push(bullet);
@@ -382,7 +382,7 @@ var Level = (function (_super) {
         this.level = this.level + 1;
         this.totalCoinsTillNextLevel = this.totalCoinsTillNextLevel + 2;
         this.attackPowerLevel = this.attackPowerLevel + 3;
-        this.moveSpeedLevel = this.moveSpeedLevel + 3;
+        this.moveSpeedLevel = this.moveSpeedLevel + 1;
         for (var _i = 0, _a = this.observers; _i < _a.length; _i++) {
             var observer = _a[_i];
             observer.notify();
@@ -503,6 +503,23 @@ var CoinsBar = (function (_super) {
     };
     return CoinsBar;
 }(Ui));
+var LevelCounter = (function (_super) {
+    __extends(LevelCounter, _super);
+    function LevelCounter(level) {
+        var _this = _super.call(this) || this;
+        _this.level = level;
+        _this.element = document.createElement("h1");
+        _this.wrapper = document.querySelector("levelcounter");
+        _this.element.innerHTML = "1";
+        _this.wrapper.appendChild(_this.element);
+        return _this;
+    }
+    LevelCounter.prototype.setLevel = function () {
+        this.element.innerHTML = "" + this.level.getLevelCount();
+        this.wrapper.appendChild(this.element);
+    };
+    return LevelCounter;
+}(GameObject));
 var PlayerHealthBar = (function (_super) {
     __extends(PlayerHealthBar, _super);
     function PlayerHealthBar() {

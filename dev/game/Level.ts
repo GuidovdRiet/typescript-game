@@ -22,7 +22,7 @@ class Level extends GameObject implements Subject {
     this.level = this.level + 1;
     this.totalCoinsTillNextLevel = this.totalCoinsTillNextLevel + 2;
     this.attackPowerLevel = this.attackPowerLevel + 3;
-    this.moveSpeedLevel = this.moveSpeedLevel + 3;
+    this.moveSpeedLevel = this.moveSpeedLevel + 1;
     for(const observer of this.observers) {
       observer.notify();
     }
