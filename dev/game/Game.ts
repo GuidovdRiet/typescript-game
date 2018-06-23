@@ -69,7 +69,7 @@ class Game extends GameObject {
 
   private createUI(): void {
     this.playerHealthBar = new PlayerHealthBar();
-    this.coinsBar = new CoinsBar(this.pickedUpItems);
+    this.coinsBar = new CoinsBar(this.pickedUpItems, this.level);
     this.levelCounter = new LevelCounter(this.level);
   }
 

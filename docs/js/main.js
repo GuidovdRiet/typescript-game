@@ -318,7 +318,7 @@ var Game = (function (_super) {
     };
     Game.prototype.createUI = function () {
         this.playerHealthBar = new PlayerHealthBar();
-        this.coinsBar = new CoinsBar(this.pickedUpItems);
+        this.coinsBar = new CoinsBar(this.pickedUpItems, this.level);
         this.levelCounter = new LevelCounter(this.level);
     };
     Game.prototype.addBulletsToArray = function (bullet) {
@@ -467,10 +467,11 @@ var Ui = (function (_super) {
 }(GameObject));
 var CoinsBar = (function (_super) {
     __extends(CoinsBar, _super);
-    function CoinsBar(pickedUpItems) {
+    function CoinsBar(pickedUpItems, level) {
         var _this = _super.call(this) || this;
         _this.coins = [];
         _this.totalCoins = 0;
+        _this.level = level;
         _this.element = document.createElement("coinsbar");
         var coinbarContainer = document.querySelector("coinbarcontainer");
         coinbarContainer.appendChild(_this.element);
@@ -498,7 +499,8 @@ var CoinsBar = (function (_super) {
         this.element.appendChild(h4);
     };
     CoinsBar.prototype.setCoinBarWidth = function () {
-        var width = this.totalCoins * 10;
+        var width = (this.level.getTotalCoinsTillNextLevel()) * (this.totalCoins * 10);
+        console.log(width);
         this.element.style.width = width + "px";
     };
     return CoinsBar;

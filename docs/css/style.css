@@ -72,7 +72,7 @@ ui {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: var(--ui-height);
+  height: 72px;
   margin-top: 10px;
 }
 
@@ -86,7 +86,7 @@ barscontainer {
   display: flex;
   justify-content: space-between;
   /* background: blue; */
-  width: 470px;
+  width: 535px;
 }
 
 barscontainer * {
@@ -156,31 +156,36 @@ coin {
 }
 
 levelcounter {
-  position: absolute;
-  right: 10px;
-  top: 10px;
   display: flex;
   justify-content: center;
-  background: #414141;
-  transform: rotate(15deg);
+  align-items: center;
+  flex-direction: column;
+  margin: 0 5px;
+  background: #232323;
   border-radius: 100%;
   width: 70px;
   height: 70px; 
 }
 
 levelcountertext {
-  background: #232323;
+  /* background: #FED856; */
   width: 50px;
   display: flex;
+  margin-top: -5px;
   justify-content: center;
   align-items: center;
   height: 15px;
+  transform: rotate(-5deg);
   color: white;
+}
+
+levelcountertext > h5 {
+  font-size: 18px;
+  letter-spacing: 1px;
 }
 
 levelcounter > h1 {
   color: white;
-  margin-top: 8px;
 }
 
 

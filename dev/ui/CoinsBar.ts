@@ -2,10 +2,12 @@
 
 class CoinsBar extends Ui {
   private coins: Item[] = [];
+  private level: Level;
   private totalCoins: number = 0;
 
-  constructor(pickedUpItems: Item[]) {
+  constructor(pickedUpItems: Item[], level: Level) {
     super();
+    this.level = level;
     this.element = document.createElement("coinsbar");
     const coinbarContainer = document.querySelector("coinbarcontainer");
     coinbarContainer.appendChild(this.element);
@@ -36,7 +38,9 @@ class CoinsBar extends Ui {
   }
 
   private setCoinBarWidth() {
-    let width = this.totalCoins * 10;
+    let width = (this.level.getTotalCoinsTillNextLevel()) * (this.totalCoins * 10);
+    console.log(width);
+    
     this.element.style.width = `${width}px`;
   }
 }
