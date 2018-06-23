@@ -541,32 +541,32 @@ var PlayerHealthBar = (function (_super) {
     };
     return PlayerHealthBar;
 }(GameObject));
-var WeaponBehaviour = (function (_super) {
-    __extends(WeaponBehaviour, _super);
-    function WeaponBehaviour(bomber) {
+var Weapon = (function (_super) {
+    __extends(Weapon, _super);
+    function Weapon(bomber) {
         var _this = _super.call(this) || this;
         _this.bomber = bomber;
         return _this;
     }
-    WeaponBehaviour.prototype.start = function (yPos) {
+    Weapon.prototype.start = function (yPos) {
         var bomberPosition = this.bomber.getPosition();
         this.x = bomberPosition.x;
         this.y = bomberPosition.y + this.height / yPos + this.bomberHeight / yPos;
         this.draw();
     };
-    WeaponBehaviour.prototype.getWidth = function () {
+    Weapon.prototype.getWidth = function () {
         return this.width;
     };
-    WeaponBehaviour.prototype.getYPos = function () {
+    Weapon.prototype.getYPos = function () {
         return this.yPos;
     };
-    WeaponBehaviour.prototype.shoot = function (instance) {
+    Weapon.prototype.shoot = function (instance) {
         this instanceof Rocketlauncher
             ? (this.bullet = new RocketlauncherBullet(this))
             : (this.bullet = new MachineGunBullet(this));
         Game.getInstance().addBulletsToArray(this.bullet);
     };
-    return WeaponBehaviour;
+    return Weapon;
 }(GameObject));
 var MachineGun = (function (_super) {
     __extends(MachineGun, _super);
@@ -583,7 +583,7 @@ var MachineGun = (function (_super) {
         return _this;
     }
     return MachineGun;
-}(WeaponBehaviour));
+}(Weapon));
 var Rocketlauncher = (function (_super) {
     __extends(Rocketlauncher, _super);
     function Rocketlauncher(bomber) {
@@ -599,7 +599,7 @@ var Rocketlauncher = (function (_super) {
         return _this;
     }
     return Rocketlauncher;
-}(WeaponBehaviour));
+}(Weapon));
 var Bullet = (function (_super) {
     __extends(Bullet, _super);
     function Bullet() {

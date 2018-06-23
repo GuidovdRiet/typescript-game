@@ -10,7 +10,7 @@ class Bomber extends Character {
   private shootEventListener: EventListener;
   private baseUrlBackgroundAnimation: string =
     "../docs/img/characters/bomber/spr_player_";
-  private weapon: WeaponBehaviour;
+  private weapon: Weapon;
 
   constructor(level: Level) {
     super("bomber", level);
@@ -90,7 +90,7 @@ class Bomber extends Character {
     }
   }
 
-  public getWeapon(): WeaponBehaviour {
+  public getWeapon(): Weapon {
     return this.weapon;
   }
 

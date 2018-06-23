@@ -43,6 +43,7 @@ Game.getInstance();
 
 # Polymorfisme
 
+
 # Strategy
 
 # Observer

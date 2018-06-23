@@ -1,4 +1,4 @@
-class Rocketlauncher extends WeaponBehaviour {
+class Rocketlauncher extends Weapon {
   constructor(bomber: Bomber) {
     super(bomber);
 
