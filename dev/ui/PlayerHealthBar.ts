@@ -1,6 +1,4 @@
-/// <reference path="./UI.ts" />
-
-class PlayerHealthBar extends Ui {
+class PlayerHealthBar extends GameObject {
   constructor() {
     super();
     this.start();

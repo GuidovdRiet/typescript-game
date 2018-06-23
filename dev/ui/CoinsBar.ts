@@ -1,6 +1,4 @@
-/// <reference path="./Ui"/>
-
-class CoinsBar extends Ui {
+class CoinsBar extends GameObject {
   private coins: Item[] = [];
   private level: Level;
   private totalCoins: number = 0;

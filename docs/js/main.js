@@ -458,13 +458,6 @@ var Coin = (function (_super) {
     }
     return Coin;
 }(Item));
-var Ui = (function (_super) {
-    __extends(Ui, _super);
-    function Ui() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return Ui;
-}(GameObject));
 var CoinsBar = (function (_super) {
     __extends(CoinsBar, _super);
     function CoinsBar(pickedUpItems, level) {
@@ -504,7 +497,7 @@ var CoinsBar = (function (_super) {
         this.element.style.width = width + "px";
     };
     return CoinsBar;
-}(Ui));
+}(GameObject));
 var LevelCounter = (function (_super) {
     __extends(LevelCounter, _super);
     function LevelCounter(level) {
@@ -547,7 +540,7 @@ var PlayerHealthBar = (function (_super) {
         this.element.style.width = (this.width / 100) * bomberHealth + "px";
     };
     return PlayerHealthBar;
-}(Ui));
+}(GameObject));
 var WeaponBehaviour = (function (_super) {
     __extends(WeaponBehaviour, _super);
     function WeaponBehaviour(bomber) {
