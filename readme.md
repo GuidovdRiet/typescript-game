@@ -13,6 +13,9 @@ Within this game I implemented the following design patterns:
 2.  Open index.html
 3.  Play game
 
+# Demo
+[Link to demo](https://musing-saha-22f8b5.netlify.com/docs/ "Take a look!")
+
 # UML
 ![UML Diagram](./assets/uml-typescript-game.jpg)
 
@@ -35,19 +38,20 @@ I used a the Singleton pattern to create a game object. Why?..
 
 ```javascript
 private static instance: Game;
-```
 
-```javascript
 public static getInstance() {
   if (!Game.instance) {
     Game.instance = new Game();
   }
   return Game.instance;
 }
+
 Game.getInstance();
 ```
 
 # Polymorfisme
+Every coin is an item. This way I can store every picked up item in te pickedUpItems array. To determ how many coins the player picked up I use 'instanceof'.
+
 ```javascript
 private pickedUpItems: Item[] = [];
 
@@ -61,6 +65,8 @@ public update(pickedUpItems: Item[]) {
   this.totalCoins = this.coins.length;
 }
 ```
+
+Every weapon in this game extends the abstract class Weapon. To determ what bullet to create I use 'instanceof', this way I can what weapon is currently active.
 
 ```javascript
 class Bomber extends Character {
@@ -83,6 +89,13 @@ abstract class Weapon extends GameObject implements WeaponBehaviour {
 ```
 
 # Strategy
+In my game there is a possibility to switch between weapons. Every weapon has a different behaviour. I use a strategy pattern to switch between behaviour. This way I can just say:
+
+```javascript
+this.weapon = new MachineGun(this);
+// or
+this.weapon = new RocketLauncher(this);
+```
 
 ```javascript
 abstract class Weapon extends GameObject implements WeaponBehaviour {
@@ -107,6 +120,7 @@ interface WeaponBehaviour {
 ```
 
 # Observer
+Every character in the game(zombies and player) observe the Level object. When the collects enough coins for the next level every active character is notified and gets stronger.
 
 ```javascript
 interface Observer {
