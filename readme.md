@@ -84,7 +84,69 @@ abstract class Weapon extends GameObject implements WeaponBehaviour {
 
 # Strategy
 
+```javascript
+abstract class Weapon extends GameObject implements WeaponBehaviour {
+  public bomber: Bomber;
+
+  constructor(bomber: Bomber) {
+    super();
+    this.bomber = bomber;
+  }
+}
+
+class Bomber extends Character {
+  constructor() {
+    super();
+    this.weapon = new MachineGun(this);
+  }
+}
+
+interface WeaponBehaviour {
+  bomber: Bomber;
+}
+```
 
 # Observer
 
+```javascript
+interface Observer {
+  notify(): void;
+}
+
+interface Subject {
+  observers: Observer[];
+  subscribe(observer: Observer): void;
+  unsubscribe(observer: Observer): void;
+}
+
+class Level extends GameObject implements Subject {
+  public subscribe(observer: Observer): void {
+    this.observers.push(observer);
+  }
+
+  public unsubscribe(): void {
+    this.removeObjectsFromArrayIfNotVisible([this.observers]);
+  }
+
+  public levelUp() {
+    for(const observer of this.observers) {
+      observer.notify();
+    }
+  }
+}
+
+class Character extends GameObject implements Observer {
+  public notify(): void {
+    this.attackPower = this.level.getAttackPowerLevel();
+    this.moveSpeed = this.level.getMoveSpeedLevel();
+    console.log(this.element, 'is notified');
+  }
+}
+```
+
 # Gameplay componenten
+```javascript
+* De game heeft levels met een oplopende moeilijkheidsgraad
+* De game ziet er visueel aantrekkelijk uit. Er is aandacht besteed aan een
+solide UI en aan een consistent grafisch ontwerp
+```

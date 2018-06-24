@@ -1,3 +1,5 @@
+/// <reference path="./WeaponBehaviour.ts" />
+
 abstract class Weapon extends GameObject implements WeaponBehaviour {
   
   public bomber: Bomber;
