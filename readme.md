@@ -14,6 +14,7 @@ Within this game I implemented the following design patterns:
 3.  Play game
 
 # UML
+[!UML Diagram](./assets/uml-typescript-game.jpg)
 
 # Pull request
 
@@ -47,7 +48,6 @@ Game.getInstance();
 ```
 
 # Polymorfisme
-
 ```javascript
 private pickedUpItems: Item[] = [];
 
