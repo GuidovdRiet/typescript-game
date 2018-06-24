@@ -14,7 +14,7 @@ Within this game I implemented the following design patterns:
 3.  Play game
 
 # UML
-[!UML Diagram](./assets/uml-typescript-game.jpg)
+![UML Diagram](./assets/uml-typescript-game.jpg)
 
 # Pull request
 
