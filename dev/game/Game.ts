@@ -14,7 +14,7 @@ class Game extends GameObject {
   private static instance: Game;
   private playerHealthBar: PlayerHealthBar;
 
-  constructor() {
+  private constructor() {
     super();
     this.level = new Level();
     this.bomber = new Bomber(this.level);
