@@ -91,7 +91,7 @@ class Game extends GameObject {
 Every weapon in this game extends the abstract class Weapon. Within this class I created a shoot method. I use an override method in the Machinegun and Rocketlauncher class to define different behaviour. This way I can call weapon.shoot() no matter what weapon is active.
 
 ```javascript
-class Bomber {
+class Bomber extends Character {
   private weapon: Weapon;
 
   constructor() {
@@ -155,12 +155,39 @@ class Rocketlauncher extends Weapon {
 In my game there is a possibility to switch between weapons. Every weapon has a different behaviour. I use a strategy pattern to switch between behaviour. This way I can just say:
 
 ```javascript
-this.weapon = new MachineGun(this);
-// or
-this.weapon = new RocketLauncher(this);
-```
+class Bomber extends Character {
+  private weapon: Weapon;
 
-```javascript
+  constructor() {
+    // Define start weapon
+    this.weapon = new MachineGun(this);
+
+    window.addEventListener("keydown", (event: KeyboardEvent) => {
+      this.switchWeapons(event);
+    });
+
+    this.addShootingEvent();
+  }
+
+  private switchWeapons(event: KeyboardEvent): void {
+    const firstWeaponKey = 49;
+    const secondWeaponKey = 50;
+    switch (event.keyCode) {
+      case firstWeaponKey:
+        this.weapon = new MachineGun(this);
+        break;
+      case secondWeaponKey:
+        this.weapon = new Rocketlauncher(this);
+        break;
+    }
+  }
+
+  private addShootingEvent(): void {
+    this.shootEventListener = () => this.weapon.shoot();
+    window.addEventListener("click", this.shootEventListener);
+  }
+}
+
 abstract class Weapon extends GameObject implements WeaponBehaviour {
   public bomber: Bomber;
 
@@ -168,18 +195,15 @@ abstract class Weapon extends GameObject implements WeaponBehaviour {
     super();
     this.bomber = bomber;
   }
-}
 
-class Bomber extends Character {
-  constructor() {
-    super();
-    this.weapon = new MachineGun(this);
-  }
+  public shoot(): void {}
 }
 
 interface WeaponBehaviour {
   bomber: Bomber;
+  shoot(): void;
 }
+
 ```
 
 # Observer
@@ -226,6 +250,4 @@ class Character extends GameObject implements Observer {
 
 ```javascript
 * De game heeft levels met een oplopende moeilijkheidsgraad
-* De game ziet er visueel aantrekkelijk uit. Er is aandacht besteed aan een
-solide UI en aan een consistent grafisch ontwerp
 ```
