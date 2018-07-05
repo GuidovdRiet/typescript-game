@@ -24,7 +24,7 @@ class Character extends GameObject implements Observer {
   public notify(): void {
     this.attackPower = this.level.getAttackPowerLevel();
     this.moveSpeed = this.level.getMoveSpeedLevel();
-    console.log(this.element, 'is notified');
+    console.log(this.element, "is notified");
   }
 
   protected setWalkingBackground(
@@ -59,6 +59,10 @@ class Character extends GameObject implements Observer {
       this.walkerHealthBar.removeElement();
       this.clearInterval(this.intervalId);
     }
+  }
+
+  public update() {
+    
   }
 
   public getHealth(): number {

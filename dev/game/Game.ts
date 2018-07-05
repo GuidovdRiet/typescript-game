@@ -7,6 +7,7 @@ class Game extends GameObject {
   private bullets: Bullet[] = [];
   private level: Level;
   private levelCounter: LevelCounter;
+  private characters: Character[] = [];
 
   private items: Item[] = [];
   private pickedUpItems: Item[] = [];
@@ -18,8 +19,9 @@ class Game extends GameObject {
     super();
     this.level = new Level();
     this.bomber = new Bomber(this.level);
+    this.characters.push(this.bomber);
     setInterval(() => {
-      this.walkers.push(new Walker(this.level));
+      this.characters.push(new Walker(this.level));
     }, 2000);
     this.createUI();
     this.gameLoop();
@@ -32,10 +34,8 @@ class Game extends GameObject {
     return Game.instance;
   }
 
-
   private gameLoop(): void {
-    this.updateBomber();
-    this.updateEnemies();
+    this.updateCharacters();
     this.removeObjectsHandler();
     this.collisionHandler();
     this.levelHandler();
@@ -56,14 +56,9 @@ class Game extends GameObject {
     console.log("remove from array unsubscribe");
   }
 
-  private updateBomber(): void {
-    this.bomber.update();
-    this.bomber.getHealth();
-  }
-
-  private updateEnemies(): void {
-    this.walkers.forEach(walker => {
-      walker.update();
+  private updateCharacters(): void {
+    this.characters.forEach(character => {
+      character.update();
     });
   }
 
@@ -78,7 +73,7 @@ class Game extends GameObject {
   }
 
   private removeObjectsHandler(): void {
-    this.removeObjectsFromArrayIfNotVisible([this.bullets, this.walkers]);
+    this.removeObjectsFromArrayIfNotVisible([this.bullets, this.characters]);
   }
 
   private collisionHandler(): void {
@@ -91,17 +86,17 @@ class Game extends GameObject {
       }
     }
 
-    for (const walker of this.walkers) {
+    for (const character of this.characters) {
       // check collision Bomber | Walker
-      if (this.collision(this.bomber, walker)) {
-        this.bomber.damage(walker.getAttackPower());
+      if (this.collision(this.bomber, character)) {
+        this.bomber.damage(character.getAttackPower());
         this.playerHealthBar.update(this.bomber);
       }
 
       // check collision Bullet | Walker
       for (const bullet of this.bullets) {
-        if (this.collision(bullet, walker)) {
-          walker.damage(this.bomber.getWeapon().getAttackPower());
+        if (this.collision(bullet, character)) {
+          character.damage(this.bomber.getWeapon().getAttackPower());
           bullet.removeElement();
         }
       }

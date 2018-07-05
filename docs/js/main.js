@@ -95,7 +95,7 @@ var Character = (function (_super) {
     Character.prototype.notify = function () {
         this.attackPower = this.level.getAttackPowerLevel();
         this.moveSpeed = this.level.getMoveSpeedLevel();
-        console.log(this.element, 'is notified');
+        console.log(this.element, "is notified");
     };
     Character.prototype.setWalkingBackground = function (startPostion, backgrounds, baseUrl) {
         startPostion
@@ -120,6 +120,8 @@ var Character = (function (_super) {
             this.walkerHealthBar.removeElement();
             this.clearInterval(this.intervalId);
         }
+    };
+    Character.prototype.update = function () {
     };
     Character.prototype.getHealth = function () {
         return this.health;
@@ -271,12 +273,14 @@ var Game = (function (_super) {
         var _this = _super.call(this) || this;
         _this.walkers = [];
         _this.bullets = [];
+        _this.characters = [];
         _this.items = [];
         _this.pickedUpItems = [];
         _this.level = new Level();
         _this.bomber = new Bomber(_this.level);
+        _this.characters.push(_this.bomber);
         setInterval(function () {
-            _this.walkers.push(new Walker(_this.level));
+            _this.characters.push(new Walker(_this.level));
         }, 2000);
         _this.createUI();
         _this.gameLoop();
@@ -290,8 +294,7 @@ var Game = (function (_super) {
     };
     Game.prototype.gameLoop = function () {
         var _this = this;
-        this.updateBomber();
-        this.updateEnemies();
+        this.updateCharacters();
         this.removeObjectsHandler();
         this.collisionHandler();
         this.levelHandler();
@@ -307,13 +310,9 @@ var Game = (function (_super) {
     Game.prototype.unsubscribe = function (observer) {
         console.log("remove from array unsubscribe");
     };
-    Game.prototype.updateBomber = function () {
-        this.bomber.update();
-        this.bomber.getHealth();
-    };
-    Game.prototype.updateEnemies = function () {
-        this.walkers.forEach(function (walker) {
-            walker.update();
+    Game.prototype.updateCharacters = function () {
+        this.characters.forEach(function (character) {
+            character.update();
         });
     };
     Game.prototype.createUI = function () {
@@ -325,7 +324,7 @@ var Game = (function (_super) {
         this.bullets.push(bullet);
     };
     Game.prototype.removeObjectsHandler = function () {
-        this.removeObjectsFromArrayIfNotVisible([this.bullets, this.walkers]);
+        this.removeObjectsFromArrayIfNotVisible([this.bullets, this.characters]);
     };
     Game.prototype.collisionHandler = function () {
         for (var _i = 0, _a = this.items; _i < _a.length; _i++) {
@@ -337,16 +336,16 @@ var Game = (function (_super) {
                 this.removeObjectsFromArrayIfNotVisible([this.items]);
             }
         }
-        for (var _b = 0, _c = this.walkers; _b < _c.length; _b++) {
-            var walker = _c[_b];
-            if (this.collision(this.bomber, walker)) {
-                this.bomber.damage(walker.getAttackPower());
+        for (var _b = 0, _c = this.characters; _b < _c.length; _b++) {
+            var character = _c[_b];
+            if (this.collision(this.bomber, character)) {
+                this.bomber.damage(character.getAttackPower());
                 this.playerHealthBar.update(this.bomber);
             }
             for (var _d = 0, _e = this.bullets; _d < _e.length; _d++) {
                 var bullet = _e[_d];
-                if (this.collision(bullet, walker)) {
-                    walker.damage(this.bomber.getWeapon().getAttackPower());
+                if (this.collision(bullet, character)) {
+                    character.damage(this.bomber.getWeapon().getAttackPower());
                     bullet.removeElement();
                 }
             }
@@ -432,16 +431,8 @@ var WalkerHealthBar = (function (_super) {
 var Item = (function (_super) {
     __extends(Item, _super);
     function Item() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.pickedUp = false;
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    Item.prototype.setPickedUp = function (pickedUp) {
-        this.pickedUp = pickedUp;
-    };
-    Item.prototype.getPickedUp = function () {
-        return this.pickedUp;
-    };
     return Item;
 }(GameObject));
 var Coin = (function (_super) {
