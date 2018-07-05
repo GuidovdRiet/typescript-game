@@ -39,6 +39,8 @@ I used the Singleton pattern to create a game object. Why?..
 ```javascript
 private static instance: Game;
 
+private constructor() {}
+
 public static getInstance() {
   if (!Game.instance) {
     Game.instance = new Game();
@@ -50,19 +52,23 @@ Game.getInstance();
 ```
 
 # Polymorfisme
-Every coin is an item. This way I can store every picked up item in te pickedUpItems array. To determ how many coins the player picked up I use 'instanceof'.
+Every character in the game is added to the characters array. Since all these characters extend from the Character class I can call 'character.update()' on every one of them. In this example I use an override method in the Bomber and Walker class to give the objects a different behaviour.
 
 ```javascript
-private pickedUpItems: Item[] = [];
+private characters: Character[] = [];
 
-public update(pickedUpItems: Item[]) {
-  this.coins = pickedUpItems.map(pickedUpItem => {
-    if (pickedUpItem instanceof Coin) {
-      return pickedUpItem;
-    }
-    return null;
+private constructor() {
+    this.bomber = new Bomber(this.level);
+    this.characters.push(this.bomber);
+    setInterval(() => {
+      this.characters.push(new Walker(this.level));
+    }, 2000);
+}
+
+private updateCharacters(): void {
+  this.characters.forEach(character => {
+    character.update();
   });
-  this.totalCoins = this.coins.length;
 }
 ```
 
