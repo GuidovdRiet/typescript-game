@@ -31,7 +31,7 @@ Within this pull request I added the functionality where enemies are created at 
 
 # Singleton
 
-I used a the Singleton pattern to create a game object. Why?..
+I used the Singleton pattern to create a game object. Why?..
 
 - There can only be one game.
 - This way I can call the game object in my entire game.

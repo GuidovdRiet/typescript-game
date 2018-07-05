@@ -10,6 +10,7 @@ class Bomber extends Character {
   private shootEventListener: EventListener;
   private baseUrlBackgroundAnimation: string =
     "../docs/img/characters/bomber/spr_player_";
+
   private weapon: Weapon;
 
   constructor(level: Level) {
