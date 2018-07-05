@@ -14,9 +14,11 @@ Within this game I implemented the following design patterns:
 3.  Play game
 
 # Demo
+
 [Link to demo](https://musing-saha-22f8b5.netlify.com/docs/ "Take a look!")
 
 # UML
+
 ![UML Diagram](./assets/uml-typescript-game.jpg)
 
 # Pull request
@@ -31,70 +33,125 @@ Within this pull request I added the functionality where enemies are created at 
 
 # Singleton
 
+NOTE: All the code snippets used in this readme file are abstracted versions of the real implementation.
+
 I used the Singleton pattern to create a game object. Why?..
 
 - There can only be one game.
 - This way I can call the game object in my entire game.
 
 ```javascript
-private static instance: Game;
+class Game extends GameObject {
+  private static instance: Game;
 
-private constructor() {}
+  private constructor() {}
 
-public static getInstance() {
-  if (!Game.instance) {
-    Game.instance = new Game();
+  public static getInstance() {
+    if (!Game.instance) {
+      Game.instance = new Game();
+    }
+    return Game.instance;
   }
-  return Game.instance;
 }
 
+// This way I have access to the game intance in the entire game.
 Game.getInstance();
 ```
 
 # Polymorfisme
+
 Every character in the game is added to the characters array. Since all these characters extend from the Character class I can call 'character.update()' on every one of them. In this example I use an override method in the Bomber and Walker class to give the objects a different behaviour.
 
 ```javascript
-private characters: Character[] = [];
+class Game extends GameObject {
+  private characters: Character[] = [];
 
-private constructor() {
-    this.bomber = new Bomber(this.level);
-    this.characters.push(this.bomber);
-    setInterval(() => {
-      this.characters.push(new Walker(this.level));
-    }, 2000);
-}
+  private constructor() {
+      this.bomber = new Bomber(this.level);
+      this.characters.push(this.bomber);
+      setInterval(() => {
+        this.characters.push(new Walker(this.level));
+      }, 2000);
+      this.gameLoop();
+  }
 
-private updateCharacters(): void {
-  this.characters.forEach(character => {
-    character.update();
-  });
+  private gameLoop(): void {
+    this.updateCharacters();
+    requestAnimationFrame(() => this.gameLoop());
+  }
+
+  private updateCharacters(): void {
+    this.characters.forEach(character => {
+      character.update();
+    });
+  }
 }
 ```
 
-Every weapon in this game extends the abstract class Weapon. To determ what bullet to create I use 'instanceof', this way I can what weapon is currently active.
+Every weapon in this game extends the abstract class Weapon. Within this class I created a shoot method. I use an override method in the Machinegun and Rocketlauncher class to define different behaviour. This way I can call weapon.shoot() no matter what weapon is active.
 
 ```javascript
-class Bomber extends Character {
+class Bomber {
   private weapon: Weapon;
-}
 
-class Game extends GameObject {
+  constructor() {
+    // Define start weapon
+    this.weapon = new MachineGun(this);
+
+    window.addEventListener("keydown", (event: KeyboardEvent) => {
+      this.switchWeapons(event);
+    });
+
+    this.addShootingEvent();
+  }
+
+  private switchWeapons(event: KeyboardEvent): void {
+    const firstWeaponKey = 49;
+    const secondWeaponKey = 50;
+    switch (event.keyCode) {
+      case firstWeaponKey:
+        this.weapon = new MachineGun(this);
+        break;
+      case secondWeaponKey:
+        this.weapon = new Rocketlauncher(this);
+        break;
+    }
+  }
+
   private addShootingEvent(): void {
-    this.shootEventListener = () => this.weapon.shoot(this.weapon);
+    this.shootEventListener = () => this.weapon.shoot();
+    window.addEventListener("click", this.shootEventListener);
   }
 }
 
-abstract class Weapon extends GameObject implements WeaponBehaviour {
-  public shoot(instance: Weapon): void {
-    this instanceof Rocketlauncher
-    ? (this.bullet = new RocketlauncherBullet(this))
-    : (this.bullet = new MachineGunBullet(this));
+abstract class Weapon {
+    public shoot(): void {}
+}
+
+class MachineGun extends Weapon {
+  constructor() {
+    super();
+  }
+
+  public shoot(): void {
+    this.bullet = new MachineGunBullet(this);
+    Game.getInstance().addBulletsToArray(this.bullet);
+  }
+}
+
+class Rocketlauncher extends Weapon {
+  constructor() {
+    super();
+  }
+
+  public shoot(): void {
+    this.bullet = new RocketlauncherBullet(this);
   }
 }
 ```
 
 # Strategy
+
 In my game there is a possibility to switch between weapons. Every weapon has a different behaviour. I use a strategy pattern to switch between behaviour. This way I can just say:
 
 ```javascript
@@ -126,6 +183,7 @@ interface WeaponBehaviour {
 ```
 
 # Observer
+
 Every character in the game(zombies and player) observe the Level object. When the collects enough coins for the next level every active character is notified and gets stronger.
 
 ```javascript
@@ -165,6 +223,7 @@ class Character extends GameObject implements Observer {
 ```
 
 # Gameplay componenten
+
 ```javascript
 * De game heeft levels met een oplopende moeilijkheidsgraad
 * De game ziet er visueel aantrekkelijk uit. Er is aandacht besteed aan een
