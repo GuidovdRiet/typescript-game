@@ -1,23 +1,24 @@
 /// <reference path="./Character.ts"/>
 
 class Bomber extends Character {
-
   private leftSpeed: number = 0;
   private upSpeed: number = 0;
   private downSpeed: number = 0;
   private rightSpeed: number = 0;
 
   private shootEventListener: EventListener;
-  private baseUrlBackgroundAnimation: string =
-    "../docs/img/characters/bomber/spr_player_";
 
   private weapon: Weapon;
 
   constructor(level: Level) {
     super("bomber", level);
-    
+
     this.start();
     this.moveSpeed = 4;
+
+    this.frames = 4;
+    this.frame = 0;
+    this.framewidth = 60;
 
     level.subscribe(this);
 
@@ -28,7 +29,7 @@ class Bomber extends Character {
 
     window.addEventListener("keyup", (event: KeyboardEvent) => {
       this.move(event, 0);
-      this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
+      this.animate(true);
     });
 
     this.addShootingEvent();
@@ -42,7 +43,6 @@ class Bomber extends Character {
   private start(): void {
     this.x = window.innerWidth / 2 - this.width;
     this.y = window.innerHeight / 2 - this.height;
-    this.setWalkingBackground(true, 2, this.baseUrlBackgroundAnimation);
     this.weapon = new MachineGun(this);
   }
 
@@ -66,6 +66,9 @@ class Bomber extends Character {
   }
 
   public move(event: KeyboardEvent, speed: number): void {
+
+    this.animate(false);
+
     const leftKey: number = 65;
     const upKey: number = 87;
     const rightKey: number = 68;
@@ -74,19 +77,15 @@ class Bomber extends Character {
     switch (event.keyCode) {
       case leftKey:
         this.leftSpeed = speed;
-        this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
         break;
       case rightKey:
         this.rightSpeed = speed;
-        this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
         break;
       case upKey:
         this.upSpeed = speed;
-        this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
         break;
       case downKey:
         this.downSpeed = speed;
-        this.setWalkingBackground(false, 2, this.baseUrlBackgroundAnimation);
         break;
     }
   }

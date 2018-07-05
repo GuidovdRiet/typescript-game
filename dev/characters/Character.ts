@@ -1,7 +1,11 @@
 /// <reference path="../game/GameObject.ts"/>
 
 class Character extends GameObject implements Observer {
-  protected animationCount: number = 0;
+  // animation
+  protected frames: number;
+  protected frame: number;
+  protected framewidth: number;
+
   protected moveSpeed: number;
   protected walkerHealthBar: WalkerHealthBar;
   protected attackPower: number;
@@ -27,26 +31,12 @@ class Character extends GameObject implements Observer {
     console.log(this.element, "is notified");
   }
 
-  protected setWalkingBackground(
-    startPostion: boolean,
-    backgrounds: number,
-    baseUrl: string
-  ): void {
-    startPostion
-      ? (this.animationCount = 0)
-      : this.animationCount <= backgrounds
-        ? this.animationCount++
-        : (this.animationCount = 0);
-
-    this.element.style.backgroundImage = `url(${baseUrl}${
-      this.animationCount
-    }.png)`;
-  }
-
-  protected animate(url: string) {
-    this.intervalId = setInterval(() => {
-      this.setWalkingBackground(false, 2, url);
-    }, 150);
+  protected animate(setToFirstSprite: boolean): void {
+    let pos = 0 - this.frame * this.framewidth;
+    this.frame++;
+    if (this.frame >= this.frames) this.frame = 0;
+    if (setToFirstSprite) pos = 0;
+    this.element.style.backgroundPosition = `${pos}px 0px`;
   }
 
   protected checkIfDead(character: Character) {
@@ -61,9 +51,7 @@ class Character extends GameObject implements Observer {
     }
   }
 
-  public update() {
-    
-  }
+  public update(): void {}
 
   public getHealth(): number {
     return this.health;

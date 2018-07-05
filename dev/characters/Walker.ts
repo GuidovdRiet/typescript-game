@@ -1,11 +1,13 @@
 /// <reference path="./Character.ts"/>
 
 class Walker extends Character {
-  private baseUrlBackgroundAnimation: string =
-    "../docs/img/characters/zombies/walker/spr_zombie1_attack_";
-
   constructor(level: Level) {
     super("walker", level);
+
+    this.frames = 4;
+    this.frame = 0;
+    this.framewidth = 60;
+    
     level.subscribe(this);
     this.start();
   }
@@ -17,11 +19,14 @@ class Walker extends Character {
     this.attackPower = this.level.getAttackPowerLevel();
     this.moveSpeed = this.level.getMoveSpeedLevel();
 
+    setInterval(() => {
+      this.animate(false);
+    }, 100);
+
     this.walkerHealthBar = new WalkerHealthBar(this);
     this.setAttackPower(this.attackPower);
 
     this.update();
-    this.animate(this.baseUrlBackgroundAnimation);
   }
 
   public update() {

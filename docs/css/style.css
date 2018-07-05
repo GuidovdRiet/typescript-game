@@ -28,16 +28,23 @@ body * {
   display: inline-block;
 }
 
+bomber,
+walker {
+  background-repeat: no-repeat;
+  display: block;
+}
+
 /* characters */
 bomber {
   width: 60px;
   height: 80px;
+  background: url("../img/characters/bomber/player-sprite.png");
 }
 
 walker {
   width: 60px;
   height: 80px;
-  background: url("../img/characters/zombies/walker/spr_zombie1_attack_0.png");
+  background: url("../img/characters/zombies/walker/walker-sprite.png");
 }
 
 /* weapons */
@@ -164,7 +171,7 @@ levelcounter {
   background: #232323;
   border-radius: 100%;
   width: 70px;
-  height: 70px; 
+  height: 70px;
 }
 
 levelcountertext {
@@ -187,5 +194,3 @@ levelcountertext > h5 {
 levelcounter > h1 {
   color: white;
 }
-
-
