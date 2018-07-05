@@ -169,7 +169,7 @@ var Bomber = (function (_super) {
     }
     Bomber.prototype.addShootingEvent = function () {
         var _this = this;
-        this.shootEventListener = function () { return _this.weapon.shoot(_this.weapon); };
+        this.shootEventListener = function () { return _this.weapon.shoot(); };
         window.addEventListener("click", this.shootEventListener);
     };
     Bomber.prototype.start = function () {
@@ -271,7 +271,6 @@ var Game = (function (_super) {
     __extends(Game, _super);
     function Game() {
         var _this = _super.call(this) || this;
-        _this.walkers = [];
         _this.bullets = [];
         _this.characters = [];
         _this.items = [];
@@ -338,9 +337,11 @@ var Game = (function (_super) {
         }
         for (var _b = 0, _c = this.characters; _b < _c.length; _b++) {
             var character = _c[_b];
-            if (this.collision(this.bomber, character)) {
-                this.bomber.damage(character.getAttackPower());
-                this.playerHealthBar.update(this.bomber);
+            if (character instanceof Walker) {
+                if (this.collision(this.bomber, character)) {
+                    this.bomber.damage(character.getAttackPower());
+                    this.playerHealthBar.update(this.bomber);
+                }
             }
             for (var _d = 0, _e = this.bullets; _d < _e.length; _d++) {
                 var bullet = _e[_d];
@@ -551,12 +552,7 @@ var Weapon = (function (_super) {
     Weapon.prototype.getYPos = function () {
         return this.yPos;
     };
-    Weapon.prototype.shoot = function (instance) {
-        this instanceof Rocketlauncher
-            ? (this.bullet = new RocketlauncherBullet(this))
-            : (this.bullet = new MachineGunBullet(this));
-        Game.getInstance().addBulletsToArray(this.bullet);
-    };
+    Weapon.prototype.shoot = function () { };
     return Weapon;
 }(GameObject));
 var MachineGun = (function (_super) {
@@ -573,6 +569,10 @@ var MachineGun = (function (_super) {
         _this.start(_this.yPos);
         return _this;
     }
+    MachineGun.prototype.shoot = function () {
+        this.bullet = new MachineGunBullet(this);
+        Game.getInstance().addBulletsToArray(this.bullet);
+    };
     return MachineGun;
 }(Weapon));
 var Rocketlauncher = (function (_super) {
@@ -589,6 +589,10 @@ var Rocketlauncher = (function (_super) {
         _this.start(_this.yPos);
         return _this;
     }
+    Rocketlauncher.prototype.shoot = function () {
+        this.bullet = new RocketlauncherBullet(this);
+        Game.getInstance().addBulletsToArray(this.bullet);
+    };
     return Rocketlauncher;
 }(Weapon));
 var Bullet = (function (_super) {

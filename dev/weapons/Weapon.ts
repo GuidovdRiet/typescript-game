@@ -1,7 +1,6 @@
 /// <reference path="./WeaponBehaviour.ts" />
 
 abstract class Weapon extends GameObject implements WeaponBehaviour {
-  
   public bomber: Bomber;
   protected bomberWidth: number;
   protected bomberHeight: number;
@@ -28,10 +27,5 @@ abstract class Weapon extends GameObject implements WeaponBehaviour {
     return this.yPos;
   }
 
-  public shoot(instance: Weapon): void {
-    this instanceof Rocketlauncher
-      ? (this.bullet = new RocketlauncherBullet(this))
-      : (this.bullet = new MachineGunBullet(this));
-    Game.getInstance().addBulletsToArray(this.bullet);
-  }
+  public shoot(): void {}
 }

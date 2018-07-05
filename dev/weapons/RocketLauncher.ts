@@ -15,4 +15,9 @@ class Rocketlauncher extends Weapon {
 
     this.start(this.yPos);
   }
+
+  public shoot(): void {
+    this.bullet = new RocketlauncherBullet(this);
+    Game.getInstance().addBulletsToArray(this.bullet);
+  }
 }

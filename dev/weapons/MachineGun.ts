@@ -17,4 +17,9 @@ class MachineGun extends Weapon {
 
     this.start(this.yPos);
   }
+
+  public shoot(): void {
+    this.bullet = new MachineGunBullet(this);
+    Game.getInstance().addBulletsToArray(this.bullet);
+  }
 }

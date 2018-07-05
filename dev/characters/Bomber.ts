@@ -34,7 +34,7 @@ class Bomber extends Character {
   }
 
   private addShootingEvent(): void {
-    this.shootEventListener = () => this.weapon.shoot(this.weapon);
+    this.shootEventListener = () => this.weapon.shoot();
     window.addEventListener("click", this.shootEventListener);
   }
 

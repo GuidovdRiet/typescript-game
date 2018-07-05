@@ -3,7 +3,6 @@
 class Game extends GameObject {
   private bomber: Bomber;
   private coinsBar: CoinsBar;
-  private walkers: Walker[] = [];
   private bullets: Bullet[] = [];
   private level: Level;
   private levelCounter: LevelCounter;
@@ -88,9 +87,11 @@ class Game extends GameObject {
 
     for (const character of this.characters) {
       // check collision Bomber | Walker
-      if (this.collision(this.bomber, character)) {
-        this.bomber.damage(character.getAttackPower());
-        this.playerHealthBar.update(this.bomber);
+      if(character instanceof Walker) {
+        if (this.collision(this.bomber, character)) {
+          this.bomber.damage(character.getAttackPower());
+          this.playerHealthBar.update(this.bomber);
+        }
       }
 
       // check collision Bullet | Walker
